@@ -251,7 +251,6 @@ public class TestRunner extends BaseTest {
         assertEquals(expectedTaxReportPeriod, reportDeclaration.getResultSumForReportPeriod(), "Неправильный расчет суммы");
 
         /***** Сохраняем отчет и отправляем *****/
-
         reportDeclaration.saveReport();
         reportDeclaration.subscribeAndSendReport();
         assertEquals("Надіслано, очікуйте...", reportDeclaration.waitReportStatusChange(), "Неверный статус формы");

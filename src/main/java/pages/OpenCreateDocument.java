@@ -58,11 +58,6 @@ public class OpenCreateDocument implements WorkingWithBrowserTabs {
         return docName;
     }
 
-    @Step("Удаление последней версии документа")
-    public void deleteLastVersion() {
-
-    }
-
     @Step("Добавление версии в документ")
     public void addVersionToDocument() {
         Random random = new Random();
