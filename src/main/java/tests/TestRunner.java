@@ -408,24 +408,16 @@ public class TestRunner extends BaseTest {
         reportDeclaration.clickEditButton();
 
         /***** Респондент *****/
-        for (Map.Entry<SelenideElement, String> pair : reportDeclaration.declarationS0501408Fields.entrySet()) {
-            reportDeclaration.setValueToHeader(pair.getKey(), pair.getValue(), dataDeclaration);
-        }
+        reportDeclaration.declarationS0501408Fields.forEach((key, value) -> reportDeclaration.setValueToHeader(key, value, dataDeclaration));
 
         /**** Экспорт товаров *****/
-        for (Map.Entry<SelenideElement, String> pair : reportDeclaration.declarationS0501408Fields.entrySet()) {
-            reportDeclaration.setValueToExportProducts(pair.getKey(), pair.getValue(), dataDeclaration);
-        }
+        reportDeclaration.declarationS0501408Fields.forEach((key, value) -> reportDeclaration.setValueToExportProducts(key, value, dataDeclaration));
 
         /**** Импорт товаров товаров *****/
-        for (Map.Entry<SelenideElement, String> pair : reportDeclaration.declarationS0501408Fields.entrySet()) {
-            reportDeclaration.setValueToImportProducts(pair.getKey(), pair.getValue(), dataDeclaration);
-        }
+        reportDeclaration.declarationS0501408Fields.forEach((key, value) -> reportDeclaration.setValueToImportProducts(key, value, dataDeclaration));
 
         /***** Персональные данные *****/
-        for (Map.Entry<SelenideElement, String> pair : reportDeclaration.declarationS0501408Fields.entrySet()) {
-            reportDeclaration.setValueToFooter(pair.getKey(), pair.getValue(), dataDeclaration);
-        }
+        reportDeclaration.declarationS0501408Fields.forEach((key, value) -> reportDeclaration.setValueToFooter(key, value, dataDeclaration));
 
 
         /***** Сохраняем отчет и копируем его *****/
@@ -438,13 +430,9 @@ public class TestRunner extends BaseTest {
 
         /***** Проверяем поля после копирования отчета *****/
         /***** Экспорт товаров *****/
-        for (Map.Entry<SelenideElement, String> pair : reportDeclaration.declarationS0501408Fields.entrySet()) {
-            reportDeclaration.checktValueToExportProducts(pair.getKey(), pair.getValue(), dataDeclaration);
-        }
+        reportDeclaration.declarationS0501408Fields.forEach((key, value) -> reportDeclaration.checktValueToExportProducts(key, value, dataDeclaration));
 
         /***** Импорт товаров *****/
-        for (Map.Entry<SelenideElement, String> pair : reportDeclaration.declarationS0501408Fields.entrySet()) {
-            reportDeclaration.checktValueToExportProducts(pair.getKey(), pair.getValue(), dataDeclaration);
-        }
+        reportDeclaration.declarationS0501408Fields.forEach((key, value) -> reportDeclaration.checktValueToExportProducts(key, value, dataDeclaration));
     }
 }
