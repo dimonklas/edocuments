@@ -238,54 +238,17 @@ public class TestRunner extends BaseTest {
 
         reportDeclaration.declarationJ0301206Fields.forEach((key, value) -> reportDeclaration.setValueToGeneralInfo(key, value, declarationData));
 
+        /**** ІІ. Розрахунок податкових зобов'язань збору за місця для паркування транспортних засобів *****/
         reportDeclaration.declarationJ0301206Fields.forEach((key, value) -> reportDeclaration.setValueToCalculationTax(key, value, calculationTax));
 
+        /***** Заполнение персональных данных (футер страницы) *****/
         reportDeclaration.declarationJ0301206Fields.forEach((key, value) -> reportDeclaration.setValueToPersonalInfo(key, value, personInfo));
 
-//        reportDeclaration.setValueToField(reportDeclaration.getSequenceNumber(), declarationData.getSequenceNumber());
-//        reportDeclaration.setValueToField(reportDeclaration.getYear(), declarationData.getYear());
-//        reportDeclaration.setValueToField(reportDeclaration.getComName(), declarationData.getComName());
-//        reportDeclaration.setValueToField(reportDeclaration.getInnOrPassportSeria(), declarationData.getInnNumberOrPassport());
-//        reportDeclaration.setValueToField(reportDeclaration.getKved(), declarationData.getKved());
-//        reportDeclaration.setValueToField(reportDeclaration.getZip(), declarationData.getZip());
-//        reportDeclaration.setValueToField(reportDeclaration.getCityCode(), declarationData.getCityCode());
-//        reportDeclaration.setValueToField(reportDeclaration.getTelNumber(), declarationData.getTelNumber());
-//        reportDeclaration.setValueToField(reportDeclaration.getFaxNumber(), declarationData.getFaxNumber());
-//        reportDeclaration.setValueToField(reportDeclaration.getLocationAddress(), declarationData.getLocationAddress());
-//        reportDeclaration.setValueToField(reportDeclaration.getEmail(), declarationData.getEmail());
-//
-//        reportDeclaration.setControlAuthorityDropdown(declarationData.getControlAuthority());
-
-
-        /**** ІІ. Розрахунок податкових зобов'язань збору за місця для паркування транспортних засобів *****/
+        /**** Проверка формул в документе *****/
         String expectedTax = reportDeclaration.calculationExpectedTax(calculationTax.getSquare(), calculationTax.getMinSalary(), calculationTax.getCountDays(), calculationTax.getPercent());
         String expectedTaxReportPeriod = reportDeclaration.calculationExpectedTaxForReportPeriod(calculationTax.getSquare(), calculationTax.getMinSalary(), calculationTax.getCountDays(), calculationTax.getPercent(), calculationTax.getTaxSum());
-//
-//        reportDeclaration.setValueToField(reportDeclaration.getSumName(), calculationTax.getSumName());
-//        reportDeclaration.setValueToField(reportDeclaration.getSquare(), calculationTax.getSquare());
-//        reportDeclaration.setValueToField(reportDeclaration.getMinSalary(), calculationTax.getMinSalary());
-//        reportDeclaration.setValueToField(reportDeclaration.getCountDays(), calculationTax.getCountDays());
-//        reportDeclaration.setValueToField(reportDeclaration.getPercent(), calculationTax.getPercent());
-//        reportDeclaration.setValueToField(reportDeclaration.getTaxSum(), calculationTax.getTaxSum());
-//        reportDeclaration.setValueToField(reportDeclaration.getTaxSumSpecified(), calculationTax.getTaxSumSpecified());
-//        reportDeclaration.setValueToField(reportDeclaration.getSpecifiedSum(), calculationTax.getSpecifiedSum());
-//        reportDeclaration.setValueToField(reportDeclaration.getFineSum(), calculationTax.getFineSum());
-//        reportDeclaration.setValueToField(reportDeclaration.getPenaltySum(), calculationTax.getPenaltySum());
-//
-//        reportDeclaration.setValueToField(reportDeclaration.getAddText(), calculationTax.getAddText());
-//        reportDeclaration.setValueToField(reportDeclaration.getAddDeclaration(), calculationTax.getAddDeclaration());
-
         assertEquals(expectedTax, reportDeclaration.getResultSum(), "Неправильный расчет суммы");
         assertEquals(expectedTaxReportPeriod, reportDeclaration.getResultSumForReportPeriod(), "Неправильный расчет суммы");
-
-
-        /***** Заполнение персональных данных (футер страницы) *****/
-//        reportDeclaration.setValueToField(reportDeclaration.getDateDeclaration(), personInfo.getDateDeclaration());
-//        reportDeclaration.setValueToField(reportDeclaration.getFIO(), personInfo.getFIO());
-//        reportDeclaration.setValueToField(reportDeclaration.getInn(), personInfo.getInn());
-//        reportDeclaration.setValueToField(reportDeclaration.getAccountant(), personInfo.getAccountant());
-//        reportDeclaration.setValueToField(reportDeclaration.getAccountantInn(), personInfo.getAccountantInn());
-
 
         /***** Сохраняем отчет и отправляем *****/
 
