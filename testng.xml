@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Документы и отчеты" parallel="classes" thread-count="3" verbose="3" configfailurepolicy="continue">
+
+    <test name="eDocReportTest">
+        <classes>
+            <class name="tests.TestRunner">
+                <methods>
+                    <!--<include name="createNewReportDeclarationS0501408"/>-->
+                    <!--<include name="createNewReportDeclarationJ0301206"/>-->
+                    <!--<include name="checkCopyReport"/>-->
+                    <include name="createNewDocumentWithMoreVersion"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+</suite>

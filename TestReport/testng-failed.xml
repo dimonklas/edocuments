@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite thread-count="3" configfailurepolicy="continue" guice-stage="DEVELOPMENT" verbose="0" name="Failed suite [Документы и отчеты]" parallel="classes">
+  <test thread-count="3" verbose="0" name="eDocReportTest(failed)" parallel="classes">
+    <classes>
+      <class name="tests.TestRunner">
+        <methods>
+          <include name="createNewReportDeclarationS0501408"/>
+          <include name="authorization"/>
+          <include name="setUp"/>
+        </methods>
+      </class> <!-- tests.TestRunner -->
+    </classes>
+  </test> <!-- eDocReportTest(failed) -->
+</suite> <!-- Failed suite [Документы и отчеты] -->
