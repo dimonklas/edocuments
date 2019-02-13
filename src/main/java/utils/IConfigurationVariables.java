@@ -91,4 +91,8 @@ public interface IConfigurationVariables extends Config {
 
     String pbKey();
     String pbKeyPassword();
+
+    /***** Создание отчета *****/
+    String docName();
+
 }

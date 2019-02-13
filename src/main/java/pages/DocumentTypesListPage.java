@@ -101,7 +101,7 @@ public class DocumentTypesListPage implements WorkingWithBrowserTabs {
     }
 
     @Step("Проверка поиска по значению \"{value}\"")
-    public void search(String value) {
+    public void searchDocument(String value) {
         refresh();
         searchField.shouldBe(visible).sendKeys(value);
         StringBuilder stringBuilder = new StringBuilder();
@@ -116,6 +116,16 @@ public class DocumentTypesListPage implements WorkingWithBrowserTabs {
         } else {
             log.info("Записи отсутствуют");
         }
+    }
+
+    @Step("Проверка поиска по значению \"{value}\"")
+    public OpenCreateDocument searchAndOpenDocument(String value) {
+        refresh();
+        searchField.shouldBe(visible).sendKeys(value);
+        $(By.xpath("//tbody//tr")).click();
+        viewDocButton.click();
+        closeBrowserTab("Типы документов");
+        return new OpenCreateDocument();
     }
 
     @Step("Удаление документа по значению \"{valueForDelete}\"")
@@ -135,6 +145,7 @@ public class DocumentTypesListPage implements WorkingWithBrowserTabs {
             acceptAlertButton.shouldBe(visible).click();
             sleep(1000);
         }
+        Assert.assertTrue($(By.xpath("//*[@id='types_table']//td[text()='Записи отсутствуют.']")).exists());
     }
 
     @Step("Переход на страницу создания документа")

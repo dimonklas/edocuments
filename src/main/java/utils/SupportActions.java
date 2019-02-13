@@ -18,11 +18,13 @@ public class SupportActions {
     }
 
     public static void clearField(SelenideElement element) {
-        int length = element.getValue().length();
-        element.click();
-        element.sendKeys(Keys.chord(Keys.END));
-        for (int i = 0; i < length; i++) {
-            element.sendKeys(Keys.chord(Keys.BACK_SPACE));
-        }
+//        int length = element.getValue().length();
+//        element.click();
+//        element.sendKeys(Keys.chord(Keys.END));
+//        for (int i = 0; i < length; i++) {
+//            element.sendKeys(Keys.chord(Keys.BACK_SPACE));
+//        }
+        element.sendKeys(Keys.chord(Keys.CONTROL, "a"));
+        element.sendKeys(Keys.chord(Keys.BACK_SPACE));
     }
 }

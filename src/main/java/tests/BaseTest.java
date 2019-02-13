@@ -86,7 +86,7 @@ public class BaseTest {
         }
     }
 
-    @AfterSuite(enabled = false)
+    @AfterSuite(enabled = true)
     public void tearDown() {
         open(Configuration.baseUrl);
         switchToDefaultContent();
@@ -96,7 +96,7 @@ public class BaseTest {
         LoginPage loginPage = new LoginPage();
         if (loginPage.needAuth()) loginPage.login(confVariable.userLogin(), confVariable.userPassword());
         DocumentTypesListPage typesListPage = new MainPage().openReportTypesListPage();
-        typesListPage.search("bla_name_");
-        typesListPage.deleteAllDocument("bla_name_");
+        typesListPage.searchDocument(confVariable.docName());
+        typesListPage.deleteAllDocument(confVariable.docName());
     }
 }

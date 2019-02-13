@@ -1,6 +1,5 @@
 package tests;
 
-import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
 import lombok.extern.log4j.Log4j;
@@ -13,9 +12,10 @@ import org.testng.annotations.Test;
 import pages.*;
 import pages.document.*;
 import utils.AllureOnFailListener;
+import utils.DateUtil;
 import utils.IConfigurationVariables;
 
-import java.util.Map;
+import java.util.ArrayList;
 
 import static com.codeborne.selenide.Selenide.$;
 import static org.testng.Assert.assertEquals;
@@ -63,114 +63,125 @@ public class TestRunner extends BaseTest {
     public void checkSearchOnDocsTypes() {
         DocumentTypesListPage documentTypesListPage = new MainPage().openReportTypesListPage();
         addStepToTheReport("Поиск по значению S0210110");
-        documentTypesListPage.search("S0210110");
+        documentTypesListPage.searchDocument("S0210110");
     }
 
     @Story("Создание нового типа без версии документа")
     @Test(description = "Создание нового документа без указания версии")
     public void createNewDocument() {
+        /***** Генерим тестовые данные *****/
+        CreateDocumentData data = CreateDocumentData.builder()
+                .docName(CV.docName() + new DateUtil().getCurrentDateTime("hhmmssSSS"))
+                .service("Фискальная служба")
+                .gateway("Шлюз службы статистики")
+                .groupJournal(true)
+                .finReport(true)
+                .vddoc("123")
+                .groupId("777")
+                .build();
+
+        /***** Тест *****/
         addStepToTheReport("Переход на страницу создания документа");
         OpenCreateDocument typePage = new MainPage().openCreateNewTypePage();
         addStepToTheReport("Создания документа");
-        String docNumber = typePage.createNewDocumentTypeWithoutVersion();
+        String docId = typePage.createNewDocumentTypeWithoutVersion(data);
         MainPage mainPage = typePage.goToMainPage();
         DocumentTypesListPage typesListPage = mainPage.openReportTypesListPage();
-        typesListPage.search(docNumber);
-        typesListPage.deleteDocument(docNumber);
-        typesListPage.search(docNumber);
-        Assert.assertTrue($(By.xpath("//*[@id='types_table']//td[text()='Записи отсутствуют.']")).exists());
+        typePage = typesListPage.searchAndOpenDocument(data.getDocName());
+        typePage.checkDocument(data, docId);
     }
 
     @Story("Создание нового типа с версией документа")
     @Test(description = "Создание нового документа с указанием версии")
     public void createNewDocumentWithVersion() {
-        addStepToTheReport("Переход на страницу создания документа");
-        OpenCreateDocument typePage = new MainPage().openCreateNewTypePage();
-        addStepToTheReport("Создания документа");
-        String docNumber = typePage.createNewDocumentTypeWithVersion(5);
-        MainPage mainPage = typePage.goToMainPage();
-        DocumentTypesListPage typesListPage = mainPage.openReportTypesListPage();
-        typesListPage.search(docNumber);
-        typesListPage.deleteDocument(docNumber);
-        typesListPage.search(docNumber);
-        Assert.assertTrue($(By.xpath("//*[@id='types_table']//td[text()='Записи отсутствуют.']")).exists());
-    }
+        /***** Генерим тестовые данные *****/
+        CreateDocumentData documentData = CreateDocumentData.builder()
+                .docName(CV.docName() + new DateUtil().getCurrentDateTime("hhmmssSSS"))
+                .service("Фискальная служба")
+                .gateway("Шлюз службы статистики")
+                .groupJournal(true)
+                .finReport(true)
+                .vddoc("123")
+                .groupId("777")
+                .build();
+        ArrayList<VersionData> versionList = new ArrayList<>();
+        versionList.add(VersionData.builder().date("2018-01-25").comType("Юр. лицо").typeReportPeriod("Квартал").cumulativeTotal(true).build());
+        versionList.add(VersionData.builder().date("2019-01-25").comType("Физ. лицо").typeReportPeriod("Без периода").cumulativeTotal(false).build());
+        versionList.add(VersionData.builder().date("2018-01-25").comType("Юр. лицо").typeReportPeriod("Месяц").cumulativeTotal(false).build());
+        versionList.add(VersionData.builder().date("2018-01-25").comType("Юр. лицо").typeReportPeriod("Квартал").cumulativeTotal(true).build());
 
-    @Story("Создание нового типа с несколькими версиями документа")
-    @Test(description = "Создание нового документа с указанием версии")
-    public void createNewDocumentWithMoreVersion() {
-        addStepToTheReport("Переход на страницу создания документа");
+        /***** Тест *****/
         OpenCreateDocument typePage = new MainPage().openCreateNewTypePage();
-        addStepToTheReport("Создания документа");
-        String docNumber = typePage.createNewDocumentTypeWithVersion(2);
+        String docId = typePage.createNewDocumentTypeWithVersion(documentData, versionList);
         MainPage mainPage = typePage.goToMainPage();
         DocumentTypesListPage typesListPage = mainPage.openReportTypesListPage();
-        typesListPage.search(docNumber);
-        typesListPage.deleteDocument(docNumber);
-        typesListPage.search(docNumber);
-        Assert.assertTrue($(By.xpath("//*[@id='types_table']//td[text()='Записи отсутствуют.']")).exists());
+        typePage = typesListPage.searchAndOpenDocument(documentData.getDocName());
+        typePage.checkDocument(documentData, docId, versionList);
     }
 
     @Story("Проверка создания копии документа с версией")
     @Test(description = "Создание копии документа с версией")
     public void checkCopyDocumentWithVersion() {
-        addStepToTheReport("Переход на страницу создания документа");
+        /***** Генерим тестовые данные *****/
+        CreateDocumentData documentData = CreateDocumentData.builder()
+                .docName(CV.docName() + new DateUtil().getCurrentDateTime("hhmmssSSS"))
+                .service("Фискальная служба")
+                .gateway("Шлюз службы статистики")
+                .groupJournal(true)
+                .finReport(true)
+                .vddoc("123")
+                .groupId("777")
+                .build();
+        ArrayList<VersionData> versionList = new ArrayList<>();
+        versionList.add(VersionData.builder().date("2018-01-25").comType("Юр. лицо").typeReportPeriod("Квартал").cumulativeTotal(true).build());
+        versionList.add(VersionData.builder().date("2019-01-25").comType("Физ. лицо").typeReportPeriod("Без периода").cumulativeTotal(false).build());
+        versionList.add(VersionData.builder().date("2018-01-25").comType("Юр. лицо").typeReportPeriod("Месяц").cumulativeTotal(false).build());
+        versionList.add(VersionData.builder().date("2018-01-25").comType("Юр. лицо").typeReportPeriod("Квартал").cumulativeTotal(true).build());
+
+        /***** Тест *****/
         OpenCreateDocument typePage = new MainPage().openCreateNewTypePage();
-        addStepToTheReport("Создания документа");
-        String docNumber = typePage.createNewDocumentTypeWithVersion(7);
-        addStepToTheReport("На главную страницу");
+        typePage.createNewDocumentTypeWithVersion(documentData, versionList);
         MainPage mainPage = typePage.goToMainPage();
-        addStepToTheReport("Открываем список документов");
         DocumentTypesListPage typesListPage = mainPage.openReportTypesListPage();
-        addStepToTheReport("Ищем документ со значением " + docNumber);
-        typesListPage.search(docNumber);
-        addStepToTheReport("Нажимаем на кнопку \"Копировать\"");
-        typePage = typesListPage.clickToCopyButton(docNumber);
-        addStepToTheReport("Нажимаем на кнопку \"Сохранить\"");
-        typePage.saveCurrentDoc();
-        addStepToTheReport("Нажимаем на Tittle страницы и идём переходим на главную страницу");
+        typesListPage.searchDocument(documentData.getDocName());
+        typePage = typesListPage.clickToCopyButton(documentData.getDocName());
+        String docCopyId = typePage.saveCurrentDoc();
         mainPage = typePage.goToMainPage();
-        addStepToTheReport("Открываем список документов");
         typesListPage = mainPage.openReportTypesListPage();
-        addStepToTheReport("Ищем документ со значением " + docNumber);
-        typesListPage.search(docNumber);
-        addStepToTheReport("Сверяем документы");
+        typesListPage.searchDocument(documentData.getDocName());
         typesListPage.checkTwoRows();
-        addStepToTheReport("Удаляем документ со значением " + docNumber);
-        typesListPage.deleteDocument(docNumber);
-        addStepToTheReport("Удаляем документ со значением " + docNumber);
-        typesListPage.deleteDocument(docNumber);
+        typePage = typesListPage.searchAndOpenDocument(docCopyId);
+        typePage.checkDocument(documentData, docCopyId, versionList);
     }
 
     @Story("Проверка создания копии документа без версии")
     @Test(description = "Создание копии документа без версии")
     public void checkCopyDocumentWithoutVersion() {
-        addStepToTheReport("Переход на страницу создания документа");
+        /***** Генерим тестовые данные *****/
+        CreateDocumentData documentData = CreateDocumentData.builder()
+                .docName(CV.docName() + new DateUtil().getCurrentDateTime("hhmmssSSS"))
+                .service("Фискальная служба")
+                .gateway("Шлюз службы статистики")
+                .groupJournal(true)
+                .finReport(true)
+                .vddoc("123")
+                .groupId("777")
+                .build();
+
+        /***** Тест *****/
         OpenCreateDocument typePage = new MainPage().openCreateNewTypePage();
-        addStepToTheReport("Создания документа");
-        String docNumber = typePage.createNewDocumentTypeWithoutVersion();
-        addStepToTheReport("На главную страницу");
+        typePage.createNewDocumentTypeWithoutVersion(documentData);
         MainPage mainPage = typePage.goToMainPage();
-        addStepToTheReport("Открываем список документов");
         DocumentTypesListPage typesListPage = mainPage.openReportTypesListPage();
-        addStepToTheReport("Ищем документ со значением " + docNumber);
-        typesListPage.search(docNumber);
-        addStepToTheReport("Нажимаем на кнопку \"Копировать\"");
-        typePage = typesListPage.clickToCopyButton(docNumber);
-        addStepToTheReport("Нажимаем на кнопку \"Сохранить\"");
-        typePage.saveCurrentDoc();
-        addStepToTheReport("Нажимаем на Tittle страницы и идём переходим на главную страницу");
+        typesListPage.searchDocument(documentData.getDocName());
+        typePage = typesListPage.clickToCopyButton(documentData.getDocName());
+        String docCopyId = typePage.saveCurrentDoc();
         mainPage = typePage.goToMainPage();
-        addStepToTheReport("Открываем список документов");
         typesListPage = mainPage.openReportTypesListPage();
-        addStepToTheReport("Ищем документ со значением " + docNumber);
-        typesListPage.search(docNumber);
-        addStepToTheReport("Сверяем документы");
+        typesListPage.searchDocument(documentData.getDocName());
         typesListPage.checkTwoRows();
-        addStepToTheReport("Удаляем документ со значением " + docNumber);
-        typesListPage.deleteDocument(docNumber);
-        addStepToTheReport("Удаляем документ со значением " + docNumber);
-        typesListPage.deleteDocument(docNumber);
+        typePage = typesListPage.searchAndOpenDocument(docCopyId);
+        typePage.checkDocument(documentData, docCopyId);
     }
 
 
@@ -226,7 +237,7 @@ public class TestRunner extends BaseTest {
         addStepToTheReport("Проверка правильнрости перехода");
         documentTypesListPage.checkDocumentTypesListPage();
         addStepToTheReport("Поиск документа с формой \"J0301206\"");
-        documentTypesListPage.search("0301206");
+        documentTypesListPage.searchDocument("0301206");
         OpenCreateDocument document = documentTypesListPage.openDocument("0301206");
 
         CreateReportDeclarationJ0301206 reportDeclaration = document.openCreateReportDeclarationJ0301206();
@@ -260,21 +271,15 @@ public class TestRunner extends BaseTest {
     @Test(description = "создание и удаления новых версий в документе")
     public void checkAddVersion() {
         /***** Содание данных для теста *****/
-        VersionData version1 = VersionData.builder().date("2018.01.25").comType("Юр. лицо").typeReportPeriod("Квартал").cumulativeTotal(true).build();
-        VersionData version2 = VersionData.builder().date("2018.10.05").comType("Физ. лицо").typeReportPeriod("Месяц").cumulativeTotal(false).build();
-        VersionData version3 = VersionData.builder().date("2017.09.09").comType("Юр. лицо").typeReportPeriod("Без периода").cumulativeTotal(false).build();
+        ArrayList<VersionData> versionList = new ArrayList<>();
+        versionList.add(VersionData.builder().date("2018-01-25").comType("Юр. лицо").typeReportPeriod("Квартал").cumulativeTotal(true).build());
+        versionList.add(VersionData.builder().date("2019-01-25").comType("Физ. лицо").typeReportPeriod("Без периода").cumulativeTotal(false).build());
+        versionList.add(VersionData.builder().date("2018-01-25").comType("Юр. лицо").typeReportPeriod("Месяц").cumulativeTotal(false).build());
+        versionList.add(VersionData.builder().date("2018-01-25").comType("Юр. лицо").typeReportPeriod("Квартал").cumulativeTotal(true).build());
 
-        addStepToTheReport("Переход на страницу создания документа");
         OpenCreateDocument typePage = new MainPage().openCreateNewTypePage();
-        addStepToTheReport("Добавление версии 1");
-        typePage.addVersionToDocument(version1.getDate(), version1.getComType(), version1.getTypeReportPeriod(), version1.isCumulativeTotal());
-        addStepToTheReport("Добавление версии 2");
-        typePage.addVersionToDocument(version2.getDate(), version2.getComType(), version2.getTypeReportPeriod(), version2.isCumulativeTotal());
-        addStepToTheReport("Добавление версии 3");
-        typePage.addVersionToDocument(version3.getDate(), version3.getComType(), version3.getTypeReportPeriod(), version3.isCumulativeTotal());
-        addStepToTheReport("Удаление всех версий");
+        typePage.addVersionToDocument(versionList);
         typePage.deleteAllVersions();
-        addStepToTheReport("Проверка отсутствия версий");
         Assert.assertFalse(typePage.checkVersionExists(), "Количество версий документа больше одного");
     }
 
@@ -319,7 +324,7 @@ public class TestRunner extends BaseTest {
         addStepToTheReport("Проверка правильнрости перехода");
         documentTypesListPage.checkDocumentTypesListPage();
         addStepToTheReport("Поиск документа с формой \"S0501408\"");
-        documentTypesListPage.search("S0501408");
+        documentTypesListPage.searchDocument("S0501408");
         OpenCreateDocument document = documentTypesListPage.openDocument("S0501408");
 
         CreateReportDeclarationS0501408 reportDeclaration = document.openCreateReportDeclarationS0501408();
@@ -362,7 +367,7 @@ public class TestRunner extends BaseTest {
     }
 
     @Story("Копирование отчета S0501408")
-    @Test(description = "Копирование отчета (S0501408)")
+    @Test(description = "Копирование отчета (S0501408)", enabled = false)
     public void checkCopyReport() {
         /***** Генерим данные для заполнения документа *****/
         DeclarationDataS0501408 dataDeclaration = DeclarationDataS0501408.builder()
@@ -401,7 +406,7 @@ public class TestRunner extends BaseTest {
         addStepToTheReport("Проверка правильнрости перехода");
         documentTypesListPage.checkDocumentTypesListPage();
         addStepToTheReport("Поиск документа с формой \"S0501408\"");
-        documentTypesListPage.search("S0501408");
+        documentTypesListPage.searchDocument("S0501408");
         OpenCreateDocument document = documentTypesListPage.openDocument("S0501408");
 
         CreateReportDeclarationS0501408 reportDeclaration = document.openCreateReportDeclarationS0501408();
