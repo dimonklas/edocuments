@@ -4,7 +4,6 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
 import lombok.extern.log4j.Log4j;
 import org.aeonbits.owner.ConfigFactory;
-import org.openqa.selenium.By;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Listeners;
@@ -17,7 +16,6 @@ import utils.IConfigurationVariables;
 
 import java.util.ArrayList;
 
-import static com.codeborne.selenide.Selenide.$;
 import static org.testng.Assert.assertEquals;
 import static utils.SupportActions.generateRandomFloatNumber;
 

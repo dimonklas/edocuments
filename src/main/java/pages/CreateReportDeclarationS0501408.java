@@ -18,7 +18,6 @@ import static com.codeborne.selenide.Selenide.*;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotEquals;
 import static utils.SupportActions.clearField;
-import static utils.SupportActions.waitForAjax;
 
 @Log4j
 @Getter
@@ -137,14 +136,14 @@ public class CreateReportDeclarationS0501408 {
     public void saveReport() {
         switchTo().defaultContent();
         saveReportButton.click();
-        waitForAjax(1000);
+        sleep(1000);
         if (shadowWindow.exists()) confirmSaveReport.shouldBe(visible).click();
     }
 
     @Step("Подписать и отправить отчет")
     public void subscribeAndSendReport() {
         subscribeAndSendButton.click();
-        waitForAjax(1000);
+        sleep(1000);
         switchTo().frame(iframeSendReport);
         if (pbKeysSelect.is(visible)){
             pbKeysSelect.shouldBe(visible).click();
@@ -155,12 +154,12 @@ public class CreateReportDeclarationS0501408 {
             roleSelect.selectOption("Директор");
             keysSave.click();
             switchTo().defaultContent();
-            waitForAjax(5000);
+            sleep(5000);
         } else {
             passwordKeyInput.shouldBe(visible).sendKeys(CV.pbKeyPassword());
             signAndSendButton.click();
             switchTo().defaultContent();
-            waitForAjax(5000);
+            sleep(5000);
         }
     }
 
@@ -168,7 +167,7 @@ public class CreateReportDeclarationS0501408 {
     public String waitReportStatusChange() {
         int countWait = 0;
         while (reportStage.getText().equals("Надіслано, очікуйте...") && countWait < 15) {
-            waitForAjax(60000);
+            sleep(60000);
             refresh();
             countWait++;
         }

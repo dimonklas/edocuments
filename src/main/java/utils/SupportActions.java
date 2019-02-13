@@ -13,18 +13,15 @@ public class SupportActions {
         return String.format("%." + numbersAfterPoint + "f", (Math.random()*100+10)).replace(",", ".");
     }
 
-    public static void waitForAjax(int number) {
-        sleep(number);
-    }
-
     public static void clearField(SelenideElement element) {
+        element.sendKeys(Keys.chord(Keys.CONTROL, "a"));
+        element.sendKeys(Keys.chord(Keys.BACK_SPACE));
+
 //        int length = element.getValue().length();
 //        element.click();
 //        element.sendKeys(Keys.chord(Keys.END));
 //        for (int i = 0; i < length; i++) {
 //            element.sendKeys(Keys.chord(Keys.BACK_SPACE));
 //        }
-        element.sendKeys(Keys.chord(Keys.CONTROL, "a"));
-        element.sendKeys(Keys.chord(Keys.BACK_SPACE));
     }
 }

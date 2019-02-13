@@ -15,7 +15,6 @@ import java.util.HashMap;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
 import static utils.SupportActions.clearField;
-import static utils.SupportActions.waitForAjax;
 
 @Log4j
 @Getter
@@ -206,17 +205,17 @@ public class CreateReportDeclarationJ0301206 {
     public void saveReport() {
         switchTo().defaultContent();
         saveReportButton.click();
-        waitForAjax(1000);
+        sleep(1000);
         if (shadowWindow.exists()) confirmSaveReport.shouldBe(visible).click();
     }
 
     @Step("Подписать и отправить отчет")
     public void subscribeAndSendReport() {
         subscribeAndSendButton.click();
-        waitForAjax(1000);
+        sleep(1000);
         confirmSaveReport.shouldBe(visible).click(); //для отчета у которого есть ошибка
         switchTo().frame(iframeSendReport);
-        waitForAjax(1000);
+        sleep(1000);
         if (pbKeysSelect.is(visible)) {
             pbKeysSelect.shouldBe(visible).click();
             keyPathInput.sendKeys(new File("src/main/resources/supportFiles/pb_3324314930.jks").getAbsolutePath());
@@ -228,7 +227,7 @@ public class CreateReportDeclarationJ0301206 {
         } else {
             passwordKeyInput.shouldBe(visible).sendKeys("qwerty123");
             signAndSendButton.click();
-            waitForAjax(5000);
+            sleep(5000);
         }
     }
 
@@ -236,7 +235,7 @@ public class CreateReportDeclarationJ0301206 {
     public String waitReportStatusChange() {
         int countWait = 0;
         while (!reportStage.getText().equals("Надіслано, очікуйте...") && countWait < 5) {
-            waitForAjax(5000);
+            sleep(5000);
             refresh();
             countWait++;
         }

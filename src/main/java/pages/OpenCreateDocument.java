@@ -134,16 +134,16 @@ public class OpenCreateDocument implements WorkingWithBrowserTabs {
         }
     }
 
-//    @Step("Добавление версии в документ")
-//    public void addVersionToDocument() {
-//        Random random = new Random();
-//        addVersioButton.click();
-//        dateFromVersion.last().sendKeys(new DateUtil().getCurrentDateTime("yyyy.MM.dd"));
-//        comTypeVersion.last().selectOption(1 + random.nextInt(3-1));
-//        int num = 1 + random.nextInt(5-1);
-//        periodTypeVersion.last().selectOption(num);
-//        if (num == 3) cumulativeControl.last().click();
-//    }
+    @Step("Добавление версии в документ")
+    public void addVersionToDocument() {
+        Random random = new Random();
+        addVersioButton.click();
+        dateFromVersion.last().sendKeys(new DateUtil().getCurrentDateTime("yyyy.MM.dd"));
+        comTypeVersion.last().selectOption(1 + random.nextInt(3-1));
+        int num = 1 + random.nextInt(5-1);
+        periodTypeVersion.last().selectOption(num);
+        if (num == 3) cumulativeControl.last().click();
+    }
 
 
     @Step("Переход на главную страницу")
