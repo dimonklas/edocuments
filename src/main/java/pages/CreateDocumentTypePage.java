@@ -64,7 +64,7 @@ public class CreateDocumentTypePage implements WorkingWithBrowserTabs {
         }
         if (!data.isFinReport() && finReportChecked) finReportCheckBox.click();
 
-        if ($$(By.xpath("//table[@id='versions_table']//tbody/tr")).size() > 0) deleteAllVersions();
+        if ($$(By.xpath("//table[@id='versions_table']//tbody/tr")).size() > 0) removeAllVersions();
 
         saveButton.shouldBe(visible).click();
         return $(By.id("page_title")).getText().replaceAll("\\D+", "");
@@ -232,7 +232,7 @@ public class CreateDocumentTypePage implements WorkingWithBrowserTabs {
 
 
     @Step("Удаление всех версий с документа")
-    public void deleteAllVersions() {
+    public void removeAllVersions() {
         int count = comTypeVersion.size();
         for (int i = 0; i < count ; i++) {
             $(By.xpath("//table[@id='versions_table']//td[@class=' row-checkbox']")).click();
