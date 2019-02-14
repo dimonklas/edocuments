@@ -150,7 +150,7 @@ public class TestRunner extends BaseTest {
         DocumentTypesListPage typesListPage = mainPage.openReportTypesListPage();
         typesListPage.searchDocument(documentData.getDocName());
         typePage = typesListPage.selectAndCopyDocType(documentData.getDocName());
-        String docCopyId = typePage.saveCurrentDoc();
+        String docCopyId = typePage.saveCurrentDocAndReturnId();
         mainPage = typePage.goToMainPage();
         typesListPage = mainPage.openReportTypesListPage();
         typesListPage.searchDocument(documentData.getDocName());
@@ -180,7 +180,7 @@ public class TestRunner extends BaseTest {
         DocumentTypesListPage typesListPage = mainPage.openReportTypesListPage();
         typesListPage.searchDocument(documentData.getDocName());
         typePage = typesListPage.selectAndCopyDocType(documentData.getDocName());
-        String docCopyId = typePage.saveCurrentDoc();
+        String docCopyId = typePage.saveCurrentDocAndReturnId();
         mainPage = typePage.goToMainPage();
         typesListPage = mainPage.openReportTypesListPage();
         typesListPage.searchDocument(documentData.getDocName());
@@ -367,24 +367,6 @@ public class TestRunner extends BaseTest {
 
         /***** Проверка значений в полях футера после сохранения *****/
         reportDeclaration.declarationJ0301206Fields.forEach((key, value) -> reportDeclaration.checkValueInPersonalInfo(key, value));
-    }
-
-    @Story("Проверка создания и удаления новых версий")
-    @Test(description = "создание и удаления новых версий в документе", enabled = false)
-    public void checkAddVersion() {
-        /***** Содание данных для теста *****/
-        ArrayList<VersionData> versionList = new ArrayList<>();
-        versionList.add(VersionData.builder().date("2018-01-25").comType("Юр. лицо").typeReportPeriod("Квартал").cumulativeTotal(true).build());
-        versionList.add(VersionData.builder().date("2019-01-25").comType("Физ. лицо").typeReportPeriod("Без периода").cumulativeTotal(false).build());
-        versionList.add(VersionData.builder().date("2018-01-25").comType("Юр. лицо").typeReportPeriod("Месяц").cumulativeTotal(false).build());
-        versionList.add(VersionData.builder().date("2018-01-25").comType("Юр. лицо").typeReportPeriod("Квартал").cumulativeTotal(true).build());
-
-        CreateDocumentTypePage typePage = new MainPage().openCreateNewTypePage();
-        typePage.addVersionToDocument(versionList);
-        typePage.deleteAllVersions();
-        MainPage mainPage = typePage.goToMainPage();
-        mainPage.openReportTypesListPage();
-        assertFalse(typePage.checkVersionExists(), "Количество версий документа больше одного");
     }
 
     @Story("Создание документа (позитивный сценарий) S0501408")

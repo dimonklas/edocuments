@@ -207,7 +207,7 @@ public class CreateDocumentTypePage implements WorkingWithBrowserTabs {
     }
 
     @Step("Сохранить текущий документ")
-    public String saveCurrentDoc(){
+    public String saveCurrentDocAndReturnId(){
         saveButton.click();
         return $(By.id("page_title")).getText().replaceAll("\\D+", "");
     }
