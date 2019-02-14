@@ -43,7 +43,6 @@ public class TestRunner extends BaseTest {
     public void checkSortedAsc(String sorted) {
         DocumentTypesListPage documentTypesListPage = new MainPage().openReportTypesListPage();
         documentTypesListPage.checkDocumentTypesListPage();
-        addStepToTheReport("Сортировка по " + sorted);
         documentTypesListPage.checkSortingAsc(sorted);
     }
 
@@ -52,7 +51,6 @@ public class TestRunner extends BaseTest {
     public void checkSortedDesc(String sorted) {
         DocumentTypesListPage documentTypesListPage = new MainPage().openReportTypesListPage();
         documentTypesListPage.checkDocumentTypesListPage();
-        addStepToTheReport("Сортировка по " + sorted);
         documentTypesListPage.checkSortingDesc(sorted);
     }
 
@@ -60,7 +58,6 @@ public class TestRunner extends BaseTest {
     @Test(description = "Поиск документа \"S0210110\"")
     public void checkSearchOnDocsTypes() {
         DocumentTypesListPage documentTypesListPage = new MainPage().openReportTypesListPage();
-        addStepToTheReport("Поиск по значению S0210110");
         documentTypesListPage.searchDocument("S0210110");
     }
 
@@ -79,9 +76,7 @@ public class TestRunner extends BaseTest {
                 .build();
 
         /***** Тест *****/
-        addStepToTheReport("Переход на страницу создания документа");
         OpenCreateDocument typePage = new MainPage().openCreateNewTypePage();
-        addStepToTheReport("Создания документа");
         String docId = typePage.createNewDocumentTypeWithoutVersion(data);
         MainPage mainPage = typePage.goToMainPage();
         DocumentTypesListPage typesListPage = mainPage.openReportTypesListPage();
@@ -230,11 +225,8 @@ public class TestRunner extends BaseTest {
                 .accountantInn(CV.accountantInn())
                 .build();
 
-        addStepToTheReport("Перейти в список документов");
         DocumentTypesListPage documentTypesListPage = new MainPage().openReportTypesListPage();
-        addStepToTheReport("Проверка правильнрости перехода");
         documentTypesListPage.checkDocumentTypesListPage();
-        addStepToTheReport("Поиск документа с формой \"J0301206\"");
         documentTypesListPage.searchDocument("0301206");
         OpenCreateDocument document = documentTypesListPage.openDocument("0301206");
 
@@ -317,11 +309,8 @@ public class TestRunner extends BaseTest {
                 .email(CV.email())
                 .build();
 
-        addStepToTheReport("Перейти в список документов");
         DocumentTypesListPage documentTypesListPage = new MainPage().openReportTypesListPage();
-        addStepToTheReport("Проверка правильнрости перехода");
         documentTypesListPage.checkDocumentTypesListPage();
-        addStepToTheReport("Поиск документа с формой \"S0501408\"");
         documentTypesListPage.searchDocument("S0501408");
         OpenCreateDocument document = documentTypesListPage.openDocument("S0501408");
 
@@ -399,11 +388,8 @@ public class TestRunner extends BaseTest {
                 .email(CV.email())
                 .build();
 
-        addStepToTheReport("Перейти в список документов");
         DocumentTypesListPage documentTypesListPage = new MainPage().openReportTypesListPage();
-        addStepToTheReport("Проверка правильнрости перехода");
         documentTypesListPage.checkDocumentTypesListPage();
-        addStepToTheReport("Поиск документа с формой \"S0501408\"");
         documentTypesListPage.searchDocument("S0501408");
         OpenCreateDocument document = documentTypesListPage.openDocument("S0501408");
 

@@ -62,11 +62,6 @@ public class BaseTest {
     }
 
 
-    @Step("{nameStep}")
-    public void addStepToTheReport(String nameStep) {
-        log.info(nameStep);
-    }
-
     public void switchToDefaultContent() {
         long waitCount = 0;
         long sleep = 1000;
