@@ -4,14 +4,12 @@ import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import lombok.extern.log4j.Log4j;
 import org.openqa.selenium.By;
-import utils.ICustomWait;
 
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
-import static com.codeborne.selenide.Selenide.sleep;
 
 @Log4j
-public class LoginPage implements ICustomWait {
+public class LoginPage {
 
     private SelenideElement loginField = $(By.xpath("//input[@name='login']"));
     private SelenideElement passwordField = $(By.xpath("//input[@name='password']"));
