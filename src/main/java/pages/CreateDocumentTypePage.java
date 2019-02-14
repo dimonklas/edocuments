@@ -238,8 +238,6 @@ public class CreateDocumentTypePage implements WorkingWithBrowserTabs {
             $(By.xpath("//table[@id='versions_table']//td[@class=' row-checkbox']")).click();
             deleteVersioButton.click();
         }
-//        goToMainPage();
-//        confirm();
     }
 
     @Step("Проверка наличия версий в документе")

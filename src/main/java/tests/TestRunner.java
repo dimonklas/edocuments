@@ -347,10 +347,10 @@ public class TestRunner extends BaseTest {
         reportDeclaration.declarationJ0301206Fields.forEach((key, value) -> reportDeclaration.checkValueInGeneralInfo(key, value, dataProviderValue));
 
         /***** Проверка значений в полях расчетов *****/
-        reportDeclaration.declarationJ0301206Fields.forEach((key, value) -> reportDeclaration.checkValueInCalculationTax(key, value));
+        reportDeclaration.declarationJ0301206Fields.forEach(reportDeclaration::checkValueInCalculationTax);
 
         /***** Проверка значений в полях футера *****/
-        reportDeclaration.declarationJ0301206Fields.forEach((key, value) -> reportDeclaration.checkValueInPersonalInfo(key, value));
+        reportDeclaration.declarationJ0301206Fields.forEach(reportDeclaration::checkValueInPersonalInfo);
 
         /**** Проверка формул в документе *****/
         assertEquals("0.00", reportDeclaration.getResultSum().getValue(), "Неправильный расчет суммы");
@@ -363,10 +363,10 @@ public class TestRunner extends BaseTest {
         reportDeclaration.declarationJ0301206Fields.forEach((key, value) -> reportDeclaration.checkValueInGeneralInfo(key, value, dataProviderValue));
 
         /***** Проверка значений в полях расчетов после сохранения *****/
-        reportDeclaration.declarationJ0301206Fields.forEach((key, value) -> reportDeclaration.checkValueInCalculationTax(key, value));
+        reportDeclaration.declarationJ0301206Fields.forEach(reportDeclaration::checkValueInCalculationTax);
 
         /***** Проверка значений в полях футера после сохранения *****/
-        reportDeclaration.declarationJ0301206Fields.forEach((key, value) -> reportDeclaration.checkValueInPersonalInfo(key, value));
+        reportDeclaration.declarationJ0301206Fields.forEach(reportDeclaration::checkValueInPersonalInfo);
     }
 
     @Story("Создание документа (позитивный сценарий) S0501408")
