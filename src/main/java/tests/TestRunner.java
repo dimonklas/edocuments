@@ -1,5 +1,6 @@
 package tests;
 
+import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
 import lombok.extern.log4j.Log4j;
@@ -15,8 +16,10 @@ import utils.DateUtil;
 import utils.IConfigurationVariables;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
 import static utils.SupportActions.generateRandomFloatNumber;
 
 
@@ -35,6 +38,17 @@ public class TestRunner extends BaseTest {
                  {"Наименование документа"},
                  {"Служба"},
                  {"Шлюз"},
+        };
+    }
+
+    @DataProvider
+    public Object[][] getDataForCreateNegativeDoc() {
+        return new Object[][]
+        {
+//                {"~!@#$^&*()_+{}|:</\\\\>?\\\"|Ё!№;:?*().,"},
+                {"qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM"},
+                {"ёйцукенгшщзхъфывапролджэячсмитьбюЁЙЦУКЕНГШЩЗФЫВАПРОЛДЖЭХЪЯЧСМИТЬБЮ"},
+//                {"-10"}
         };
     }
 
@@ -257,6 +271,99 @@ public class TestRunner extends BaseTest {
         assertEquals("Надіслано, очікуйте...", reportDeclaration.waitReportStatusChange(), "Неверный статус формы");
     }
 
+    @Story("Создание документа (негативный сценарий) J0301206")
+    @Test(description = "Создать новый документ (J0301206)", dataProvider = "getDataForCreateNegativeDoc")
+    public void createNewReportDeclarationNegativeJ0301206(String dataProviderValue) {
+
+        /***** Генерим данные для заполнения документа *****/
+        DeclarationDataGeneralInformationJ0301206 declarationData = DeclarationDataGeneralInformationJ0301206.builder()
+                .declarationType(new CreateReportDeclarationJ0301206(CV).chooseReportNewCheckBox)
+                .specifiedPeriodType(new CreateReportDeclarationJ0301206(CV).chooseSpecifiedPeriodYear)
+                .year(dataProviderValue)
+                .comName(CV.comName())
+                .zip(dataProviderValue)
+                .sequenceNumber(dataProviderValue)
+                .kved(CV.kved())
+                .cityCode(dataProviderValue)
+                .innNumberOrPassport(CV.innNumberOrPassport())
+                .telNumber(CV.telNumber())
+                .faxNumber(CV.faxNumber())
+                .locationAddress(CV.locationAddress())
+                .email(CV.email())
+                .controlAuthority(CV.controlAuthority())
+                .build();
+
+        /***** Генерим данные для заполнения документа *****/
+        DeclarationDataCalculationTaxJ0301206 calculationTax = DeclarationDataCalculationTaxJ0301206.builder()
+                .sumName(CV.sumName())
+                .square(dataProviderValue)
+                .minSalary(dataProviderValue)
+                .countDays(dataProviderValue)
+                .percent(dataProviderValue)
+                .taxSum(dataProviderValue)
+                .taxSumSpecified(dataProviderValue)
+                .specifiedSum(dataProviderValue)
+                .fineSum(dataProviderValue)
+                .penaltySum(dataProviderValue)
+                .addText(CV.addText())
+                .addDeclaration(dataProviderValue)
+                .build();
+
+        /***** Генерим данные для заполнения документа *****/
+        DeclarationDataPersonInfoJ0301206 personInfo = DeclarationDataPersonInfoJ0301206.builder()
+                .dateDeclaration(dataProviderValue)
+                .FIO(CV.FIO())
+                .inn(CV.inn())
+                .accountant(CV.accountant())
+                .accountantInn(CV.accountantInn())
+                .build();
+
+        DocumentTypesListPage documentTypesListPage = new MainPage().openReportTypesListPage();
+        documentTypesListPage.checkDocumentTypesListPage();
+        documentTypesListPage.searchDocument("0301206");
+        OpenCreateDocument document = documentTypesListPage.openDocument("0301206");
+
+        CreateReportDeclarationJ0301206 reportDeclaration = document.openCreateReportDeclarationJ0301206();
+        reportDeclaration.clickEditButton();
+
+        /***** І. Загальні відомості *****/
+        declarationData.getDeclarationType().chooseTypeDeclaration();
+        declarationData.getSpecifiedPeriodType().chooseReportSpecifiedPeriod();
+
+        reportDeclaration.declarationJ0301206Fields.forEach((key, value) -> reportDeclaration.setValueToGeneralInfo(key, value, declarationData));
+
+        /**** ІІ. Розрахунок податкових зобов'язань збору за місця для паркування транспортних засобів *****/
+        reportDeclaration.declarationJ0301206Fields.forEach((key, value) -> reportDeclaration.setValueToCalculationTax(key, value, calculationTax));
+
+        /***** Заполнение персональных данных (футер страницы) *****/
+        reportDeclaration.declarationJ0301206Fields.forEach((key, value) -> reportDeclaration.setValueToPersonalInfo(key, value, personInfo));
+
+        /***** Проверка значений в полях хедера *****/
+        reportDeclaration.declarationJ0301206Fields.forEach((key, value) -> reportDeclaration.checkValueInGeneralInfo(key, value, dataProviderValue));
+
+        /***** Проверка значений в полях расчетов *****/
+        reportDeclaration.declarationJ0301206Fields.forEach((key, value) -> reportDeclaration.checkValueInCalculationTax(key, value));
+
+        /***** Проверка значений в полях футера *****/
+        reportDeclaration.declarationJ0301206Fields.forEach((key, value) -> reportDeclaration.checkValueInPersonalInfo(key, value));
+
+        /**** Проверка формул в документе *****/
+        assertEquals("0.00", reportDeclaration.getResultSum().getValue(), "Неправильный расчет суммы");
+        assertEquals("0.00", reportDeclaration.getResultSumForReportPeriod().getValue(), "Неправильный расчет суммы");
+
+        /***** Сохраняем отчет и отправляем *****/
+        reportDeclaration.saveReport();
+
+        /***** Проверка значений в полях хедера после сохранения *****/
+        reportDeclaration.declarationJ0301206Fields.forEach((key, value) -> reportDeclaration.checkValueInGeneralInfo(key, value, dataProviderValue));
+
+        /***** Проверка значений в полях расчетов после сохранения *****/
+        reportDeclaration.declarationJ0301206Fields.forEach((key, value) -> reportDeclaration.checkValueInCalculationTax(key, value));
+
+        /***** Проверка значений в полях футера после сохранения *****/
+        reportDeclaration.declarationJ0301206Fields.forEach((key, value) -> reportDeclaration.checkValueInPersonalInfo(key, value));
+    }
+
     @Story("Проверка создания и удаления новых версий")
     @Test(description = "создание и удаления новых версий в документе")
     public void checkAddVersion() {
@@ -270,7 +377,7 @@ public class TestRunner extends BaseTest {
         OpenCreateDocument typePage = new MainPage().openCreateNewTypePage();
         typePage.addVersionToDocument(versionList);
         typePage.deleteAllVersions();
-        Assert.assertFalse(typePage.checkVersionExists(), "Количество версий документа больше одного");
+        assertFalse(typePage.checkVersionExists(), "Количество версий документа больше одного");
     }
 
     @Story("Создание документа (позитивный сценарий) S0501408")

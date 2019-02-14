@@ -14,6 +14,7 @@ import java.util.HashMap;
 
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
+import static org.testng.Assert.assertEquals;
 import static utils.SupportActions.clearField;
 
 @Log4j
@@ -98,6 +99,9 @@ public class CreateReportDeclarationJ0301206 {
     private SelenideElement keysCancel = $(By.id("keys-cancel"));
     private SelenideElement reportStage = $(By.id("report_stage"));
 
+    private SelenideElement resultSum = $(By.name("T1RXXXXG7__row1"));
+    private SelenideElement resultSumForReportPeriod = $(By.name("R03G7"));
+
     public CreateReportDeclarationJ0301206(IConfigurationVariables CV) {
         this.CV = CV;
     }
@@ -162,17 +166,6 @@ public class CreateReportDeclarationJ0301206 {
         editButton.shouldBe(visible).click();
     }
 
-    @Step("Получить итоговую сумму налогов")
-    public String getResultSum() {
-        return $(By.name("T1RXXXXG7__row1")).getValue();
-    }
-
-    @Step("Получить итоговую сумму налогов за отчетный период")
-    public String getResultSumForReportPeriod() {
-        return $(By.name("R03G7")).getValue();
-    }
-
-
     @Step("Расчет ожидаемой суммы налога")
     public String calculationExpectedTax(String value1, String value2, String value3, String value4) {
         double num1 = Double.parseDouble(value1);
@@ -193,7 +186,6 @@ public class CreateReportDeclarationJ0301206 {
 
         return String.format("%.2f", (num1 * num2 * num3 * num4) / 100 - num5).replace(",", ".");
     }
-
 
     @Step("Обираемо контролюючий орган, до якого подається податкова декларація")
     public String setControlAuthorityDropdown(Integer value) {
@@ -322,6 +314,54 @@ public class CreateReportDeclarationJ0301206 {
             case "Головний бухгалтер":setValueToField(element, data.getAccountant());
                 break;
             case "Реєстраційний номер бухгалтера":setValueToField(element, data.getAccountantInn());
+                break;
+        }
+    }
+
+    @Step("Проверка поля {name} в загальних відомостях")
+    public void checkValueInGeneralInfo(SelenideElement element, String name, String fieldSetValue) {
+        switch (name){
+            case "Рік":assertEquals(element.getValue(), fieldSetValue.replaceAll("\\D+", ""));
+                break;
+            case "порядковий N":assertEquals(element.getValue(), fieldSetValue.replaceAll("\\D+", ""));
+                break;
+            case "поштовий індекс":assertEquals(element.getValue(), fieldSetValue.replaceAll("\\D+", ""));
+                break;
+            case "міжміський код":assertEquals(element.getValue(), fieldSetValue.replaceAll("\\D+", ""));
+                break;
+        }
+    }
+
+    @Step("Проверка поля {name} в розрахуноках податкових зобов'язань")
+    public void checkValueInCalculationTax(SelenideElement element, String name) {
+        switch (name){
+            case "Площа земельної ділянки":assertEquals(element.getValue(), "0.000");
+                break;
+            case "Мінімальна заробітна плата":assertEquals(element.getValue(), "0.00");
+                break;
+            case "Кількість днів провадження":assertEquals(element.getValue(), "0");
+                break;
+            case "Ставка збору":assertEquals(element.getValue(), "0.0000");
+                break;
+            case "Нарахована сума збору":assertEquals(element.getValue(), "0.00");
+                break;
+            case "сума збору за даними раніше поданої декларації":assertEquals(element.getValue(), "0.00");
+                break;
+            case "Уточнена сума":assertEquals(element.getValue(), "0.00");
+                break;
+            case "Сума штрафу":assertEquals(element.getValue(), "0.00");
+                break;
+            case "Сума пені":assertEquals(element.getValue(), "0.00");
+                break;
+            case "Доповнення до декларації":assertEquals(element.getValue(), "0");
+                break;
+        }
+    }
+
+    @Step("Заполнение поля {name} в персональну інформацію")
+    public void checkValueInPersonalInfo(SelenideElement element, String name) {
+        switch (name){
+            case "Дата заповнення":assertEquals(element.getValue(), "");
                 break;
         }
     }
