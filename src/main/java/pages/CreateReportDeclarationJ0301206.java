@@ -318,6 +318,7 @@ public class CreateReportDeclarationJ0301206 {
         }
     }
 
+    /***** Проверка данных в форме *****/
     @Step("Проверка поля {name} в загальних відомостях")
     public void checkValueInGeneralInfo(SelenideElement element, String name, String fieldSetValue) {
         switch (name){
@@ -362,6 +363,85 @@ public class CreateReportDeclarationJ0301206 {
     public void checkValueInPersonalInfo(SelenideElement element, String name) {
         switch (name){
             case "Дата заповнення":assertEquals(element.getValue(), "");
+                break;
+        }
+    }
+
+    /***** Проверка данніх в полях формі, после корректного заполнения ****/
+
+    @Step("Заполнение поля {name} в загальних відомостях")
+    public void checkValueToGeneralInfo(SelenideElement element, String name, DeclarationDataGeneralInformationJ0301206 data) {
+        switch (name){
+            case "Рік":assertEquals(element.getValue(), data.getYear());
+                break;
+            case "порядковий N":assertEquals(element.getValue(), data.getSequenceNumber());
+                break;
+            case "Платник податку":assertEquals(element.getValue(), data.getComName());
+                break;
+            case "Податковий номер платника":assertEquals(element.getValue(), data.getInnNumberOrPassport());
+                break;
+            case "КВЕД":assertEquals(element.getValue(), data.getKved());
+                break;
+            case "поштовий індекс":assertEquals(element.getValue(), data.getZip());
+                break;
+            case "міжміський код":assertEquals(element.getValue(), data.getCityCode());
+                break;
+            case "телефон":assertEquals(element.getValue(), data.getTelNumber());
+                break;
+            case "факс":assertEquals(element.getValue(), data.getFaxNumber());
+                break;
+            case "податкова адреса":assertEquals(element.getValue(), data.getLocationAddress());
+                break;
+            case "електронна адреса":assertEquals(element.getValue(), data.getEmail());
+                break;
+//            case "контролюючий орган":assertEquals(element.getValue(), data.getControlAuthority());
+//                break;
+        }
+    }
+
+    @Step("Заполнение поля {name} в розрахуноках податкових зобов'язань")
+    public void checkValueToCalculationTax(SelenideElement element, String name, DeclarationDataCalculationTaxJ0301206 data) {
+        switch (name){
+            case "Назва платежа":assertEquals(element.getValue(), data.getSumName());
+                break;
+            case "Площа земельної ділянки":assertEquals(element.getValue(), data.getSquare());
+                break;
+            case "Мінімальна заробітна плата":assertEquals(element.getValue(), data.getMinSalary());
+                break;
+            case "Кількість днів провадження":assertEquals(element.getValue(), data.getCountDays());
+                break;
+            case "Ставка збору":assertEquals(element.getValue(), data.getPercent());
+                break;
+            case "Нарахована сума збору":assertEquals(element.getValue(), data.getTaxSum());
+                break;
+            case "сума збору за даними раніше поданої декларації":assertEquals(element.getValue(), data.getTaxSumSpecified());
+                break;
+            case "Уточнена сума":assertEquals(element.getValue(), data.getSpecifiedSum());
+                break;
+            case "Сума штрафу":assertEquals(element.getValue(), data.getFineSum());
+                break;
+            case "Сума пені":assertEquals(element.getValue(), data.getPenaltySum());
+                break;
+            case "Зміст доповнення":assertEquals(element.getValue(), data.getAddText());
+                break;
+            case "Доповнення до декларації":assertEquals(element.getValue(), data.getAddDeclaration());
+                break;
+        }
+    }
+
+
+    @Step("Заполнение поля {name} в персональну інформацію")
+    public void checkValueToPersonalInfo(SelenideElement element, String name, DeclarationDataPersonInfoJ0301206 data) {
+        switch (name){
+            case "Дата заповнення":assertEquals(element.getValue(), data.getDateDeclaration());
+                break;
+            case "Керівник":assertEquals(element.getValue(), data.getFIO());
+                break;
+            case "Реєстраційний номер":assertEquals(element.getValue(), data.getInn());
+                break;
+            case "Головний бухгалтер":assertEquals(element.getValue(), data.getAccountant());
+                break;
+            case "Реєстраційний номер бухгалтера":assertEquals(element.getValue(), data.getAccountantInn());
                 break;
         }
     }

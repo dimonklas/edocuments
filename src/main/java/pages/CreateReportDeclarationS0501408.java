@@ -298,7 +298,7 @@ public class CreateReportDeclarationS0501408 {
     }
 
     @Step("проверяем в \"Експорт товарів\' поле {name}")
-    public void checktValueToExportProducts(SelenideElement element, String name, DeclarationDataS0501408 data){
+    public void checkValueToExportProducts(SelenideElement element, String name, DeclarationDataS0501408 data){
         switch (name) {
             case "Назва країни експорт":assertEquals(element.getValue(), data.getCountryNameExport());
                 break;
@@ -315,6 +315,16 @@ public class CreateReportDeclarationS0501408 {
             case "Кількість експортваних товарів експорт":assertEquals(element.getValue(), data.getCountProductsExport());
                 break;
             case "Вартість експортованих товарів експорт":assertEquals(element.getValue(), data.getProductPriceExport());
+                break;
+        }
+    }
+
+    @Step("проверяем в \"Експорт товарів\' поле {name}")
+    public void checkValueToExportProducts(SelenideElement element, String name){
+        switch (name) {
+            case "Кількість експортваних товарів експорт":assertEquals(element.getValue(), "0.000000");
+                break;
+            case "Вартість експортованих товарів експорт":assertEquals(element.getValue(), "0.000000");
                 break;
         }
     }
@@ -337,6 +347,16 @@ public class CreateReportDeclarationS0501408 {
             case "Кількість експортваних товарів імпорт":assertEquals(element.getValue(), data.getCountProductsImport());
                 break;
             case "Вартість експортованих товарів імпорт":assertEquals(element.getValue(), data.getProductPriceImport());
+                break;
+        }
+    }
+
+    @Step("проверяем в \"Імпорт товарів\' поле {name}")
+    public void checkValueToImportProducts(SelenideElement element, String name){
+        switch (name) {
+            case "Кількість експортваних товарів імпорт":assertEquals(element.getValue(), "0.000000");
+                break;
+            case "Вартість експортованих товарів імпорт":assertEquals(element.getValue(), "0.000000");
                 break;
         }
     }

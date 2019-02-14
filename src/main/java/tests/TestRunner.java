@@ -1,11 +1,9 @@
 package tests;
 
-import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
 import lombok.extern.log4j.Log4j;
 import org.aeonbits.owner.ConfigFactory;
-import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
@@ -16,7 +14,6 @@ import utils.DateUtil;
 import utils.IConfigurationVariables;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
@@ -262,17 +259,24 @@ public class TestRunner extends BaseTest {
         /**** Проверка формул в документе *****/
         String expectedTax = reportDeclaration.calculationExpectedTax(calculationTax.getSquare(), calculationTax.getMinSalary(), calculationTax.getCountDays(), calculationTax.getPercent());
         String expectedTaxReportPeriod = reportDeclaration.calculationExpectedTaxForReportPeriod(calculationTax.getSquare(), calculationTax.getMinSalary(), calculationTax.getCountDays(), calculationTax.getPercent(), calculationTax.getTaxSum());
-        assertEquals(expectedTax, reportDeclaration.getResultSum(), "Неправильный расчет суммы");
-        assertEquals(expectedTaxReportPeriod, reportDeclaration.getResultSumForReportPeriod(), "Неправильный расчет суммы");
+        assertEquals(expectedTax, reportDeclaration.getResultSum().getValue(), "Неправильный расчет суммы");
+        assertEquals(expectedTaxReportPeriod, reportDeclaration.getResultSumForReportPeriod().getValue(), "Неправильный расчет суммы");
 
-        /***** Сохраняем отчет и отправляем *****/
+        /***** Сохраняем отчет *****/
         reportDeclaration.saveReport();
+
+        /***** Проверяем данные после сохраниния *****/
+        reportDeclaration.declarationJ0301206Fields.forEach((key, value) -> reportDeclaration.checkValueToGeneralInfo(key, value, declarationData));
+        reportDeclaration.declarationJ0301206Fields.forEach((key, value) -> reportDeclaration.checkValueToCalculationTax(key, value, calculationTax));
+        reportDeclaration.declarationJ0301206Fields.forEach((key, value) -> reportDeclaration.checkValueToPersonalInfo(key, value, personInfo));
+
+        /***** Отправляем отчет *****/
         reportDeclaration.subscribeAndSendReport();
         assertEquals("Надіслано, очікуйте...", reportDeclaration.waitReportStatusChange(), "Неверный статус формы");
     }
 
     @Story("Создание документа (негативный сценарий) J0301206")
-    @Test(description = "Создать новый документ (J0301206)", dataProvider = "getDataForCreateNegativeDoc")
+    @Test(description = "Создать новый документ (J0301206) с некорректными данными", dataProvider = "getDataForCreateNegativeDoc")
     public void createNewReportDeclarationNegativeJ0301206(String dataProviderValue) {
 
         /***** Генерим данные для заполнения документа *****/
@@ -445,7 +449,7 @@ public class TestRunner extends BaseTest {
         reportDeclaration.declarationS0501408Fields.forEach((key, value) -> reportDeclaration.checkValueToHeader(key, value, dataDeclaration));
 
         /**** Экспорт товаров *****/
-        reportDeclaration.declarationS0501408Fields.forEach((key, value) -> reportDeclaration.checktValueToExportProducts(key, value, dataDeclaration));
+        reportDeclaration.declarationS0501408Fields.forEach((key, value) -> reportDeclaration.checkValueToExportProducts(key, value, dataDeclaration));
 
         /**** Импорт товаров товаров *****/
         reportDeclaration.declarationS0501408Fields.forEach((key, value) -> reportDeclaration.checkValueToImportProducts(key, value, dataDeclaration));
@@ -458,6 +462,80 @@ public class TestRunner extends BaseTest {
         assertEquals("Не розшифрований", reportDeclaration.waitReportStatusChange(), "Неверный статус формы");
         reportDeclaration.decryptionReceipt();
 
+    }
+
+    @Story("Создание документа (негативный сценарий) S0501408")
+    @Test(description = "Создать новый документ (S0501408) с некорректными данными", dataProvider = "getDataForCreateNegativeDoc")
+    public void createNewReportDeclarationS0501408NegativeDoc(String dataProviderValue) {
+
+        /***** Генерим данные для заполнения документа *****/
+        DeclarationDataS0501408 dataDeclaration = DeclarationDataS0501408.builder()
+                .comEDRPOU(CV.comEDRPOU())
+                .comName(CV.comName())
+                .locationAddress(CV.locationAddress())
+                .locationAddressFact(CV.locationAddressFact())
+
+                .countryNameExport(CV.countryNameExport())
+                .countryCodeExport(CV.countryCodeExport())
+                .productNameExport(CV.productNameExport())
+                .productCodeExport(CV.productCodeExport())
+                .currencyNameExport(CV.currencyNameExport())
+                .currencyCodeExport(CV.currencyCodeExport())
+                .countProductsExport(dataProviderValue)
+                .productPriceExport(dataProviderValue)
+
+                .countryNameImport(CV.countryNameImport())
+                .countryCodeImport(CV.countryCodeImport())
+                .productNameImport(CV.productNameImport())
+                .productCodeImport(CV.productCodeImport())
+                .currencyNameImport(CV.currencyNameImport())
+                .currencyCodeImport(CV.currencyCodeImport())
+                .countProductsImport(dataProviderValue)
+                .productPriceImport(dataProviderValue)
+
+                .fioDir(CV.fioDir())
+                .fio(CV.fio())
+                .telNumber(CV.telNumber())
+                .fax(CV.fax())
+                .email(CV.email())
+                .build();
+
+        DocumentTypesListPage documentTypesListPage = new MainPage().openReportTypesListPage();
+        documentTypesListPage.checkDocumentTypesListPage();
+        documentTypesListPage.searchDocument("S0501408");
+        OpenCreateDocument document = documentTypesListPage.openDocument("S0501408");
+
+        CreateReportDeclarationS0501408 reportDeclaration = document.openCreateReportDeclarationS0501408();
+        reportDeclaration.clickEditButton();
+
+        /***** Респондент *****/
+        reportDeclaration.declarationS0501408Fields.forEach((key, value) -> reportDeclaration.setValueToHeader(key, value, dataDeclaration));
+
+        /**** Экспорт товаров *****/
+        reportDeclaration.declarationS0501408Fields.forEach((key, value) -> reportDeclaration.setValueToExportProducts(key, value, dataDeclaration));
+
+        /**** Импорт товаров товаров *****/
+        reportDeclaration.declarationS0501408Fields.forEach((key, value) -> reportDeclaration.setValueToImportProducts(key, value, dataDeclaration));
+
+        /***** Персональные данные *****/
+        reportDeclaration.declarationS0501408Fields.forEach((key, value) -> reportDeclaration.setValueToFooter(key, value, dataDeclaration));
+
+        /***** Сохраняем отчет *****/
+        reportDeclaration.saveReport();
+
+
+        /***** Проверка всех полей после сохранения документа *****/
+        /***** Респондент *****/
+        reportDeclaration.declarationS0501408Fields.forEach((key, value) -> reportDeclaration.checkValueToHeader(key, value, dataDeclaration));
+
+        /**** Экспорт товаров *****/
+        reportDeclaration.declarationS0501408Fields.forEach((key, value) -> reportDeclaration.checkValueToExportProducts(key, value));
+
+        /**** Импорт товаров товаров *****/
+        reportDeclaration.declarationS0501408Fields.forEach((key, value) -> reportDeclaration.checkValueToImportProducts(key, value));
+
+        /***** Персональные данные *****/
+        reportDeclaration.declarationS0501408Fields.forEach((key, value) -> reportDeclaration.checkValueToFooter(key, value, dataDeclaration));
     }
 
     @Story("Копирование отчета S0501408")
@@ -526,9 +604,9 @@ public class TestRunner extends BaseTest {
 
         /***** Проверяем поля после копирования отчета *****/
         /***** Экспорт товаров *****/
-        reportDeclaration.declarationS0501408Fields.forEach((key, value) -> reportDeclaration.checktValueToExportProducts(key, value, dataDeclaration));
+        reportDeclaration.declarationS0501408Fields.forEach((key, value) -> reportDeclaration.checkValueToExportProducts(key, value, dataDeclaration));
 
         /***** Импорт товаров *****/
-        reportDeclaration.declarationS0501408Fields.forEach((key, value) -> reportDeclaration.checktValueToExportProducts(key, value, dataDeclaration));
+        reportDeclaration.declarationS0501408Fields.forEach((key, value) -> reportDeclaration.checkValueToExportProducts(key, value, dataDeclaration));
     }
 }
