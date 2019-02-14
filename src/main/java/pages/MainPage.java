@@ -19,9 +19,9 @@ public class MainPage implements WorkingWithBrowserTabs {
     }
 
     @Step("Перейти на страницу со 'Создать новый тип'")
-    public OpenCreateDocument openCreateNewTypePage() {
+    public CreateDocumentTypePage openCreateNewTypePage() {
         createNewType.click();
         closeBrowserTab("Конструктор отчетов");
-        return new OpenCreateDocument();
+        return new CreateDocumentTypePage();
     }
 }

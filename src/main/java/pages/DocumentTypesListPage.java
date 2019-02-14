@@ -119,13 +119,13 @@ public class DocumentTypesListPage implements WorkingWithBrowserTabs {
     }
 
     @Step("Проверка поиска по значению \"{value}\"")
-    public OpenCreateDocument searchAndOpenDocument(String value) {
+    public CreateDocumentTypePage searchAndOpenDocument(String value) {
         refresh();
         searchField.shouldBe(visible).sendKeys(value);
         $(By.xpath("//tbody//tr")).click();
         viewDocButton.click();
         closeBrowserTab("Типы документов");
-        return new OpenCreateDocument();
+        return new CreateDocumentTypePage();
     }
 
     @Step("Удаление документа по значению \"{valueForDelete}\"")
@@ -149,18 +149,18 @@ public class DocumentTypesListPage implements WorkingWithBrowserTabs {
     }
 
     @Step("Переход на страницу создания документа")
-    public OpenCreateDocument goToCreateNewDocumentPage() {
+    public CreateDocumentTypePage goToCreateNewDocumentPage() {
         createButton.shouldBe(visible).click();
         closeBrowserTab("Типы документов");
-        return new OpenCreateDocument();
+        return new CreateDocumentTypePage();
     }
 
     @Step("Создание копии документа со значением {valueForCopy}")
-    public OpenCreateDocument clickToCopyButton(String valueForCopy) {
+    public CreateDocumentTypePage selectAndCopyDocType(String valueForCopy) {
         $(By.xpath("//tbody//tr[@role='row']/td[text()='" + valueForCopy + "']")).click();
         copyButton.click();
         closeBrowserTab("Типы документов");
-        return new OpenCreateDocument();
+        return new CreateDocumentTypePage();
     }
 
     @Step("Проверка двух документов после копирования")
@@ -180,10 +180,10 @@ public class DocumentTypesListPage implements WorkingWithBrowserTabs {
     }
 
     @Step("Открытие документа")
-    public OpenCreateDocument openDocument(String value){
+    public CreateDocumentTypePage openDocument(String value){
         $(By.xpath("//tr/td[contains(., '" + value + "')]")).shouldBe(visible).click();
         viewDocButton.click();
         closeBrowserTab("Типы документов");
-        return new OpenCreateDocument();
+        return new CreateDocumentTypePage();
     }
 }

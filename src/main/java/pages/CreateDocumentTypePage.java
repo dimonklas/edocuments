@@ -3,6 +3,7 @@ package pages;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
+import lombok.Getter;
 import lombok.extern.log4j.Log4j;
 import org.openqa.selenium.By;
 import pages.document.CreateDocumentData;
@@ -19,9 +20,11 @@ import static org.testng.Assert.*;
 
 
 @Log4j
-public class OpenCreateDocument implements WorkingWithBrowserTabs {
+@Getter
+public class CreateDocumentTypePage implements WorkingWithBrowserTabs {
     private SelenideElement fieldName = $(By.id("type_name"));
     private SelenideElement saveButton = $(By.id("btn_save"));
+    private SelenideElement editButton = $(By.id("btn_edit"));
     private SelenideElement groupJournalCheckBox = $(By.xpath("//*[@id='group_journal']/../label"));
     private SelenideElement finReportCheckBox = $(By.xpath("//*[@id='fin_reporting']/../label"));
     private SelenideElement serviceDropdown = $(By.id("service"));
@@ -41,35 +44,79 @@ public class OpenCreateDocument implements WorkingWithBrowserTabs {
 
 
     @Step("Создание нового типа документа без версии")
-    public String createNewDocumentTypeWithoutVersion(CreateDocumentData data) {
+    public String createNewDocumentType(CreateDocumentData data) {
+        fieldName.shouldBe(visible).clear();
         fieldName.shouldBe(visible).sendKeys(data.getDocName());
         serviceDropdown.selectOption(data.getService());
         gatewayDropdown.selectOption(data.getGateway());
-        if (data.isGroupJournal()) groupJournalCheckBox.click();
-        if (data.isFinReport()) {
+
+        boolean gropJournalCheked = executeJavaScript("return document.getElementById(\"group_journal\").checked;");
+        boolean finReportChecked = executeJavaScript("return  document.getElementById(\"fin_reporting\").checked;");
+
+        if (data.isGroupJournal() && !gropJournalCheked) groupJournalCheckBox.click();
+        if (!data.isGroupJournal() && gropJournalCheked) groupJournalCheckBox.click();
+        if (data.isFinReport() && !finReportChecked) {
             finReportCheckBox.click();
             vddoc.clear();
             vddoc.sendKeys(data.getVddoc());
             groupId.clear();
             groupId.sendKeys(data.getGroupId());
         }
+        if (!data.isFinReport() && finReportChecked) finReportCheckBox.click();
+
+        if ($$(By.xpath("//table[@id='versions_table']//tbody/tr")).size() > 0) deleteAllVersions();
+
         saveButton.shouldBe(visible).click();
         return $(By.id("page_title")).getText().replaceAll("\\D+", "");
     }
 
-    @Step("Создание нового типа документа с версией")
-    public String createNewDocumentTypeWithVersion(CreateDocumentData data, ArrayList<VersionData> versions) {
+    @Step("Создание нового типа документа с версиями")
+    public String createNewDocumentType(CreateDocumentData data, VersionData version) {
+        fieldName.shouldBe(visible).clear();
         fieldName.shouldBe(visible).sendKeys(data.getDocName());
         serviceDropdown.selectOption(data.getService());
         gatewayDropdown.selectOption(data.getGateway());
-        if (data.isGroupJournal()) groupJournalCheckBox.click();
-        if (data.isFinReport()) {
+
+        boolean gropJournalCheked = executeJavaScript("return document.getElementById(\"group_journal\").checked;");
+        boolean finReportChecked = executeJavaScript("return  document.getElementById(\"fin_reporting\").checked;");
+
+        if (data.isGroupJournal() && !gropJournalCheked) groupJournalCheckBox.click();
+        if (!data.isGroupJournal() && gropJournalCheked) groupJournalCheckBox.click();
+        if (data.isFinReport() && !finReportChecked) {
             finReportCheckBox.click();
             vddoc.clear();
             vddoc.sendKeys(data.getVddoc());
             groupId.clear();
             groupId.sendKeys(data.getGroupId());
         }
+        if (!data.isFinReport() && finReportChecked) finReportCheckBox.click();
+
+        addVersionToDocument(version);
+        saveButton.shouldBe(visible).click();
+        return $(By.id("page_title")).getText().replaceAll("\\D+", "");
+    }
+
+    @Step("Создание нового типа документа с версиями")
+    public String createNewDocumentType(CreateDocumentData data, ArrayList<VersionData> versions) {
+        fieldName.shouldBe(visible).clear();
+        fieldName.shouldBe(visible).sendKeys(data.getDocName());
+        serviceDropdown.selectOption(data.getService());
+        gatewayDropdown.selectOption(data.getGateway());
+
+        boolean gropJournalCheked = executeJavaScript("return document.getElementById(\"group_journal\").checked;");
+        boolean finReportChecked = executeJavaScript("return  document.getElementById(\"fin_reporting\").checked;");
+
+        if (data.isGroupJournal() && !gropJournalCheked) groupJournalCheckBox.click();
+        if (!data.isGroupJournal() && gropJournalCheked) groupJournalCheckBox.click();
+        if (data.isFinReport() && !finReportChecked) {
+            finReportCheckBox.click();
+            vddoc.clear();
+            vddoc.sendKeys(data.getVddoc());
+            groupId.clear();
+            groupId.sendKeys(data.getGroupId());
+        }
+        if (!data.isFinReport() && finReportChecked) finReportCheckBox.click();
+
         addVersionToDocument(versions);
         saveButton.shouldBe(visible).click();
         return $(By.id("page_title")).getText().replaceAll("\\D+", "");
@@ -84,6 +131,15 @@ public class OpenCreateDocument implements WorkingWithBrowserTabs {
             periodTypeVersion.last().sendKeys(versions.get(i).getTypeReportPeriod());
             if (versions.get(i).isCumulativeTotal()) cumulativeControl.last().click();
         }
+    }
+
+    @Step("Добавление версии в документ")
+    public void addVersionToDocument(VersionData version) {
+        addVersioButton.shouldBe(visible).click();
+        dateFromVersion.last().sendKeys(version.getDate());
+        comTypeVersion.last().sendKeys(version.getComType());
+        periodTypeVersion.last().sendKeys(version.getTypeReportPeriod());
+        if (version.isCumulativeTotal()) cumulativeControl.last().click();
     }
 
     @Step("Проверка документа после создания")
@@ -103,6 +159,7 @@ public class OpenCreateDocument implements WorkingWithBrowserTabs {
             assertEquals(vddoc.getValue(), data.getVddoc());
             assertEquals(groupId.getValue(), data.getGroupId());
         }
+        assertEquals("В таблице отсутствуют данные", $(By.xpath("//table[@id='versions_table']//tbody//td")).getText());
     }
 
     @Step("Проверка документа после создания")
@@ -181,8 +238,8 @@ public class OpenCreateDocument implements WorkingWithBrowserTabs {
             $(By.xpath("//table[@id='versions_table']//td[@class=' row-checkbox']")).click();
             deleteVersioButton.click();
         }
-        goToMainPage();
-        confirm();
+//        goToMainPage();
+//        confirm();
     }
 
     @Step("Проверка наличия версий в документе")

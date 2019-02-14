@@ -1,5 +1,6 @@
 package tests;
 
+import com.codeborne.selenide.Condition;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
 import lombok.extern.log4j.Log4j;
@@ -87,8 +88,8 @@ public class TestRunner extends BaseTest {
                 .build();
 
         /***** Тест *****/
-        OpenCreateDocument typePage = new MainPage().openCreateNewTypePage();
-        String docId = typePage.createNewDocumentTypeWithoutVersion(data);
+        CreateDocumentTypePage typePage = new MainPage().openCreateNewTypePage();
+        String docId = typePage.createNewDocumentType(data);
         MainPage mainPage = typePage.goToMainPage();
         DocumentTypesListPage typesListPage = mainPage.openReportTypesListPage();
         typePage = typesListPage.searchAndOpenDocument(data.getDocName());
@@ -115,8 +116,8 @@ public class TestRunner extends BaseTest {
         versionList.add(VersionData.builder().date("2018-01-20").comType("Юр. лицо").typeReportPeriod("Квартал").cumulativeTotal(true).build());
 
         /***** Тест *****/
-        OpenCreateDocument typePage = new MainPage().openCreateNewTypePage();
-        String docId = typePage.createNewDocumentTypeWithVersion(documentData, versionList);
+        CreateDocumentTypePage typePage = new MainPage().openCreateNewTypePage();
+        String docId = typePage.createNewDocumentType(documentData, versionList);
         MainPage mainPage = typePage.goToMainPage();
         DocumentTypesListPage typesListPage = mainPage.openReportTypesListPage();
         typePage = typesListPage.searchAndOpenDocument(documentData.getDocName());
@@ -143,12 +144,12 @@ public class TestRunner extends BaseTest {
         versionList.add(VersionData.builder().date("2018-01-25").comType("Юр. лицо").typeReportPeriod("Квартал").cumulativeTotal(true).build());
 
         /***** Тест *****/
-        OpenCreateDocument typePage = new MainPage().openCreateNewTypePage();
-        typePage.createNewDocumentTypeWithVersion(documentData, versionList);
+        CreateDocumentTypePage typePage = new MainPage().openCreateNewTypePage();
+        typePage.createNewDocumentType(documentData, versionList);
         MainPage mainPage = typePage.goToMainPage();
         DocumentTypesListPage typesListPage = mainPage.openReportTypesListPage();
         typesListPage.searchDocument(documentData.getDocName());
-        typePage = typesListPage.clickToCopyButton(documentData.getDocName());
+        typePage = typesListPage.selectAndCopyDocType(documentData.getDocName());
         String docCopyId = typePage.saveCurrentDoc();
         mainPage = typePage.goToMainPage();
         typesListPage = mainPage.openReportTypesListPage();
@@ -173,12 +174,12 @@ public class TestRunner extends BaseTest {
                 .build();
 
         /***** Тест *****/
-        OpenCreateDocument typePage = new MainPage().openCreateNewTypePage();
-        typePage.createNewDocumentTypeWithoutVersion(documentData);
+        CreateDocumentTypePage typePage = new MainPage().openCreateNewTypePage();
+        typePage.createNewDocumentType(documentData);
         MainPage mainPage = typePage.goToMainPage();
         DocumentTypesListPage typesListPage = mainPage.openReportTypesListPage();
         typesListPage.searchDocument(documentData.getDocName());
-        typePage = typesListPage.clickToCopyButton(documentData.getDocName());
+        typePage = typesListPage.selectAndCopyDocType(documentData.getDocName());
         String docCopyId = typePage.saveCurrentDoc();
         mainPage = typePage.goToMainPage();
         typesListPage = mainPage.openReportTypesListPage();
@@ -239,7 +240,7 @@ public class TestRunner extends BaseTest {
         DocumentTypesListPage documentTypesListPage = new MainPage().openReportTypesListPage();
         documentTypesListPage.checkDocumentTypesListPage();
         documentTypesListPage.searchDocument("0301206");
-        OpenCreateDocument document = documentTypesListPage.openDocument("0301206");
+        CreateDocumentTypePage document = documentTypesListPage.openDocument("0301206");
 
         CreateReportDeclarationJ0301206 reportDeclaration = document.openCreateReportDeclarationJ0301206();
         reportDeclaration.clickEditButton();
@@ -325,7 +326,7 @@ public class TestRunner extends BaseTest {
         DocumentTypesListPage documentTypesListPage = new MainPage().openReportTypesListPage();
         documentTypesListPage.checkDocumentTypesListPage();
         documentTypesListPage.searchDocument("0301206");
-        OpenCreateDocument document = documentTypesListPage.openDocument("0301206");
+        CreateDocumentTypePage document = documentTypesListPage.openDocument("0301206");
 
         CreateReportDeclarationJ0301206 reportDeclaration = document.openCreateReportDeclarationJ0301206();
         reportDeclaration.clickEditButton();
@@ -369,7 +370,7 @@ public class TestRunner extends BaseTest {
     }
 
     @Story("Проверка создания и удаления новых версий")
-    @Test(description = "создание и удаления новых версий в документе")
+    @Test(description = "создание и удаления новых версий в документе", enabled = false)
     public void checkAddVersion() {
         /***** Содание данных для теста *****/
         ArrayList<VersionData> versionList = new ArrayList<>();
@@ -378,9 +379,11 @@ public class TestRunner extends BaseTest {
         versionList.add(VersionData.builder().date("2018-01-25").comType("Юр. лицо").typeReportPeriod("Месяц").cumulativeTotal(false).build());
         versionList.add(VersionData.builder().date("2018-01-25").comType("Юр. лицо").typeReportPeriod("Квартал").cumulativeTotal(true).build());
 
-        OpenCreateDocument typePage = new MainPage().openCreateNewTypePage();
+        CreateDocumentTypePage typePage = new MainPage().openCreateNewTypePage();
         typePage.addVersionToDocument(versionList);
         typePage.deleteAllVersions();
+        MainPage mainPage = typePage.goToMainPage();
+        mainPage.openReportTypesListPage();
         assertFalse(typePage.checkVersionExists(), "Количество версий документа больше одного");
     }
 
@@ -423,7 +426,7 @@ public class TestRunner extends BaseTest {
         DocumentTypesListPage documentTypesListPage = new MainPage().openReportTypesListPage();
         documentTypesListPage.checkDocumentTypesListPage();
         documentTypesListPage.searchDocument("S0501408");
-        OpenCreateDocument document = documentTypesListPage.openDocument("S0501408");
+        CreateDocumentTypePage document = documentTypesListPage.openDocument("S0501408");
 
         CreateReportDeclarationS0501408 reportDeclaration = document.openCreateReportDeclarationS0501408();
         reportDeclaration.clickEditButton();
@@ -503,7 +506,7 @@ public class TestRunner extends BaseTest {
         DocumentTypesListPage documentTypesListPage = new MainPage().openReportTypesListPage();
         documentTypesListPage.checkDocumentTypesListPage();
         documentTypesListPage.searchDocument("S0501408");
-        OpenCreateDocument document = documentTypesListPage.openDocument("S0501408");
+        CreateDocumentTypePage document = documentTypesListPage.openDocument("S0501408");
 
         CreateReportDeclarationS0501408 reportDeclaration = document.openCreateReportDeclarationS0501408();
         reportDeclaration.clickEditButton();
@@ -576,7 +579,7 @@ public class TestRunner extends BaseTest {
         DocumentTypesListPage documentTypesListPage = new MainPage().openReportTypesListPage();
         documentTypesListPage.checkDocumentTypesListPage();
         documentTypesListPage.searchDocument("S0501408");
-        OpenCreateDocument document = documentTypesListPage.openDocument("S0501408");
+        CreateDocumentTypePage document = documentTypesListPage.openDocument("S0501408");
 
         CreateReportDeclarationS0501408 reportDeclaration = document.openCreateReportDeclarationS0501408();
         reportDeclaration.clickEditButton();
@@ -608,5 +611,105 @@ public class TestRunner extends BaseTest {
 
         /***** Импорт товаров *****/
         reportDeclaration.declarationS0501408Fields.forEach((key, value) -> reportDeclaration.checkValueToExportProducts(key, value, dataDeclaration));
+    }
+
+    @Story("Проверка редактирования формы документа")
+    @Test(description = "Проверка редактирования документа без версий")
+    public void checkEditDocType() {
+        /***** Генерим тестовые данные *****/
+        CreateDocumentData documentDataOriginal = CreateDocumentData.builder()
+                .docName(CV.docName() + new DateUtil().getCurrentDateTime("hhmmssSSS"))
+                .service("Фискальная служба")
+                .gateway("Шлюз службы статистики")
+                .groupJournal(true)
+                .finReport(true)
+                .vddoc("123")
+                .groupId("777")
+                .build();
+
+        CreateDocumentData documentDataCopy = CreateDocumentData.builder()
+                .docName(CV.docName() + new DateUtil().getCurrentDateTime("hhmmssSSS"))
+                .service("Служба статистики")
+                .gateway("Шлюз пенсионного фонда")
+                .groupJournal(false)
+                .finReport(false)
+                .vddoc("2775")
+                .groupId("552288")
+                .build();
+        ArrayList<VersionData> versionList = new ArrayList<>();
+        versionList.add(VersionData.builder().date("2018-01-25").comType("Юр. лицо").typeReportPeriod("Квартал").cumulativeTotal(true).build());
+        versionList.add(VersionData.builder().date("2019-01-25").comType("Физ. лицо").typeReportPeriod("Без периода").cumulativeTotal(false).build());
+        versionList.add(VersionData.builder().date("2018-01-25").comType("Юр. лицо").typeReportPeriod("Месяц").cumulativeTotal(false).build());
+        versionList.add(VersionData.builder().date("2018-01-25").comType("Юр. лицо").typeReportPeriod("Квартал").cumulativeTotal(true).build());
+
+        /***** Тест *****/
+        CreateDocumentTypePage typePage = new MainPage().openCreateNewTypePage();
+        typePage.createNewDocumentType(documentDataOriginal);
+        MainPage mainPage = typePage.goToMainPage();
+        DocumentTypesListPage typesListPage = mainPage.openReportTypesListPage();
+
+        typePage = typesListPage.searchAndOpenDocument(documentDataOriginal.getDocName());
+        typePage.getEditButton().shouldBe(Condition.visible).click();
+        String docCopyId = typePage.createNewDocumentType(documentDataCopy, versionList);
+        mainPage = typePage.goToMainPage();
+        typesListPage = mainPage.openReportTypesListPage();
+        typePage = typesListPage.searchAndOpenDocument(documentDataCopy.getDocName());
+        typePage.checkDocument(documentDataCopy, docCopyId, versionList);
+    }
+
+    @Story("Проверка редактирования формы документа")
+    @Test(description = "Проверка редактирования документа, с добавлением версий")
+    public void checkEditDocTypeAddNewVersion() {
+        /***** Генерим тестовые данные *****/
+        CreateDocumentData documentDataOriginal = CreateDocumentData.builder()
+                .docName(CV.docName() + new DateUtil().getCurrentDateTime("hhmmssSSS"))
+                .service("Фискальная служба")
+                .gateway("Шлюз службы статистики")
+                .groupJournal(true)
+                .finReport(true)
+                .vddoc("123")
+                .groupId("777")
+                .build();
+
+        CreateDocumentData documentDataCopy = CreateDocumentData.builder()
+                .docName(CV.docName() + new DateUtil().getCurrentDateTime("hhmmssSSS"))
+                .service("Служба статистики")
+                .gateway("Шлюз пенсионного фонда")
+                .groupJournal(false)
+                .finReport(false)
+                .vddoc("2775")
+                .groupId("552288")
+                .build();
+        ArrayList<VersionData> versionListOriginal = new ArrayList<>();
+        versionListOriginal.add(VersionData.builder().date("2018-01-31").comType("Юр. лицо").typeReportPeriod("Квартал").cumulativeTotal(true).build());
+        versionListOriginal.add(VersionData.builder().date("2020-02-29").comType("Физ. лицо").typeReportPeriod("Без периода").cumulativeTotal(false).build());
+        versionListOriginal.add(VersionData.builder().date("2018-12-23").comType("Юр. лицо").typeReportPeriod("Месяц").cumulativeTotal(false).build());
+        versionListOriginal.add(VersionData.builder().date("2018-07-30").comType("Юр. лицо").typeReportPeriod("Квартал").cumulativeTotal(true).build());
+
+        VersionData versionData = VersionData.builder().date("2018-11-17").comType("Юр. лицо").typeReportPeriod("Квартал").cumulativeTotal(true).build();
+
+        /***** Тест *****/
+        CreateDocumentTypePage typePage = new MainPage().openCreateNewTypePage();
+        typePage.createNewDocumentType(documentDataOriginal, versionListOriginal);
+        MainPage mainPage = typePage.goToMainPage();
+        DocumentTypesListPage typesListPage = mainPage.openReportTypesListPage();
+
+        typePage = typesListPage.searchAndOpenDocument(documentDataOriginal.getDocName());
+        typePage.getEditButton().shouldBe(Condition.visible).click();
+
+        String docCopyId = typePage.createNewDocumentType(documentDataCopy, versionData);
+        mainPage = typePage.goToMainPage();
+        typesListPage = mainPage.openReportTypesListPage();
+        typePage = typesListPage.searchAndOpenDocument(documentDataCopy.getDocName());
+
+        versionListOriginal.add(versionData);
+        typePage.checkDocument(documentDataCopy, docCopyId, versionListOriginal);
+
+        typePage.getEditButton().shouldBe(Condition.visible).click();
+        typePage.createNewDocumentType(documentDataOriginal);
+        mainPage = typePage.goToMainPage();
+        typesListPage = mainPage.openReportTypesListPage();
+        typePage = typesListPage.searchAndOpenDocument(documentDataOriginal.getDocName());
+        typePage.checkDocument(documentDataOriginal, docCopyId);
     }
 }
