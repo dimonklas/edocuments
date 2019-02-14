@@ -8,6 +8,7 @@ import utils.ICustomWait;
 
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
+import static com.codeborne.selenide.Selenide.sleep;
 
 @Log4j
 public class LoginPage implements ICustomWait {
@@ -26,8 +27,8 @@ public class LoginPage implements ICustomWait {
         passwordField.shouldBe(visible).setValue(password);
         submitButton.shouldBe(visible).click();
 
-        if (warningMessage.exists()) warningSubmitButton.click();
-        if (authenticationPageTitle.exists()) authenticationNextButton.click();
+        if (warningMessage.exists()) warningSubmitButton.shouldBe(visible).click();
+        if (authenticationPageTitle.exists()) authenticationNextButton.shouldBe(visible).click();
     }
 
     public boolean needAuth() {

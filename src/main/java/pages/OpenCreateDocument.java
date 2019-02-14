@@ -1,14 +1,10 @@
 package pages;
 
 import com.codeborne.selenide.ElementsCollection;
-import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
-import com.codeborne.selenide.WebDriverRunner;
 import io.qameta.allure.Step;
 import lombok.extern.log4j.Log4j;
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
 import pages.document.CreateDocumentData;
 import pages.document.VersionData;
 import utils.DateUtil;

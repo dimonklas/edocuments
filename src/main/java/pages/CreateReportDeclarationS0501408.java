@@ -142,32 +142,31 @@ public class CreateReportDeclarationS0501408 {
 
     @Step("Подписать и отправить отчет")
     public void subscribeAndSendReport() {
-        subscribeAndSendButton.click();
+        subscribeAndSendButton.shouldBe(visible).click();
         sleep(1000);
-        switchTo().frame(iframeSendReport);
+        switchTo().frame(iframeSendReport.shouldBe(visible));
         if (pbKeysSelect.is(visible)){
+            sleep(1000);
             pbKeysSelect.shouldBe(visible).click();
-            keyPathInput.sendKeys(new File("src/main/resources/supportFiles/" + CV.pbKey() + "").getAbsolutePath());
-            nextButton.click();
+            keyPathInput.shouldBe(visible).sendKeys(new File("src/main/resources/supportFiles/" + CV.pbKey() + "").getAbsolutePath());
+            nextButton.shouldBe(visible).click();
             passwordKeyInput.shouldBe(visible).sendKeys(CV.pbKeyPassword());
-            signAndSendButton.click();
-            roleSelect.selectOption("Директор");
-            keysSave.click();
+            signAndSendButton.shouldBe(visible).click();
+            roleSelect.shouldBe(visible).selectOption("Директор");
+            keysSave.shouldBe(visible).click();
             switchTo().defaultContent();
-            sleep(5000);
         } else {
             passwordKeyInput.shouldBe(visible).sendKeys(CV.pbKeyPassword());
-            signAndSendButton.click();
+            signAndSendButton.shouldBe(visible).click();
             switchTo().defaultContent();
-            sleep(5000);
         }
     }
 
     @Step("Ожидание изменения статуса")
     public String waitReportStatusChange() {
         int countWait = 0;
-        while (reportStage.getText().equals("Надіслано, очікуйте...") && countWait < 15) {
-            sleep(60000);
+        while (!reportStage.getText().equals("Не розшифрований") && countWait < 20) {
+            sleep(20000);
             refresh();
             countWait++;
         }

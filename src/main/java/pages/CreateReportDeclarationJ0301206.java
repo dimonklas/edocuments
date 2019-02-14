@@ -203,23 +203,22 @@ public class CreateReportDeclarationJ0301206 {
 
     @Step("Подписать и отправить отчет")
     public void subscribeAndSendReport() {
-        subscribeAndSendButton.click();
-        sleep(1000);
+        subscribeAndSendButton.shouldBe(visible).click();
         confirmSaveReport.shouldBe(visible).click(); //для отчета у которого есть ошибка
-        switchTo().frame(iframeSendReport);
         sleep(1000);
+        switchTo().frame(iframeSendReport.shouldBe(visible));
         if (pbKeysSelect.is(visible)) {
+            sleep(1000);
             pbKeysSelect.shouldBe(visible).click();
-            keyPathInput.sendKeys(new File("src/main/resources/supportFiles/pb_3324314930.jks").getAbsolutePath());
-            nextButton.click();
+            keyPathInput.shouldBe(visible).sendKeys(new File("src/main/resources/supportFiles/pb_3324314930.jks").getAbsolutePath());
+            nextButton.shouldBe(visible).click();
             passwordKeyInput.shouldBe(visible).sendKeys("qwerty123");
-            signAndSendButton.click();
-            roleSelect.selectOption("Директор");
-            keysSave.click();
+            signAndSendButton.shouldBe(visible).click();
+            roleSelect.shouldBe(visible).selectOption("Директор");
+            keysSave.shouldBe(visible).click();
         } else {
             passwordKeyInput.shouldBe(visible).sendKeys("qwerty123");
-            signAndSendButton.click();
-            sleep(5000);
+            signAndSendButton.shouldBe(visible).click();
         }
     }
 

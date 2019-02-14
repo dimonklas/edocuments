@@ -110,9 +110,9 @@ public class TestRunner extends BaseTest {
                 .build();
         ArrayList<VersionData> versionList = new ArrayList<>();
         versionList.add(VersionData.builder().date("2018-01-25").comType("Юр. лицо").typeReportPeriod("Квартал").cumulativeTotal(true).build());
-        versionList.add(VersionData.builder().date("2019-01-25").comType("Физ. лицо").typeReportPeriod("Без периода").cumulativeTotal(false).build());
-        versionList.add(VersionData.builder().date("2018-01-25").comType("Юр. лицо").typeReportPeriod("Месяц").cumulativeTotal(false).build());
-        versionList.add(VersionData.builder().date("2018-01-25").comType("Юр. лицо").typeReportPeriod("Квартал").cumulativeTotal(true).build());
+        versionList.add(VersionData.builder().date("2019-12-09").comType("Физ. лицо").typeReportPeriod("Без периода").cumulativeTotal(false).build());
+        versionList.add(VersionData.builder().date("2018-07-01").comType("Юр. лицо").typeReportPeriod("Месяц").cumulativeTotal(false).build());
+        versionList.add(VersionData.builder().date("2018-01-20").comType("Юр. лицо").typeReportPeriod("Квартал").cumulativeTotal(true).build());
 
         /***** Тест *****/
         OpenCreateDocument typePage = new MainPage().openCreateNewTypePage();
