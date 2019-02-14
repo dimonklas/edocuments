@@ -111,8 +111,8 @@ public class OpenCreateDocument implements WorkingWithBrowserTabs {
 
     @Step("Проверка документа после создания")
     public void checkDocument(CreateDocumentData data, String docId, ArrayList<VersionData> versions) {
-        assertEquals($(By.id("page_title")).getText().replaceAll("\\D+", ""), docId);
-        assertEquals($(By.id("type_id")).getValue(), docId);
+        assertEquals($(By.id("page_title")).shouldBe(visible).getText().replaceAll("\\D+", ""), docId);
+        assertEquals($(By.id("type_id")).shouldBe(visible).getValue(), docId);
         assertEquals(fieldName.getValue(), data.getDocName());
         assertEquals(serviceDropdown.getText(), data.getService());
         assertEquals(gatewayDropdown.getText(), data.getGateway());
