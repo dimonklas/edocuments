@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.extern.log4j.Log4j;
 import org.aeonbits.owner.ConfigFactory;
 import org.openqa.selenium.By;
-import org.testng.Assert;
 import pages.document.DeclarationDataS0501408;
 import utils.IConfigurationVariables;
 
@@ -143,10 +142,10 @@ public class CreateReportDeclarationS0501408 {
     @Step("Подписать и отправить отчет")
     public void subscribeAndSendReport() {
         subscribeAndSendButton.shouldBe(visible).click();
-        sleep(1000);
+        sleep(2000);
         switchTo().frame(iframeSendReport.shouldBe(visible));
         if (pbKeysSelect.is(visible)){
-            sleep(1000);
+            sleep(2000);
             pbKeysSelect.shouldBe(visible).click();
             keyPathInput.shouldBe(visible).sendKeys(new File("src/main/resources/supportFiles/" + CV.pbKey() + "").getAbsolutePath());
             nextButton.shouldBe(visible).click();
@@ -189,11 +188,11 @@ public class CreateReportDeclarationS0501408 {
 
     @Step("Копирование отчета")
     public void copyReport() {
-        String originalId = String.format($(By.xpath("//*[@id='report_stage']/following-sibling::span")).getText()).replaceAll("\\D+","");
+        String originalId = ($(By.xpath("//*[@id='report_stage']/following-sibling::span")).getText()).replaceAll("\\D+","");
         copyReportButton.shouldBe(visible).click();
         $(By.xpath("//span[text()='Створити']/..")).shouldBe(visible).click();
         sleep(1000);
-        String copyId = String.format($(By.xpath("//*[@id='report_stage']/following-sibling::span")).getText()).replaceAll("\\D+","");
+        String copyId = $(By.xpath("//*[@id='report_stage']/following-sibling::span")).getText().replaceAll("\\D+","");
         assertNotEquals(originalId, copyId);
     }
 

@@ -205,10 +205,10 @@ public class CreateReportDeclarationJ0301206 {
     public void subscribeAndSendReport() {
         subscribeAndSendButton.shouldBe(visible).click();
         confirmSaveReport.shouldBe(visible).click(); //для отчета у которого есть ошибка
-        sleep(1000);
+        sleep(2000);
         switchTo().frame(iframeSendReport.shouldBe(visible));
         if (pbKeysSelect.is(visible)) {
-            sleep(1000);
+            sleep(2000);
             pbKeysSelect.shouldBe(visible).click();
             keyPathInput.shouldBe(visible).sendKeys(new File("src/main/resources/supportFiles/pb_3324314930.jks").getAbsolutePath());
             nextButton.shouldBe(visible).click();

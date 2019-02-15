@@ -10,16 +10,16 @@ import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 import pages.*;
 import pages.document.*;
+import pages.documentObjects.CreateDocumentObject;
+import pages.documentObjects.J0301206Object;
+import pages.documentObjects.S0501408Object;
+import pages.documentObjects.VersionsObject;
 import utils.AllureOnFailListener;
-import utils.DateUtil;
 import utils.IConfigurationVariables;
 
 import java.util.ArrayList;
 
 import static org.testng.Assert.assertEquals;
-import static com.codeborne.selenide.Condition.*;
-import static org.testng.Assert.assertTrue;
-import static utils.SupportActions.generateRandomFloatNumber;
 
 
 @Log4j
@@ -27,6 +27,11 @@ import static utils.SupportActions.generateRandomFloatNumber;
 @Listeners(AllureOnFailListener.class)
 public class TestRunner extends BaseTest {
     private final IConfigurationVariables CV = ConfigFactory.create(IConfigurationVariables.class, System.getProperties());
+
+    CreateDocumentObject documentObject;
+    VersionsObject versionsList;
+    J0301206Object j0301206Object;
+    S0501408Object s0501408Object;
 
     @DataProvider
     public Object[][] getDataForSort() {
@@ -55,24 +60,16 @@ public class TestRunner extends BaseTest {
     public Object[][] incorrectDataForCreateForm() {
         return new Object[][]{
                 {
-                        CreateDocumentData.builder().docName("")
-                                .service("Фискальная служба").gateway("Шлюз службы статистики").groupJournal(true).finReport(true)
-                                .vddoc("123").groupId("777").build()
+                        documentObject.getDocumentIncorrectDataFirst()
                 },
                 {
-                        CreateDocumentData.builder().docName(CV.docName() + new DateUtil().getCurrentDateTime("hhmmssSSS"))
-                                .service("").gateway("Шлюз пенсионного фонда").groupJournal(false).finReport(true)
-                                .vddoc("123").groupId("777").build()
+                        documentObject.getDocumentIncorrectDataSecond()
                 },
                 {
-                        CreateDocumentData.builder().docName(CV.docName() + new DateUtil().getCurrentDateTime("hhmmssSSS"))
-                                .service("Служба статистики").gateway("").groupJournal(false).finReport(true)
-                                .vddoc("123").groupId("777").build()
+                        documentObject.getDocumentIncorrectDataThird()
                 },
                 {
-                        CreateDocumentData.builder().docName(CV.docName() + new DateUtil().getCurrentDateTime("hhmmssSSS"))
-                                .service("Пенсионный фонд").gateway("Шлюз пенсионного фонда").groupJournal(false).finReport(true)
-                                .vddoc("0").groupId("777").build()
+                        documentObject.getDocumentIncorrectDataFour()
                 }
         };
     }
@@ -103,117 +100,75 @@ public class TestRunner extends BaseTest {
     @Story("Создание нового типа без версии документа")
     @Test(description = "Создание нового документа без указания версии")
     public void createNewDocument() {
-        /***** Генерим тестовые данные *****/
-        CreateDocumentData data = CreateDocumentData.builder()
-                .docName(CV.docName() + new DateUtil().getCurrentDateTime("hhmmssSSS"))
-                .service("Фискальная служба")
-                .gateway("Шлюз службы статистики")
-                .groupJournal(true)
-                .finReport(true)
-                .vddoc("123")
-                .groupId("777")
-                .build();
-
+        /***** Генерим тестовые данные *****/;
+        documentObject = new CreateDocumentObject();
         /***** Тест *****/
         CreateDocumentTypePage typePage = new MainPage().openCreateNewTypePage();
-        String docId = typePage.createNewDocumentType(data);
+        String docId = typePage.createNewDocumentType(documentObject.getDocumentDataFirst());
         MainPage mainPage = typePage.goToMainPage();
         DocumentTypesListPage typesListPage = mainPage.openReportTypesListPage();
-        typePage = typesListPage.searchAndOpenDocument(data.getDocName());
-        typePage.checkDocument(data, docId);
+        typePage = typesListPage.searchAndOpenDocument(documentObject.getDocumentDataFirst().getDocName());
+        typePage.checkDocument(documentObject.getDocumentDataFirst(), docId);
     }
 
     @Story("Создание нового типа с версией документа")
     @Test(description = "Создание нового документа с указанием версии")
     public void createNewDocumentWithVersion() {
         /***** Генерим тестовые данные *****/
-        CreateDocumentData documentData = CreateDocumentData.builder()
-                .docName(CV.docName() + new DateUtil().getCurrentDateTime("hhmmssSSS"))
-                .service("Фискальная служба")
-                .gateway("Шлюз службы статистики")
-                .groupJournal(true)
-                .finReport(true)
-                .vddoc("123")
-                .groupId("777")
-                .build();
-        ArrayList<VersionData> versionList = new ArrayList<>();
-        versionList.add(VersionData.builder().date("2018-01-25").comType("Юр. лицо").typeReportPeriod("Квартал").cumulativeTotal(true).build());
-        versionList.add(VersionData.builder().date("2019-12-09").comType("Физ. лицо").typeReportPeriod("Без периода").cumulativeTotal(false).build());
-        versionList.add(VersionData.builder().date("2018-07-01").comType("Юр. лицо").typeReportPeriod("Месяц").cumulativeTotal(false).build());
-        versionList.add(VersionData.builder().date("2018-01-20").comType("Юр. лицо").typeReportPeriod("Квартал").cumulativeTotal(true).build());
+        documentObject = new CreateDocumentObject();
+        versionsList = new VersionsObject();
 
         /***** Тест *****/
         CreateDocumentTypePage typePage = new MainPage().openCreateNewTypePage();
-        String docId = typePage.createNewDocumentType(documentData, versionList);
+        String docId = typePage.createNewDocumentType(documentObject.getDocumentDataFirst(), versionsList.getVersionList());
         MainPage mainPage = typePage.goToMainPage();
         DocumentTypesListPage typesListPage = mainPage.openReportTypesListPage();
-        typePage = typesListPage.searchAndOpenDocument(documentData.getDocName());
-        typePage.checkDocument(documentData, docId, versionList);
+        typePage = typesListPage.searchAndOpenDocument(documentObject.getDocumentDataFirst().getDocName());
+        typePage.checkDocument(documentObject.getDocumentDataFirst(), docId, versionsList.getVersionList());
     }
 
     @Story("Проверка создания копии документа с версией")
     @Test(description = "Создание копии документа с версией")
     public void checkCopyDocumentWithVersion() {
         /***** Генерим тестовые данные *****/
-        CreateDocumentData documentData = CreateDocumentData.builder()
-                .docName(CV.docName() + new DateUtil().getCurrentDateTime("hhmmssSSS"))
-                .service("Фискальная служба")
-                .gateway("Шлюз службы статистики")
-                .groupJournal(true)
-                .finReport(true)
-                .vddoc("123")
-                .groupId("777")
-                .build();
-        ArrayList<VersionData> versionList = new ArrayList<>();
-        versionList.add(VersionData.builder().date("2018-01-25").comType("Юр. лицо").typeReportPeriod("Квартал").cumulativeTotal(true).build());
-        versionList.add(VersionData.builder().date("2019-01-25").comType("Физ. лицо").typeReportPeriod("Без периода").cumulativeTotal(false).build());
-        versionList.add(VersionData.builder().date("2018-01-25").comType("Юр. лицо").typeReportPeriod("Месяц").cumulativeTotal(false).build());
-        versionList.add(VersionData.builder().date("2018-01-25").comType("Юр. лицо").typeReportPeriod("Квартал").cumulativeTotal(true).build());
+        documentObject = new CreateDocumentObject();
+        versionsList = new VersionsObject();
 
         /***** Тест *****/
         CreateDocumentTypePage typePage = new MainPage().openCreateNewTypePage();
-        typePage.createNewDocumentType(documentData, versionList);
+        typePage.createNewDocumentType(documentObject.getDocumentDataFirst(), versionsList.getVersionList());
         MainPage mainPage = typePage.goToMainPage();
         DocumentTypesListPage typesListPage = mainPage.openReportTypesListPage();
-        typesListPage.searchDocument(documentData.getDocName());
-        typePage = typesListPage.selectAndCopyDocType(documentData.getDocName());
+        typesListPage.searchDocument(documentObject.getDocumentDataFirst().getDocName());
+        typePage = typesListPage.selectAndCopyDocType(documentObject.getDocumentDataFirst().getDocName());
         String docCopyId = typePage.saveCurrentDocAndReturnId();
         mainPage = typePage.goToMainPage();
         typesListPage = mainPage.openReportTypesListPage();
-        typesListPage.searchDocument(documentData.getDocName());
+        typesListPage.searchDocument(documentObject.getDocumentDataFirst().getDocName());
         typesListPage.checkTwoRows();
         typePage = typesListPage.searchAndOpenDocument(docCopyId);
-        typePage.checkDocument(documentData, docCopyId, versionList);
+        typePage.checkDocument(documentObject.getDocumentDataFirst(), docCopyId, versionsList.getVersionList());
     }
 
     @Story("Проверка создания копии документа без версии")
     @Test(description = "Создание копии документа без версии")
     public void checkCopyDocumentWithoutVersion() {
         /***** Генерим тестовые данные *****/
-        CreateDocumentData documentData = CreateDocumentData.builder()
-                .docName(CV.docName() + new DateUtil().getCurrentDateTime("hhmmssSSS"))
-                .service("Фискальная служба")
-                .gateway("Шлюз службы статистики")
-                .groupJournal(true)
-                .finReport(true)
-                .vddoc("123")
-                .groupId("777")
-                .build();
-
+        documentObject = new CreateDocumentObject();
         /***** Тест *****/
         CreateDocumentTypePage typePage = new MainPage().openCreateNewTypePage();
-        typePage.createNewDocumentType(documentData);
+        typePage.createNewDocumentType(documentObject.getDocumentDataFirst());
         MainPage mainPage = typePage.goToMainPage();
         DocumentTypesListPage typesListPage = mainPage.openReportTypesListPage();
-        typesListPage.searchDocument(documentData.getDocName());
-        typePage = typesListPage.selectAndCopyDocType(documentData.getDocName());
+        typesListPage.searchDocument(documentObject.getDocumentDataFirst().getDocName());
+        typePage = typesListPage.selectAndCopyDocType(documentObject.getDocumentDataFirst().getDocName());
         String docCopyId = typePage.saveCurrentDocAndReturnId();
         mainPage = typePage.goToMainPage();
         typesListPage = mainPage.openReportTypesListPage();
-        typesListPage.searchDocument(documentData.getDocName());
+        typesListPage.searchDocument(documentObject.getDocumentDataFirst().getDocName());
         typesListPage.checkTwoRows();
         typePage = typesListPage.searchAndOpenDocument(docCopyId);
-        typePage.checkDocument(documentData, docCopyId);
+        typePage.checkDocument(documentObject.getDocumentDataFirst(), docCopyId);
     }
 
 
@@ -222,47 +177,7 @@ public class TestRunner extends BaseTest {
     public void createNewReportDeclarationJ0301206() {
 
         /***** Генерим данные для заполнения документа *****/
-        DeclarationDataGeneralInformationJ0301206 declarationData = DeclarationDataGeneralInformationJ0301206.builder()
-                .declarationType(new CreateReportDeclarationJ0301206(CV).chooseReportNewCheckBox)
-                .specifiedPeriodType(new CreateReportDeclarationJ0301206(CV).chooseSpecifiedPeriodYear)
-                .year(CV.year())
-                .comName(CV.comName())
-                .zip(CV.zip())
-                .sequenceNumber(CV.sequenceNumber())
-                .kved(CV.kved())
-                .cityCode(CV.cityCode())
-                .innNumberOrPassport(CV.innNumberOrPassport())
-                .telNumber(CV.telNumber())
-                .faxNumber(CV.faxNumber())
-                .locationAddress(CV.locationAddress())
-                .email(CV.email())
-                .controlAuthority(CV.controlAuthority())
-                .build();
-
-        /***** Генерим данные для заполнения документа *****/
-        DeclarationDataCalculationTaxJ0301206 calculationTax = DeclarationDataCalculationTaxJ0301206.builder()
-                .sumName(CV.sumName())
-                .square(generateRandomFloatNumber(3))
-                .minSalary(generateRandomFloatNumber(2))
-                .countDays(generateRandomFloatNumber(0))
-                .percent(generateRandomFloatNumber(4))
-                .taxSum(generateRandomFloatNumber(2))
-                .taxSumSpecified(CV.taxSumSpecified())
-                .specifiedSum(CV.specifiedSum())
-                .fineSum(CV.fineSum())
-                .penaltySum(CV.penaltySum())
-                .addText(CV.addText())
-                .addDeclaration(CV.addDeclaration())
-                .build();
-
-        /***** Генерим данные для заполнения документа *****/
-        DeclarationDataPersonInfoJ0301206 personInfo = DeclarationDataPersonInfoJ0301206.builder()
-                .dateDeclaration(CV.dateDeclaration())
-                .FIO(CV.FIO())
-                .inn(CV.inn())
-                .accountant(CV.accountant())
-                .accountantInn(CV.accountantInn())
-                .build();
+        j0301206Object = new J0301206Object();
 
         DocumentTypesListPage documentTypesListPage = new MainPage().openReportTypesListPage();
         documentTypesListPage.checkDocumentTypesListPage();
@@ -273,20 +188,20 @@ public class TestRunner extends BaseTest {
         reportDeclaration.clickEditButton();
 
         /***** І. Загальні відомості *****/
-        declarationData.getDeclarationType().chooseTypeDeclaration();
-        declarationData.getSpecifiedPeriodType().chooseReportSpecifiedPeriod();
+        j0301206Object.getDeclarationData().getDeclarationType().chooseTypeDeclaration();
+        j0301206Object.getDeclarationData().getSpecifiedPeriodType().chooseReportSpecifiedPeriod();
 
-        reportDeclaration.declarationJ0301206Fields.forEach((key, value) -> reportDeclaration.setValueToGeneralInfo(key, value, declarationData));
+        reportDeclaration.declarationJ0301206Fields.forEach((key, value) -> reportDeclaration.setValueToGeneralInfo(key, value, j0301206Object.getDeclarationData()));
 
         /**** ІІ. Розрахунок податкових зобов'язань збору за місця для паркування транспортних засобів *****/
-        reportDeclaration.declarationJ0301206Fields.forEach((key, value) -> reportDeclaration.setValueToCalculationTax(key, value, calculationTax));
+        reportDeclaration.declarationJ0301206Fields.forEach((key, value) -> reportDeclaration.setValueToCalculationTax(key, value, j0301206Object.getCalculationTax()));
 
         /***** Заполнение персональных данных (футер страницы) *****/
-        reportDeclaration.declarationJ0301206Fields.forEach((key, value) -> reportDeclaration.setValueToPersonalInfo(key, value, personInfo));
+        reportDeclaration.declarationJ0301206Fields.forEach((key, value) -> reportDeclaration.setValueToPersonalInfo(key, value, j0301206Object.getPersonInfo()));
 
         /**** Проверка формул в документе *****/
-        String expectedTax = reportDeclaration.calculationExpectedTax(calculationTax.getSquare(), calculationTax.getMinSalary(), calculationTax.getCountDays(), calculationTax.getPercent());
-        String expectedTaxReportPeriod = reportDeclaration.calculationExpectedTaxForReportPeriod(calculationTax.getSquare(), calculationTax.getMinSalary(), calculationTax.getCountDays(), calculationTax.getPercent(), calculationTax.getTaxSum());
+        String expectedTax = reportDeclaration.calculationExpectedTax(j0301206Object.getCalculationTax().getSquare(), j0301206Object.getCalculationTax().getMinSalary(), j0301206Object.getCalculationTax().getCountDays(), j0301206Object.getCalculationTax().getPercent());
+        String expectedTaxReportPeriod = reportDeclaration.calculationExpectedTaxForReportPeriod(j0301206Object.getCalculationTax().getSquare(), j0301206Object.getCalculationTax().getMinSalary(), j0301206Object.getCalculationTax().getCountDays(), j0301206Object.getCalculationTax().getPercent(), j0301206Object.getCalculationTax().getTaxSum());
         assertEquals(expectedTax, reportDeclaration.getResultSum().getValue(), "Неправильный расчет суммы");
         assertEquals(expectedTaxReportPeriod, reportDeclaration.getResultSumForReportPeriod().getValue(), "Неправильный расчет суммы");
 
@@ -294,9 +209,9 @@ public class TestRunner extends BaseTest {
         reportDeclaration.saveReport();
 
         /***** Проверяем данные после сохраниния *****/
-        reportDeclaration.declarationJ0301206Fields.forEach((key, value) -> reportDeclaration.checkValueToGeneralInfo(key, value, declarationData));
-        reportDeclaration.declarationJ0301206Fields.forEach((key, value) -> reportDeclaration.checkValueToCalculationTax(key, value, calculationTax));
-        reportDeclaration.declarationJ0301206Fields.forEach((key, value) -> reportDeclaration.checkValueToPersonalInfo(key, value, personInfo));
+        reportDeclaration.declarationJ0301206Fields.forEach((key, value) -> reportDeclaration.checkValueToGeneralInfo(key, value, j0301206Object.getDeclarationData()));
+        reportDeclaration.declarationJ0301206Fields.forEach((key, value) -> reportDeclaration.checkValueToCalculationTax(key, value, j0301206Object.getCalculationTax()));
+        reportDeclaration.declarationJ0301206Fields.forEach((key, value) -> reportDeclaration.checkValueToPersonalInfo(key, value, j0301206Object.getPersonInfo()));
 
         /***** Отправляем отчет *****/
         reportDeclaration.subscribeAndSendReport();
@@ -308,47 +223,7 @@ public class TestRunner extends BaseTest {
     public void createNewReportDeclarationNegativeJ0301206(String dataProviderValue) {
 
         /***** Генерим данные для заполнения документа *****/
-        DeclarationDataGeneralInformationJ0301206 declarationData = DeclarationDataGeneralInformationJ0301206.builder()
-                .declarationType(new CreateReportDeclarationJ0301206(CV).chooseReportNewCheckBox)
-                .specifiedPeriodType(new CreateReportDeclarationJ0301206(CV).chooseSpecifiedPeriodYear)
-                .year(dataProviderValue)
-                .comName(CV.comName())
-                .zip(dataProviderValue)
-                .sequenceNumber(dataProviderValue)
-                .kved(CV.kved())
-                .cityCode(dataProviderValue)
-                .innNumberOrPassport(CV.innNumberOrPassport())
-                .telNumber(CV.telNumber())
-                .faxNumber(CV.faxNumber())
-                .locationAddress(CV.locationAddress())
-                .email(CV.email())
-                .controlAuthority(CV.controlAuthority())
-                .build();
-
-        /***** Генерим данные для заполнения документа *****/
-        DeclarationDataCalculationTaxJ0301206 calculationTax = DeclarationDataCalculationTaxJ0301206.builder()
-                .sumName(CV.sumName())
-                .square(dataProviderValue)
-                .minSalary(dataProviderValue)
-                .countDays(dataProviderValue)
-                .percent(dataProviderValue)
-                .taxSum(dataProviderValue)
-                .taxSumSpecified(dataProviderValue)
-                .specifiedSum(dataProviderValue)
-                .fineSum(dataProviderValue)
-                .penaltySum(dataProviderValue)
-                .addText(CV.addText())
-                .addDeclaration(dataProviderValue)
-                .build();
-
-        /***** Генерим данные для заполнения документа *****/
-        DeclarationDataPersonInfoJ0301206 personInfo = DeclarationDataPersonInfoJ0301206.builder()
-                .dateDeclaration(dataProviderValue)
-                .FIO(CV.FIO())
-                .inn(CV.inn())
-                .accountant(CV.accountant())
-                .accountantInn(CV.accountantInn())
-                .build();
+        j0301206Object = new J0301206Object();
 
         DocumentTypesListPage documentTypesListPage = new MainPage().openReportTypesListPage();
         documentTypesListPage.checkDocumentTypesListPage();
@@ -359,16 +234,16 @@ public class TestRunner extends BaseTest {
         reportDeclaration.clickEditButton();
 
         /***** І. Загальні відомості *****/
-        declarationData.getDeclarationType().chooseTypeDeclaration();
-        declarationData.getSpecifiedPeriodType().chooseReportSpecifiedPeriod();
+        j0301206Object.getDeclarationData().getDeclarationType().chooseTypeDeclaration();
+        j0301206Object.getDeclarationData().getSpecifiedPeriodType().chooseReportSpecifiedPeriod();
 
-        reportDeclaration.declarationJ0301206Fields.forEach((key, value) -> reportDeclaration.setValueToGeneralInfo(key, value, declarationData));
+        reportDeclaration.declarationJ0301206Fields.forEach((key, value) -> reportDeclaration.setValueToGeneralInfo(key, value, j0301206Object.generateGeneralInfoFromDataProvider(dataProviderValue)));
 
         /**** ІІ. Розрахунок податкових зобов'язань збору за місця для паркування транспортних засобів *****/
-        reportDeclaration.declarationJ0301206Fields.forEach((key, value) -> reportDeclaration.setValueToCalculationTax(key, value, calculationTax));
+        reportDeclaration.declarationJ0301206Fields.forEach((key, value) -> reportDeclaration.setValueToCalculationTax(key, value, j0301206Object.generateCalculationTaxFromDataProvider(dataProviderValue)));
 
         /***** Заполнение персональных данных (футер страницы) *****/
-        reportDeclaration.declarationJ0301206Fields.forEach((key, value) -> reportDeclaration.setValueToPersonalInfo(key, value, personInfo));
+        reportDeclaration.declarationJ0301206Fields.forEach((key, value) -> reportDeclaration.setValueToPersonalInfo(key, value, j0301206Object.generatePersonalInfoFromDataProvider(dataProviderValue)));
 
         /***** Проверка значений в полях хедера *****/
         reportDeclaration.declarationJ0301206Fields.forEach((key, value) -> reportDeclaration.checkValueInGeneralInfo(key, value, dataProviderValue));
@@ -401,36 +276,7 @@ public class TestRunner extends BaseTest {
     public void createNewReportDeclarationS0501408() {
 
         /***** Генерим данные для заполнения документа *****/
-        DeclarationDataS0501408 dataDeclaration = DeclarationDataS0501408.builder()
-                .comEDRPOU(CV.comEDRPOU())
-                .comName(CV.comName())
-                .locationAddress(CV.locationAddress())
-                .locationAddressFact(CV.locationAddressFact())
-
-                .countryNameExport(CV.countryNameExport())
-                .countryCodeExport(CV.countryCodeExport())
-                .productNameExport(CV.productNameExport())
-                .productCodeExport(CV.productCodeExport())
-                .currencyNameExport(CV.currencyNameExport())
-                .currencyCodeExport(CV.currencyCodeExport())
-                .countProductsExport(CV.countProductsExport())
-                .productPriceExport(CV.productPriceExport())
-
-                .countryNameImport(CV.countryNameImport())
-                .countryCodeImport(CV.countryCodeImport())
-                .productNameImport(CV.productNameImport())
-                .productCodeImport(CV.productCodeImport())
-                .currencyNameImport(CV.currencyNameImport())
-                .currencyCodeImport(CV.currencyCodeImport())
-                .countProductsImport(CV.countProductsImport())
-                .productPriceImport(CV.productPriceImport())
-
-                .fioDir(CV.fioDir())
-                .fio(CV.fio())
-                .telNumber(CV.telNumber())
-                .fax(CV.fax())
-                .email(CV.email())
-                .build();
+        s0501408Object = new S0501408Object();
 
         DocumentTypesListPage documentTypesListPage = new MainPage().openReportTypesListPage();
         documentTypesListPage.checkDocumentTypesListPage();
@@ -441,16 +287,16 @@ public class TestRunner extends BaseTest {
         reportDeclaration.clickEditButton();
 
         /***** Респондент *****/
-        reportDeclaration.declarationS0501408Fields.forEach((key, value) -> reportDeclaration.setValueToHeader(key, value, dataDeclaration));
+        reportDeclaration.declarationS0501408Fields.forEach((key, value) -> reportDeclaration.setValueToHeader(key, value, s0501408Object.getDataDeclaration()));
 
         /**** Экспорт товаров *****/
-        reportDeclaration.declarationS0501408Fields.forEach((key, value) -> reportDeclaration.setValueToExportProducts(key, value, dataDeclaration));
+        reportDeclaration.declarationS0501408Fields.forEach((key, value) -> reportDeclaration.setValueToExportProducts(key, value, s0501408Object.getDataDeclaration()));
 
         /**** Импорт товаров товаров *****/
-        reportDeclaration.declarationS0501408Fields.forEach((key, value) -> reportDeclaration.setValueToImportProducts(key, value, dataDeclaration));
+        reportDeclaration.declarationS0501408Fields.forEach((key, value) -> reportDeclaration.setValueToImportProducts(key, value, s0501408Object.getDataDeclaration()));
 
         /***** Персональные данные *****/
-        reportDeclaration.declarationS0501408Fields.forEach((key, value) -> reportDeclaration.setValueToFooter(key, value, dataDeclaration));
+        reportDeclaration.declarationS0501408Fields.forEach((key, value) -> reportDeclaration.setValueToFooter(key, value, s0501408Object.getDataDeclaration()));
 
         /***** Сохраняем отчет *****/
         reportDeclaration.saveReport();
@@ -458,16 +304,16 @@ public class TestRunner extends BaseTest {
 
         /***** Проверка всех полей после сохранения документа *****/
         /***** Респондент *****/
-        reportDeclaration.declarationS0501408Fields.forEach((key, value) -> reportDeclaration.checkValueToHeader(key, value, dataDeclaration));
+        reportDeclaration.declarationS0501408Fields.forEach((key, value) -> reportDeclaration.checkValueToHeader(key, value, s0501408Object.getDataDeclaration()));
 
         /**** Экспорт товаров *****/
-        reportDeclaration.declarationS0501408Fields.forEach((key, value) -> reportDeclaration.checkValueToExportProducts(key, value, dataDeclaration));
+        reportDeclaration.declarationS0501408Fields.forEach((key, value) -> reportDeclaration.checkValueToExportProducts(key, value, s0501408Object.getDataDeclaration()));
 
         /**** Импорт товаров товаров *****/
-        reportDeclaration.declarationS0501408Fields.forEach((key, value) -> reportDeclaration.checkValueToImportProducts(key, value, dataDeclaration));
+        reportDeclaration.declarationS0501408Fields.forEach((key, value) -> reportDeclaration.checkValueToImportProducts(key, value, s0501408Object.getDataDeclaration()));
 
         /***** Персональные данные *****/
-        reportDeclaration.declarationS0501408Fields.forEach((key, value) -> reportDeclaration.checkValueToFooter(key, value, dataDeclaration));
+        reportDeclaration.declarationS0501408Fields.forEach((key, value) -> reportDeclaration.checkValueToFooter(key, value, s0501408Object.getDataDeclaration()));
 
         /***** Отправляем отчет *****/
         reportDeclaration.subscribeAndSendReport();
@@ -481,36 +327,7 @@ public class TestRunner extends BaseTest {
     public void createNewReportDeclarationS0501408NegativeDoc(String dataProviderValue) {
 
         /***** Генерим данные для заполнения документа *****/
-        DeclarationDataS0501408 dataDeclaration = DeclarationDataS0501408.builder()
-                .comEDRPOU(CV.comEDRPOU())
-                .comName(CV.comName())
-                .locationAddress(CV.locationAddress())
-                .locationAddressFact(CV.locationAddressFact())
-
-                .countryNameExport(CV.countryNameExport())
-                .countryCodeExport(CV.countryCodeExport())
-                .productNameExport(CV.productNameExport())
-                .productCodeExport(CV.productCodeExport())
-                .currencyNameExport(CV.currencyNameExport())
-                .currencyCodeExport(CV.currencyCodeExport())
-                .countProductsExport(dataProviderValue)
-                .productPriceExport(dataProviderValue)
-
-                .countryNameImport(CV.countryNameImport())
-                .countryCodeImport(CV.countryCodeImport())
-                .productNameImport(CV.productNameImport())
-                .productCodeImport(CV.productCodeImport())
-                .currencyNameImport(CV.currencyNameImport())
-                .currencyCodeImport(CV.currencyCodeImport())
-                .countProductsImport(dataProviderValue)
-                .productPriceImport(dataProviderValue)
-
-                .fioDir(CV.fioDir())
-                .fio(CV.fio())
-                .telNumber(CV.telNumber())
-                .fax(CV.fax())
-                .email(CV.email())
-                .build();
+        s0501408Object = new S0501408Object();
 
         DocumentTypesListPage documentTypesListPage = new MainPage().openReportTypesListPage();
         documentTypesListPage.checkDocumentTypesListPage();
@@ -521,16 +338,16 @@ public class TestRunner extends BaseTest {
         reportDeclaration.clickEditButton();
 
         /***** Респондент *****/
-        reportDeclaration.declarationS0501408Fields.forEach((key, value) -> reportDeclaration.setValueToHeader(key, value, dataDeclaration));
+        reportDeclaration.declarationS0501408Fields.forEach((key, value) -> reportDeclaration.setValueToHeader(key, value, s0501408Object.generateDataFromDataProvider(dataProviderValue)));
 
         /**** Экспорт товаров *****/
-        reportDeclaration.declarationS0501408Fields.forEach((key, value) -> reportDeclaration.setValueToExportProducts(key, value, dataDeclaration));
+        reportDeclaration.declarationS0501408Fields.forEach((key, value) -> reportDeclaration.setValueToExportProducts(key, value, s0501408Object.generateDataFromDataProvider(dataProviderValue)));
 
         /**** Импорт товаров товаров *****/
-        reportDeclaration.declarationS0501408Fields.forEach((key, value) -> reportDeclaration.setValueToImportProducts(key, value, dataDeclaration));
+        reportDeclaration.declarationS0501408Fields.forEach((key, value) -> reportDeclaration.setValueToImportProducts(key, value, s0501408Object.generateDataFromDataProvider(dataProviderValue)));
 
         /***** Персональные данные *****/
-        reportDeclaration.declarationS0501408Fields.forEach((key, value) -> reportDeclaration.setValueToFooter(key, value, dataDeclaration));
+        reportDeclaration.declarationS0501408Fields.forEach((key, value) -> reportDeclaration.setValueToFooter(key, value, s0501408Object.generateDataFromDataProvider(dataProviderValue)));
 
         /***** Сохраняем отчет *****/
         reportDeclaration.saveReport();
@@ -538,52 +355,23 @@ public class TestRunner extends BaseTest {
 
         /***** Проверка всех полей после сохранения документа *****/
         /***** Респондент *****/
-        reportDeclaration.declarationS0501408Fields.forEach((key, value) -> reportDeclaration.checkValueToHeader(key, value, dataDeclaration));
+        reportDeclaration.declarationS0501408Fields.forEach((key, value) -> reportDeclaration.checkValueToHeader(key, value, s0501408Object.getDataDeclaration()));
 
         /**** Экспорт товаров *****/
-        reportDeclaration.declarationS0501408Fields.forEach((key, value) -> reportDeclaration.checkValueToExportProducts(key, value));
+        reportDeclaration.declarationS0501408Fields.forEach(reportDeclaration::checkValueToExportProducts);
 
         /**** Импорт товаров товаров *****/
-        reportDeclaration.declarationS0501408Fields.forEach((key, value) -> reportDeclaration.checkValueToImportProducts(key, value));
+        reportDeclaration.declarationS0501408Fields.forEach(reportDeclaration::checkValueToImportProducts);
 
         /***** Персональные данные *****/
-        reportDeclaration.declarationS0501408Fields.forEach((key, value) -> reportDeclaration.checkValueToFooter(key, value, dataDeclaration));
+        reportDeclaration.declarationS0501408Fields.forEach((key, value) -> reportDeclaration.checkValueToFooter(key, value, s0501408Object.getDataDeclaration()));
     }
 
     @Story("Копирование отчета S0501408")
     @Test(description = "Копирование отчета (S0501408)", enabled = false)
     public void checkCopyReport() {
         /***** Генерим данные для заполнения документа *****/
-        DeclarationDataS0501408 dataDeclaration = DeclarationDataS0501408.builder()
-                .comEDRPOU(CV.comEDRPOU())
-                .comName(CV.comName())
-                .locationAddress(CV.locationAddress())
-                .locationAddressFact(CV.locationAddressFact())
-
-                .countryNameExport(CV.countryNameExport())
-                .countryCodeExport(CV.countryCodeExport())
-                .productNameExport(CV.productNameExport())
-                .productCodeExport(CV.productCodeExport())
-                .currencyNameExport(CV.currencyNameExport())
-                .currencyCodeExport(CV.currencyCodeExport())
-                .countProductsExport(CV.countProductsExport())
-                .productPriceExport(CV.productPriceExport())
-
-                .countryNameImport(CV.countryNameImport())
-                .countryCodeImport(CV.countryCodeImport())
-                .productNameImport(CV.productNameImport())
-                .productCodeImport(CV.productCodeImport())
-                .currencyNameImport(CV.currencyNameImport())
-                .currencyCodeImport(CV.currencyCodeImport())
-                .countProductsImport(CV.countProductsImport())
-                .productPriceImport(CV.productPriceImport())
-
-                .fioDir(CV.fioDir())
-                .fio(CV.fio())
-                .telNumber(CV.telNumber())
-                .fax(CV.fax())
-                .email(CV.email())
-                .build();
+        s0501408Object = new S0501408Object();
 
         DocumentTypesListPage documentTypesListPage = new MainPage().openReportTypesListPage();
         documentTypesListPage.checkDocumentTypesListPage();
@@ -594,16 +382,16 @@ public class TestRunner extends BaseTest {
         reportDeclaration.clickEditButton();
 
         /***** Респондент *****/
-        reportDeclaration.declarationS0501408Fields.forEach((key, value) -> reportDeclaration.setValueToHeader(key, value, dataDeclaration));
+        reportDeclaration.declarationS0501408Fields.forEach((key, value) -> reportDeclaration.setValueToHeader(key, value, s0501408Object.getDataDeclaration()));
 
         /**** Экспорт товаров *****/
-        reportDeclaration.declarationS0501408Fields.forEach((key, value) -> reportDeclaration.setValueToExportProducts(key, value, dataDeclaration));
+        reportDeclaration.declarationS0501408Fields.forEach((key, value) -> reportDeclaration.setValueToExportProducts(key, value, s0501408Object.getDataDeclaration()));
 
         /**** Импорт товаров товаров *****/
-        reportDeclaration.declarationS0501408Fields.forEach((key, value) -> reportDeclaration.setValueToImportProducts(key, value, dataDeclaration));
+        reportDeclaration.declarationS0501408Fields.forEach((key, value) -> reportDeclaration.setValueToImportProducts(key, value, s0501408Object.getDataDeclaration()));
 
         /***** Персональные данные *****/
-        reportDeclaration.declarationS0501408Fields.forEach((key, value) -> reportDeclaration.setValueToFooter(key, value, dataDeclaration));
+        reportDeclaration.declarationS0501408Fields.forEach((key, value) -> reportDeclaration.setValueToFooter(key, value, s0501408Object.getDataDeclaration()));
 
 
         /***** Сохраняем отчет и копируем его *****/
@@ -616,117 +404,73 @@ public class TestRunner extends BaseTest {
 
         /***** Проверяем поля после копирования отчета *****/
         /***** Экспорт товаров *****/
-        reportDeclaration.declarationS0501408Fields.forEach((key, value) -> reportDeclaration.checkValueToExportProducts(key, value, dataDeclaration));
+        reportDeclaration.declarationS0501408Fields.forEach((key, value) -> reportDeclaration.checkValueToExportProducts(key, value, s0501408Object.getDataDeclaration()));
 
         /***** Импорт товаров *****/
-        reportDeclaration.declarationS0501408Fields.forEach((key, value) -> reportDeclaration.checkValueToExportProducts(key, value, dataDeclaration));
+        reportDeclaration.declarationS0501408Fields.forEach((key, value) -> reportDeclaration.checkValueToExportProducts(key, value, s0501408Object.getDataDeclaration()));
     }
 
     @Story("Проверка редактирования формы документа")
     @Test(description = "Проверка редактирования документа без версий")
     public void checkEditDocType() {
         /***** Генерим тестовые данные *****/
-        CreateDocumentData documentDataOriginal = CreateDocumentData.builder()
-                .docName(CV.docName() + new DateUtil().getCurrentDateTime("hhmmssSSS"))
-                .service("Фискальная служба")
-                .gateway("Шлюз службы статистики")
-                .groupJournal(true)
-                .finReport(true)
-                .vddoc("123")
-                .groupId("777")
-                .build();
-
-        CreateDocumentData documentDataEdit = CreateDocumentData.builder()
-                .docName(CV.docName() + new DateUtil().getCurrentDateTime("hhmmssSSS"))
-                .service("Служба статистики")
-                .gateway("Шлюз пенсионного фонда")
-                .groupJournal(false)
-                .finReport(false)
-                .vddoc("2775")
-                .groupId("552288")
-                .build();
-        ArrayList<VersionData> versionList = new ArrayList<>();
-        versionList.add(VersionData.builder().date("2018-01-25").comType("Юр. лицо").typeReportPeriod("Квартал").cumulativeTotal(true).build());
-        versionList.add(VersionData.builder().date("2019-01-25").comType("Физ. лицо").typeReportPeriod("Без периода").cumulativeTotal(false).build());
-        versionList.add(VersionData.builder().date("2018-01-25").comType("Юр. лицо").typeReportPeriod("Месяц").cumulativeTotal(false).build());
-        versionList.add(VersionData.builder().date("2018-01-25").comType("Юр. лицо").typeReportPeriod("Квартал").cumulativeTotal(true).build());
+        documentObject = new CreateDocumentObject();
+        versionsList = new VersionsObject();
 
         /***** Тест *****/
         CreateDocumentTypePage typePage = new MainPage().openCreateNewTypePage();
         /***** Создаем документ *****/
-        typePage.createNewDocumentType(documentDataOriginal);
+        typePage.createNewDocumentType(documentObject.getDocumentDataFirst());
         MainPage mainPage = typePage.goToMainPage();
         DocumentTypesListPage typesListPage = mainPage.openReportTypesListPage();
 
-        typePage = typesListPage.searchAndOpenDocument(documentDataOriginal.getDocName());
+        typePage = typesListPage.searchAndOpenDocument(documentObject.getDocumentDataFirst().getDocName());
         typePage.getEditButton().shouldBe(Condition.visible).click();
         /***** Редактируем документ *****/
-        String docEditId = typePage.createNewDocumentType(documentDataEdit, versionList);
+        String docEditId = typePage.createNewDocumentType(documentObject.getDocumentDataSecond(), versionsList.getVersionList());
         mainPage = typePage.goToMainPage();
         typesListPage = mainPage.openReportTypesListPage();
         /***** Проверяем документ после редактирования *****/
-        typePage = typesListPage.searchAndOpenDocument(documentDataEdit.getDocName());
-        typePage.checkDocument(documentDataEdit, docEditId, versionList);
+        typePage = typesListPage.searchAndOpenDocument(documentObject.getDocumentDataSecond().getDocName());
+        typePage.checkDocument(documentObject.getDocumentDataSecond(), docEditId, versionsList.getVersionList());
     }
 
     @Story("Проверка редактирования формы документа")
     @Test(description = "Проверка редактирования документа, с добавлением версий")
     public void checkEditDocTypeAddNewVersion() {
         /***** Генерим тестовые данные *****/
-        CreateDocumentData documentDataOriginal = CreateDocumentData.builder()
-                .docName(CV.docName() + new DateUtil().getCurrentDateTime("hhmmssSSS"))
-                .service("Фискальная служба")
-                .gateway("Шлюз службы статистики")
-                .groupJournal(true)
-                .finReport(true)
-                .vddoc("123")
-                .groupId("777")
-                .build();
-
-        CreateDocumentData documentDataEdit = CreateDocumentData.builder()
-                .docName(CV.docName() + new DateUtil().getCurrentDateTime("hhmmssSSS"))
-                .service("Служба статистики")
-                .gateway("Шлюз пенсионного фонда")
-                .groupJournal(false)
-                .finReport(false)
-                .vddoc("2775")
-                .groupId("552288")
-                .build();
-        ArrayList<VersionData> versionListOriginal = new ArrayList<>();
-        versionListOriginal.add(VersionData.builder().date("2018-01-31").comType("Юр. лицо").typeReportPeriod("Квартал").cumulativeTotal(true).build());
-        versionListOriginal.add(VersionData.builder().date("2020-02-29").comType("Физ. лицо").typeReportPeriod("Без периода").cumulativeTotal(false).build());
-        versionListOriginal.add(VersionData.builder().date("2018-12-23").comType("Юр. лицо").typeReportPeriod("Месяц").cumulativeTotal(false).build());
-        versionListOriginal.add(VersionData.builder().date("2018-07-30").comType("Юр. лицо").typeReportPeriod("Квартал").cumulativeTotal(true).build());
+        documentObject = new CreateDocumentObject();
+        versionsList = new VersionsObject();
 
         VersionData versionData = VersionData.builder().date("2018-11-17").comType("Юр. лицо").typeReportPeriod("Квартал").cumulativeTotal(true).build();
 
         /***** Тест *****/
         CreateDocumentTypePage typePage = new MainPage().openCreateNewTypePage();
         /***** Создаем документ *****/
-        typePage.createNewDocumentType(documentDataOriginal, versionListOriginal);
+        typePage.createNewDocumentType(documentObject.getDocumentDataFirst(), versionsList.getVersionList());
         MainPage mainPage = typePage.goToMainPage();
         DocumentTypesListPage typesListPage = mainPage.openReportTypesListPage();
 
-        typePage = typesListPage.searchAndOpenDocument(documentDataOriginal.getDocName());
+        typePage = typesListPage.searchAndOpenDocument(documentObject.getDocumentDataFirst().getDocName());
         typePage.getEditButton().shouldBe(Condition.visible).click();
         /***** Редатируем документ (добавляем версию) *****/
-        String docCopyId = typePage.createNewDocumentType(documentDataEdit, versionData);
+        String docCopyId = typePage.createNewDocumentType(documentObject.getDocumentDataSecond(), versionData);
         mainPage = typePage.goToMainPage();
         typesListPage = mainPage.openReportTypesListPage();
-        typePage = typesListPage.searchAndOpenDocument(documentDataEdit.getDocName());
+        typePage = typesListPage.searchAndOpenDocument(documentObject.getDocumentDataSecond().getDocName());
 
         /***** Проверяем документ *****/
-        versionListOriginal.add(versionData);
-        typePage.checkDocument(documentDataEdit, docCopyId, versionListOriginal);
+        versionsList.getVersionList().add(versionData);
+        typePage.checkDocument(documentObject.getDocumentDataSecond(), docCopyId, versionsList.getVersionList());
 
         typePage.getEditButton().shouldBe(Condition.visible).click();
         /***** Редактируем документ (удаляем все версии) *****/
-        typePage.createNewDocumentType(documentDataOriginal);
+        typePage.createNewDocumentType(documentObject.getDocumentDataFirst());
         mainPage = typePage.goToMainPage();
         typesListPage = mainPage.openReportTypesListPage();
-        typePage = typesListPage.searchAndOpenDocument(documentDataOriginal.getDocName());
+        typePage = typesListPage.searchAndOpenDocument(documentObject.getDocumentDataFirst().getDocName());
         /***** Проверяем документ *****/
-        typePage.checkDocument(documentDataOriginal, docCopyId);
+        typePage.checkDocument(documentObject.getDocumentDataFirst(), docCopyId);
     }
 
     @Story("Проверка отображения ошибки при некорректном создании типа документа")

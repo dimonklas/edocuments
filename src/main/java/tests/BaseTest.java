@@ -4,7 +4,6 @@ import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.WebDriverRunner;
 import com.codeborne.selenide.testng.TextReport;
-import io.qameta.allure.Step;
 import lombok.extern.log4j.Log4j;
 import org.aeonbits.owner.ConfigFactory;
 import org.testng.annotations.AfterSuite;
@@ -23,7 +22,7 @@ import static com.codeborne.selenide.Selenide.*;
 @Log4j
 @Listeners({AllureOnFailListener.class, TextReport.class})
 public class BaseTest {
-    IConfigurationVariables confVariable = ConfigFactory.create(IConfigurationVariables.class, System.getProperties());
+    private final IConfigurationVariables confVariable = ConfigFactory.create(IConfigurationVariables.class, System.getProperties());
 
     @BeforeSuite
     public void setUp() {
@@ -81,7 +80,7 @@ public class BaseTest {
         }
     }
 
-    @AfterSuite(enabled = false)
+    @AfterSuite(enabled = true)
     public void tearDown() {
         open(Configuration.baseUrl);
         switchToDefaultContent();
