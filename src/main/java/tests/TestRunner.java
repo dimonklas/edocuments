@@ -735,4 +735,15 @@ public class TestRunner extends BaseTest {
         CreateDocumentTypePage typePage = new MainPage().openCreateNewTypePage();
         assertEquals("Ошибка", typePage.createNewDocumentType(documentData));
     }
+
+    @Story("Проверка отображения ошибки при некорректном создании типа документа")
+    @Test(description = "Проверка отображения ошибки при создании документа с версиями", dataProvider = "incorrectDataForCreateForm")
+    public void checkErrorWhileCreateNewDocWithVersions(CreateDocumentData documentData) {
+        ArrayList<VersionData> versionList = new ArrayList<>();
+        versionList.add(VersionData.builder().date("2018-01-25").comType("Юр. лицо").typeReportPeriod("Квартал").cumulativeTotal(true).build());
+        versionList.add(VersionData.builder().date("2019-01-25").comType("Физ. лицо").typeReportPeriod("Без периода").cumulativeTotal(false).build());
+
+        CreateDocumentTypePage typePage = new MainPage().openCreateNewTypePage();
+        assertEquals("Ошибка", typePage.createNewDocumentType(documentData, versionList));
+    }
 }
