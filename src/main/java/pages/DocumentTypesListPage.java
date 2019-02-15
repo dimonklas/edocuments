@@ -186,4 +186,9 @@ public class DocumentTypesListPage implements WorkingWithBrowserTabs {
         closeBrowserTab("Типы документов");
         return new CreateDocumentTypePage();
     }
+
+    public void checkOpenCloseDocument() {
+        String s = $x("(//table[@id='types_table']//tbody//tr)[1]").attr("class");
+        log.info("value: " + s);
+    }
 }

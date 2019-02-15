@@ -4,7 +4,6 @@ import com.codeborne.selenide.Condition;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
 import lombok.extern.log4j.Log4j;
-import org.aeonbits.owner.ConfigFactory;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
@@ -15,9 +14,6 @@ import pages.documentObjects.J0301206Object;
 import pages.documentObjects.S0501408Object;
 import pages.documentObjects.VersionsObject;
 import utils.AllureOnFailListener;
-import utils.IConfigurationVariables;
-
-import java.util.ArrayList;
 
 import static org.testng.Assert.assertEquals;
 
@@ -26,12 +22,11 @@ import static org.testng.Assert.assertEquals;
 @Feature("Тестирование документов")
 @Listeners(AllureOnFailListener.class)
 public class TestRunner extends BaseTest {
-    private final IConfigurationVariables CV = ConfigFactory.create(IConfigurationVariables.class, System.getProperties());
 
-    CreateDocumentObject documentObject;
-    VersionsObject versionsList;
-    J0301206Object j0301206Object;
-    S0501408Object s0501408Object;
+    private CreateDocumentObject documentObject;
+    private VersionsObject versionsList;
+    private J0301206Object j0301206Object;
+    private S0501408Object s0501408Object;
 
     @DataProvider
     public Object[][] getDataForSort() {
@@ -59,18 +54,10 @@ public class TestRunner extends BaseTest {
     @DataProvider
     public Object[][] incorrectDataForCreateForm() {
         return new Object[][]{
-                {
-                        documentObject.getDocumentIncorrectDataFirst()
-                },
-                {
-                        documentObject.getDocumentIncorrectDataSecond()
-                },
-                {
-                        documentObject.getDocumentIncorrectDataThird()
-                },
-                {
-                        documentObject.getDocumentIncorrectDataFour()
-                }
+                {documentObject.getDocumentIncorrectDataFirst()},
+                {documentObject.getDocumentIncorrectDataSecond()},
+                {documentObject.getDocumentIncorrectDataThird()},
+                {documentObject.getDocumentIncorrectDataFour()}
         };
     }
 
@@ -301,7 +288,6 @@ public class TestRunner extends BaseTest {
         /***** Сохраняем отчет *****/
         reportDeclaration.saveReport();
 
-
         /***** Проверка всех полей после сохранения документа *****/
         /***** Респондент *****/
         reportDeclaration.declarationS0501408Fields.forEach((key, value) -> reportDeclaration.checkValueToHeader(key, value, s0501408Object.getDataDeclaration()));
@@ -352,7 +338,6 @@ public class TestRunner extends BaseTest {
         /***** Сохраняем отчет *****/
         reportDeclaration.saveReport();
 
-
         /***** Проверка всех полей после сохранения документа *****/
         /***** Респондент *****/
         reportDeclaration.declarationS0501408Fields.forEach((key, value) -> reportDeclaration.checkValueToHeader(key, value, s0501408Object.getDataDeclaration()));
@@ -393,14 +378,12 @@ public class TestRunner extends BaseTest {
         /***** Персональные данные *****/
         reportDeclaration.declarationS0501408Fields.forEach((key, value) -> reportDeclaration.setValueToFooter(key, value, s0501408Object.getDataDeclaration()));
 
-
         /***** Сохраняем отчет и копируем его *****/
         reportDeclaration.saveReport();
         reportDeclaration.copyReport();
 
         /***** Проверяем все поля скопированного отчета *****/
         reportDeclaration.clickEditButton();
-
 
         /***** Проверяем поля после копирования отчета *****/
         /***** Экспорт товаров *****/
@@ -458,8 +441,17 @@ public class TestRunner extends BaseTest {
         mainPage = typePage.goToMainPage();
         typesListPage = mainPage.openReportTypesListPage();
         typePage = typesListPage.searchAndOpenDocument(documentObject.getDocumentDataSecond().getDocName());
+        /***** Копируем последнюю версию в документе *****/
+        typePage.getEditButton().shouldBe(Condition.visible).click();
+        typePage.copyLastVersion();
+        typePage.saveCurrentDocAndReturnId();
+
+        mainPage = typePage.goToMainPage();
+        typesListPage = mainPage.openReportTypesListPage();
+        typePage = typesListPage.searchAndOpenDocument(documentObject.getDocumentDataSecond().getDocName());
 
         /***** Проверяем документ *****/
+        versionsList.getVersionList().add(versionData);
         versionsList.getVersionList().add(versionData);
         typePage.checkDocument(documentObject.getDocumentDataSecond(), docCopyId, versionsList.getVersionList());
 
@@ -483,11 +475,18 @@ public class TestRunner extends BaseTest {
     @Story("Проверка отображения ошибки при некорректном создании типа документа")
     @Test(description = "Проверка отображения ошибки при создании документа с версиями", dataProvider = "incorrectDataForCreateForm")
     public void checkErrorWhileCreateNewDocWithVersions(CreateDocumentData documentData) {
-        ArrayList<VersionData> versionList = new ArrayList<>();
-        versionList.add(VersionData.builder().date("2018-01-25").comType("Юр. лицо").typeReportPeriod("Квартал").cumulativeTotal(true).build());
-        versionList.add(VersionData.builder().date("2019-01-25").comType("Физ. лицо").typeReportPeriod("Без периода").cumulativeTotal(false).build());
+        /***** Генерим тестовые данные *****/
+        versionsList = new VersionsObject();
 
         CreateDocumentTypePage typePage = new MainPage().openCreateNewTypePage();
-        assertEquals("Ошибка", typePage.createNewDocumentType(documentData, versionList));
+        assertEquals("Ошибка", typePage.createNewDocumentType(documentData, versionsList.getVersionList()));
+    }
+
+    @Story("Проверка открытия и закрытия документа")
+    @Test(description = "Открытие и закрытие документа", enabled = false)
+    public void checkOpenAndCloseDocument() {
+        DocumentTypesListPage typesListPage = new MainPage().openReportTypesListPage();
+        typesListPage.searchDocument("bla_name_1107");
+        typesListPage.checkOpenCloseDocument();
     }
 }

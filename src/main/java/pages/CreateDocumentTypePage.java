@@ -214,18 +214,6 @@ public class CreateDocumentTypePage implements WorkingWithBrowserTabs {
         }
     }
 
-    @Step("Добавление версии в документ")
-    public void addVersionToDocument() {
-        Random random = new Random();
-        addVersioButton.click();
-        dateFromVersion.last().sendKeys(new DateUtil().getCurrentDateTime("yyyy.MM.dd"));
-        comTypeVersion.last().selectOption(1 + random.nextInt(3-1));
-        int num = 1 + random.nextInt(5-1);
-        periodTypeVersion.last().selectOption(num);
-        if (num == 3) cumulativeControl.last().click();
-    }
-
-
     @Step("Переход на главную страницу")
     public MainPage goToMainPage(){
         linkOnHeader.shouldBe(visible).click();
@@ -264,6 +252,12 @@ public class CreateDocumentTypePage implements WorkingWithBrowserTabs {
             $(By.xpath("//table[@id='versions_table']//td[@class=' row-checkbox']")).click();
             deleteVersioButton.click();
         }
+    }
+
+    @Step("Копирование последней версии в документе")
+    public void copyLastVersion() {
+        $x("(//table[@id='versions_table']//tbody//tr)[last()]/td").shouldBe(visible).click();
+        copyVersioButton.shouldBe(visible).click();
     }
 
     @Step("Проверка наличия версий в документе")
