@@ -17,7 +17,8 @@ import utils.IConfigurationVariables;
 import java.util.ArrayList;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
+import static com.codeborne.selenide.Condition.*;
+import static org.testng.Assert.assertTrue;
 import static utils.SupportActions.generateRandomFloatNumber;
 
 
@@ -25,28 +26,54 @@ import static utils.SupportActions.generateRandomFloatNumber;
 @Feature("Тестирование документов")
 @Listeners(AllureOnFailListener.class)
 public class TestRunner extends BaseTest {
-    IConfigurationVariables CV = ConfigFactory.create(IConfigurationVariables.class, System.getProperties());
+    private final IConfigurationVariables CV = ConfigFactory.create(IConfigurationVariables.class, System.getProperties());
 
     @DataProvider
     public Object[][] getDataForSort() {
         return new Object[][]
-         {
-                 {"ID"},
-                 {"Код формы"},
-                 {"Наименование документа"},
-                 {"Служба"},
-                 {"Шлюз"},
-        };
+                {
+                        {"ID"},
+                        {"Код формы"},
+                        {"Наименование документа"},
+                        {"Служба"},
+                        {"Шлюз"},
+                };
     }
 
     @DataProvider
     public Object[][] getDataForCreateNegativeDoc() {
         return new Object[][]
-        {
+                {
 //                {"~!@#$^&*()_+{}|:</\\\\>?\\\"|Ё!№;:?*().,"},
-                {"qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM"},
-                {"ёйцукенгшщзхъфывапролджэячсмитьбюЁЙЦУКЕНГШЩЗФЫВАПРОЛДЖЭХЪЯЧСМИТЬБЮ"},
+                        {"qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM"},
+                        {"ёйцукенгшщзхъфывапролджэячсмитьбюЁЙЦУКЕНГШЩЗФЫВАПРОЛДЖЭХЪЯЧСМИТЬБЮ"},
 //                {"-10"}
+                };
+    }
+
+    @DataProvider
+    public Object[][] incorrectDataForCreateForm() {
+        return new Object[][]{
+                {
+                        CreateDocumentData.builder().docName("")
+                                .service("Фискальная служба").gateway("Шлюз службы статистики").groupJournal(true).finReport(true)
+                                .vddoc("123").groupId("777").build()
+                },
+                {
+                        CreateDocumentData.builder().docName(CV.docName() + new DateUtil().getCurrentDateTime("hhmmssSSS"))
+                                .service("").gateway("Шлюз пенсионного фонда").groupJournal(false).finReport(true)
+                                .vddoc("123").groupId("777").build()
+                },
+                {
+                        CreateDocumentData.builder().docName(CV.docName() + new DateUtil().getCurrentDateTime("hhmmssSSS"))
+                                .service("Служба статистики").gateway("").groupJournal(false).finReport(true)
+                                .vddoc("123").groupId("777").build()
+                },
+                {
+                        CreateDocumentData.builder().docName(CV.docName() + new DateUtil().getCurrentDateTime("hhmmssSSS"))
+                                .service("Пенсионный фонд").gateway("Шлюз пенсионного фонда").groupJournal(false).finReport(true)
+                                .vddoc("0").groupId("777").build()
+                }
         };
     }
 
@@ -609,7 +636,7 @@ public class TestRunner extends BaseTest {
                 .groupId("777")
                 .build();
 
-        CreateDocumentData documentDataCopy = CreateDocumentData.builder()
+        CreateDocumentData documentDataEdit = CreateDocumentData.builder()
                 .docName(CV.docName() + new DateUtil().getCurrentDateTime("hhmmssSSS"))
                 .service("Служба статистики")
                 .gateway("Шлюз пенсионного фонда")
@@ -626,17 +653,20 @@ public class TestRunner extends BaseTest {
 
         /***** Тест *****/
         CreateDocumentTypePage typePage = new MainPage().openCreateNewTypePage();
+        /***** Создаем документ *****/
         typePage.createNewDocumentType(documentDataOriginal);
         MainPage mainPage = typePage.goToMainPage();
         DocumentTypesListPage typesListPage = mainPage.openReportTypesListPage();
 
         typePage = typesListPage.searchAndOpenDocument(documentDataOriginal.getDocName());
         typePage.getEditButton().shouldBe(Condition.visible).click();
-        String docCopyId = typePage.createNewDocumentType(documentDataCopy, versionList);
+        /***** Редактируем документ *****/
+        String docEditId = typePage.createNewDocumentType(documentDataEdit, versionList);
         mainPage = typePage.goToMainPage();
         typesListPage = mainPage.openReportTypesListPage();
-        typePage = typesListPage.searchAndOpenDocument(documentDataCopy.getDocName());
-        typePage.checkDocument(documentDataCopy, docCopyId, versionList);
+        /***** Проверяем документ после редактирования *****/
+        typePage = typesListPage.searchAndOpenDocument(documentDataEdit.getDocName());
+        typePage.checkDocument(documentDataEdit, docEditId, versionList);
     }
 
     @Story("Проверка редактирования формы документа")
@@ -653,7 +683,7 @@ public class TestRunner extends BaseTest {
                 .groupId("777")
                 .build();
 
-        CreateDocumentData documentDataCopy = CreateDocumentData.builder()
+        CreateDocumentData documentDataEdit = CreateDocumentData.builder()
                 .docName(CV.docName() + new DateUtil().getCurrentDateTime("hhmmssSSS"))
                 .service("Служба статистики")
                 .gateway("Шлюз пенсионного фонда")
@@ -672,26 +702,37 @@ public class TestRunner extends BaseTest {
 
         /***** Тест *****/
         CreateDocumentTypePage typePage = new MainPage().openCreateNewTypePage();
+        /***** Создаем документ *****/
         typePage.createNewDocumentType(documentDataOriginal, versionListOriginal);
         MainPage mainPage = typePage.goToMainPage();
         DocumentTypesListPage typesListPage = mainPage.openReportTypesListPage();
 
         typePage = typesListPage.searchAndOpenDocument(documentDataOriginal.getDocName());
         typePage.getEditButton().shouldBe(Condition.visible).click();
-
-        String docCopyId = typePage.createNewDocumentType(documentDataCopy, versionData);
+        /***** Редатируем документ (добавляем версию) *****/
+        String docCopyId = typePage.createNewDocumentType(documentDataEdit, versionData);
         mainPage = typePage.goToMainPage();
         typesListPage = mainPage.openReportTypesListPage();
-        typePage = typesListPage.searchAndOpenDocument(documentDataCopy.getDocName());
+        typePage = typesListPage.searchAndOpenDocument(documentDataEdit.getDocName());
 
+        /***** Проверяем документ *****/
         versionListOriginal.add(versionData);
-        typePage.checkDocument(documentDataCopy, docCopyId, versionListOriginal);
+        typePage.checkDocument(documentDataEdit, docCopyId, versionListOriginal);
 
         typePage.getEditButton().shouldBe(Condition.visible).click();
+        /***** Редактируем документ (удаляем все версии) *****/
         typePage.createNewDocumentType(documentDataOriginal);
         mainPage = typePage.goToMainPage();
         typesListPage = mainPage.openReportTypesListPage();
         typePage = typesListPage.searchAndOpenDocument(documentDataOriginal.getDocName());
+        /***** Проверяем документ *****/
         typePage.checkDocument(documentDataOriginal, docCopyId);
+    }
+
+    @Story("Проверка отображения ошибки при некорректном создании типа документа")
+    @Test(description = "Проверка отображения ошибки при создании документа без версии", dataProvider = "incorrectDataForCreateForm")
+    public void checkErrorWhileCreateNewDoc(CreateDocumentData documentData) {
+        CreateDocumentTypePage typePage = new MainPage().openCreateNewTypePage();
+        assertEquals("Ошибка", typePage.createNewDocumentType(documentData));
     }
 }

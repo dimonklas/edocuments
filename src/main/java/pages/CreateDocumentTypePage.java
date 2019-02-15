@@ -41,6 +41,8 @@ public class CreateDocumentTypePage implements WorkingWithBrowserTabs {
     private ElementsCollection periodTypeVersion = $$(By.name("period_type"));
     private SelenideElement linkOnHeader = $(By.id("section_title"));
     private ElementsCollection cumulativeControl = $$(By.xpath("//input[@name='cumulative']/../.."));
+    private SelenideElement modalConfirmWindow = $(By.className("modal-header"));
+    private SelenideElement closeConfirmWindow = $(By.id("btn_close_red"));
 
 
     @Step("Создание нового типа документа без версии")
@@ -67,7 +69,15 @@ public class CreateDocumentTypePage implements WorkingWithBrowserTabs {
         if ($$(By.xpath("//table[@id='versions_table']//tbody/tr")).size() > 0) removeAllVersions();
 
         saveButton.shouldBe(visible).click();
-        return $(By.id("page_title")).getText().replaceAll("\\D+", "");
+        sleep(1000);
+
+        if (modalConfirmWindow.is(visible)) {
+            closeConfirmWindow.shouldBe(visible).click();
+            goToMainPage();
+            confirm();
+            return "Ошибка";
+        }
+            else return $(By.id("page_title")).getText().replaceAll("\\D+", "");
     }
 
     @Step("Создание нового типа документа с версиями")
@@ -93,7 +103,15 @@ public class CreateDocumentTypePage implements WorkingWithBrowserTabs {
 
         addVersionToDocument(version);
         saveButton.shouldBe(visible).click();
-        return $(By.id("page_title")).getText().replaceAll("\\D+", "");
+        sleep(1000);
+
+        if (modalConfirmWindow.is(visible)) {
+            closeConfirmWindow.shouldBe(visible).click();
+            goToMainPage();
+            confirm();
+            return "Ошибка";
+        }
+        else return $(By.id("page_title")).getText().replaceAll("\\D+", "");
     }
 
     @Step("Создание нового типа документа с версиями")
@@ -119,7 +137,15 @@ public class CreateDocumentTypePage implements WorkingWithBrowserTabs {
 
         addVersionToDocument(versions);
         saveButton.shouldBe(visible).click();
-        return $(By.id("page_title")).getText().replaceAll("\\D+", "");
+        sleep(1000);
+
+        if (modalConfirmWindow.is(visible)) {
+            closeConfirmWindow.shouldBe(visible).click();
+            goToMainPage();
+            confirm();
+            return "Ошибка";
+        }
+        else return $(By.id("page_title")).getText().replaceAll("\\D+", "");
     }
 
     @Step("Добавление версии в документ")

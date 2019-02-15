@@ -165,8 +165,8 @@ public class CreateReportDeclarationS0501408 {
     @Step("Ожидание изменения статуса")
     public String waitReportStatusChange() {
         int countWait = 0;
-        while (!reportStage.getText().equals("Не розшифрований") && countWait < 20) {
-            sleep(20000);
+        while (!reportStage.getText().equals("Не розшифрований") && countWait < 40) {
+            sleep(10000);
             refresh();
             countWait++;
         }
