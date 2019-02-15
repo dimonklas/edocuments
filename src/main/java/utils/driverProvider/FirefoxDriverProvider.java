@@ -10,7 +10,7 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 
 import java.io.File;
 
-public class FireFoxDriverProvider implements WebDriverProvider {
+public class FirefoxDriverProvider implements WebDriverProvider {
     @Override
     public WebDriver createDriver(DesiredCapabilities desiredCapabilities) {
 
