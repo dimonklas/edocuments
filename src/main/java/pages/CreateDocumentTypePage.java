@@ -24,6 +24,7 @@ import static org.testng.Assert.*;
 public class CreateDocumentTypePage implements WorkingWithBrowserTabs {
     private SelenideElement fieldName = $(By.id("type_name"));
     private SelenideElement saveButton = $(By.id("btn_save"));
+    private SelenideElement cancelButton = $(By.id("btn_cancel"));
     private SelenideElement editButton = $(By.id("btn_edit"));
     private SelenideElement groupJournalCheckBox = $(By.xpath("//*[@id='group_journal']/../label"));
     private SelenideElement finReportCheckBox = $(By.xpath("//*[@id='fin_reporting']/../label"));
@@ -201,6 +202,14 @@ public class CreateDocumentTypePage implements WorkingWithBrowserTabs {
             return "Ошибка";
         }
         else return $(By.id("page_title")).getText().replaceAll("\\D+", "");
+    }
+
+    @Step("Отмена изменений в типе документа")
+    public void cancelChanges() {
+        cancelButton.shouldBe(visible).click();
+        sleep(1000);
+        if ($(By.className("modal-header")).is(visible)) $(By.id("btn_yes")).shouldBe(visible).click();
+        sleep(1000);
     }
 
     @Step("Перейти на создание докумета \"J0301206\"")

@@ -493,6 +493,60 @@ public class TestRunner extends BaseTest {
         assertEquals("Ошибка", typePage.saveCurrentDocAndReturnId());
     }
 
+    @Story("Проверка кнопки \"Отменить\" в редактировании типа тендера")
+    @Test(description = "Проверка отмены изменений в редактировании тендера, с удалением версий")
+    public void checkCancelButtonRemoveVersions() {
+        /***** Генерим тестовые данные *****/
+        documentObject = new CreateDocumentObject();
+        versionsList = new VersionsObject();
+
+        /***** Тест *****/
+        CreateDocumentTypePage typePage = new MainPage().openCreateNewTypePage();
+        /***** Создаем документ *****/
+        typePage.setDataToDocumentType(documentObject.getDocumentDataFirst(), versionsList.getVersionList());
+        String docId = typePage.saveCurrentDocAndReturnId();
+        MainPage mainPage = typePage.goToMainPage();
+        DocumentTypesListPage typesListPage = mainPage.openReportTypesListPage();
+
+        typePage = typesListPage.searchAndOpenDocument(documentObject.getDocumentDataFirst().getDocName());
+        typePage.getEditButton().shouldBe(Condition.visible).click();
+        /***** Редатируем документ (добавляем версию) *****/
+        typePage.setDataToDocumentType(documentObject.getDocumentDataSecond());
+        typePage.cancelChanges();
+        typePage.checkDocument(documentObject.getDocumentDataFirst(), docId, versionsList.getVersionList());
+        mainPage = typePage.goToMainPage();
+        typesListPage = mainPage.openReportTypesListPage();
+        typePage = typesListPage.searchAndOpenDocument(documentObject.getDocumentDataFirst().getDocName());
+        typePage.checkDocument(documentObject.getDocumentDataFirst(), docId, versionsList.getVersionList());
+    }
+
+    @Story("Проверка кнопки \"Отменить\" в редактировании типа тендера")
+    @Test(description = "Проверка отмены изменений в редактировании тендера, с добавлением версий")
+    public void checkCancelButtonAddVersions() {
+        /***** Генерим тестовые данные *****/
+        documentObject = new CreateDocumentObject();
+        versionsList = new VersionsObject();
+
+        /***** Тест *****/
+        CreateDocumentTypePage typePage = new MainPage().openCreateNewTypePage();
+        /***** Создаем документ *****/
+        typePage.setDataToDocumentType(documentObject.getDocumentDataFirst());
+        String docId = typePage.saveCurrentDocAndReturnId();
+        MainPage mainPage = typePage.goToMainPage();
+        DocumentTypesListPage typesListPage = mainPage.openReportTypesListPage();
+
+        typePage = typesListPage.searchAndOpenDocument(documentObject.getDocumentDataFirst().getDocName());
+        typePage.getEditButton().shouldBe(Condition.visible).click();
+        /***** Редатируем документ (добавляем версию) *****/
+        typePage.setDataToDocumentType(documentObject.getDocumentDataSecond(), versionsList.getVersionList());
+        typePage.cancelChanges();
+        typePage.checkDocument(documentObject.getDocumentDataFirst(), docId);
+        mainPage = typePage.goToMainPage();
+        typesListPage = mainPage.openReportTypesListPage();
+        typePage = typesListPage.searchAndOpenDocument(documentObject.getDocumentDataFirst().getDocName());
+        typePage.checkDocument(documentObject.getDocumentDataFirst(), docId);
+    }
+
     @Story("Проверка открытия и закрытия документа")
     @Test(description = "Открытие и закрытие документа", enabled = false)
     public void checkOpenAndCloseDocument() {
