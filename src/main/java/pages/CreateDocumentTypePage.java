@@ -295,10 +295,31 @@ public class CreateDocumentTypePage implements WorkingWithBrowserTabs {
         int countCloseVersion = 0;
 
         for (int i = 1; i <= count; i++) {
-            $x("(//table[@id='versions_table']//tbody//tr)[" + i + "]/td").click();
-            openVersionButton.shouldBe(visible).click();
+            if ($x("(//table[@id='versions_table']//tbody//tr)[" + i + "]/td[contains(.,'Закрыта')]").is(exist)) {
+                $x("(//table[@id='versions_table']//tbody//tr)[" + i + "]/td").click();
+                openVersionButton.shouldBe(visible).click();
+            }
             sleep(500);
             if (closeVersionButton.is(visible) && $x("(//table[@id='versions_table']//tbody//tr)[" + i + "]//td[3]").getText().equals("Открыта"))
+                countCloseVersion++;
+        }
+        return countCloseVersion == currentCloseVersion ;
+    }
+
+    @Step("Открытие версии документа")
+    public boolean closeAllVersion() {
+        int count = comTypeVersion.size();
+        int currentCloseVersion = $$x("//table[@id='versions_table']//tr[contains(.,('Открыта'))]").size();
+        int countCloseVersion = 0;
+
+        for (int i = 1; i <= count; i++) {
+            if ($x("(//table[@id='versions_table']//tbody//tr)[" + i + "]/td[contains(.,'Открыта')]").is(exist)){
+                $x("(//table[@id='versions_table']//tbody//tr)[" + i + "]/td").click();
+                closeVersionButton.shouldBe(visible).click();
+            }
+            sleep(500);
+
+            if (openVersionButton.is(visible) && $x("(//table[@id='versions_table']//tbody//tr)[" + i + "]//td[3]").getText().equals("Закрыта"))
                 countCloseVersion++;
         }
         return countCloseVersion == currentCloseVersion ;

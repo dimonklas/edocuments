@@ -658,5 +658,6 @@ public class TestRunner extends BaseTest {
 
         typePage = typesListPage.searchAndOpenDocument(documentObject.getDocumentDataFirst().getDocName());
         assertTrue(typePage.openAllVersion(), "Версия не открылась");
+        assertTrue(typePage.closeAllVersion(), "Версия не закрылась");
     }
 }
