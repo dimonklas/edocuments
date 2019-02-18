@@ -174,8 +174,6 @@ public class DocumentTypesListPage implements WorkingWithBrowserTabs {
             }
             arrayList.add(stringBuilder.toString());
         }
-        log.info(arrayList.get(0));
-        log.info(arrayList.get(1));
         Assert.assertEquals(arrayList.get(0), arrayList.get(1), "Разные документы");
     }
 

@@ -46,17 +46,17 @@ public class CreateDocumentTypePage implements WorkingWithBrowserTabs {
 
 
     @Step("Создание нового типа документа без версии")
-    public String createNewDocumentType(CreateDocumentData data) {
+    public void setDataToDocumentType(CreateDocumentData data) {
         fieldName.shouldBe(visible).clear();
         fieldName.shouldBe(visible).sendKeys(data.getDocName());
         serviceDropdown.selectOption(data.getService());
         gatewayDropdown.selectOption(data.getGateway());
 
-        boolean gropJournalCheked = executeJavaScript("return document.getElementById(\"group_journal\").checked;");
+        boolean groupJournalChecked = executeJavaScript("return document.getElementById(\"group_journal\").checked;");
         boolean finReportChecked = executeJavaScript("return  document.getElementById(\"fin_reporting\").checked;");
 
-        if (data.isGroupJournal() && !gropJournalCheked) groupJournalCheckBox.click();
-        if (!data.isGroupJournal() && gropJournalCheked) groupJournalCheckBox.click();
+        if (data.isGroupJournal() && !groupJournalChecked) groupJournalCheckBox.click();
+        if (!data.isGroupJournal() && groupJournalChecked) groupJournalCheckBox.click();
         if (data.isFinReport() && !finReportChecked) {
             finReportCheckBox.click();
             vddoc.clear();
@@ -67,21 +67,10 @@ public class CreateDocumentTypePage implements WorkingWithBrowserTabs {
         if (!data.isFinReport() && finReportChecked) finReportCheckBox.click();
 
         if ($$(By.xpath("//table[@id='versions_table']//tbody/tr")).size() > 0) removeAllVersions();
-
-        saveButton.shouldBe(visible).click();
-        sleep(1000);
-
-        if (modalConfirmWindow.is(visible)) {
-            closeConfirmWindow.shouldBe(visible).click();
-            goToMainPage();
-            confirm();
-            return "Ошибка";
-        }
-            else return $(By.id("page_title")).getText().replaceAll("\\D+", "");
     }
 
     @Step("Создание нового типа документа с версиями")
-    public String createNewDocumentType(CreateDocumentData data, VersionData version) {
+    public void setDataToDocumentType(CreateDocumentData data, VersionData version) {
         fieldName.shouldBe(visible).clear();
         fieldName.shouldBe(visible).sendKeys(data.getDocName());
         serviceDropdown.selectOption(data.getService());
@@ -102,30 +91,20 @@ public class CreateDocumentTypePage implements WorkingWithBrowserTabs {
         if (!data.isFinReport() && finReportChecked) finReportCheckBox.click();
 
         addVersionToDocument(version);
-        saveButton.shouldBe(visible).click();
-        sleep(1000);
-
-        if (modalConfirmWindow.is(visible)) {
-            closeConfirmWindow.shouldBe(visible).click();
-            goToMainPage();
-            confirm();
-            return "Ошибка";
-        }
-        else return $(By.id("page_title")).getText().replaceAll("\\D+", "");
     }
 
     @Step("Создание нового типа документа с версиями")
-    public String createNewDocumentType(CreateDocumentData data, ArrayList<VersionData> versions) {
+    public void setDataToDocumentType(CreateDocumentData data, ArrayList<VersionData> versions) {
         fieldName.shouldBe(visible).clear();
         fieldName.shouldBe(visible).sendKeys(data.getDocName());
         serviceDropdown.selectOption(data.getService());
         gatewayDropdown.selectOption(data.getGateway());
 
-        boolean gropJournalCheked = executeJavaScript("return document.getElementById(\"group_journal\").checked;");
+        boolean groupJournalChecked = executeJavaScript("return document.getElementById(\"group_journal\").checked;");
         boolean finReportChecked = executeJavaScript("return  document.getElementById(\"fin_reporting\").checked;");
 
-        if (data.isGroupJournal() && !gropJournalCheked) groupJournalCheckBox.click();
-        if (!data.isGroupJournal() && gropJournalCheked) groupJournalCheckBox.click();
+        if (data.isGroupJournal() && !groupJournalChecked) groupJournalCheckBox.click();
+        if (!data.isGroupJournal() && groupJournalChecked) groupJournalCheckBox.click();
         if (data.isFinReport() && !finReportChecked) {
             finReportCheckBox.click();
             vddoc.clear();
@@ -136,16 +115,6 @@ public class CreateDocumentTypePage implements WorkingWithBrowserTabs {
         if (!data.isFinReport() && finReportChecked) finReportCheckBox.click();
 
         addVersionToDocument(versions);
-        saveButton.shouldBe(visible).click();
-        sleep(1000);
-
-        if (modalConfirmWindow.is(visible)) {
-            closeConfirmWindow.shouldBe(visible).click();
-            goToMainPage();
-            confirm();
-            return "Ошибка";
-        }
-        else return $(By.id("page_title")).getText().replaceAll("\\D+", "");
     }
 
     @Step("Добавление версии в документ")
@@ -175,10 +144,10 @@ public class CreateDocumentTypePage implements WorkingWithBrowserTabs {
         assertEquals(serviceDropdown.getText(), data.getService());
         assertEquals(gatewayDropdown.getText(), data.getGateway());
 
-        boolean gropJournalCheked = executeJavaScript("return document.getElementById(\"group_journal\").checked;");
+        boolean groupJournalChecked = executeJavaScript("return document.getElementById(\"group_journal\").checked;");
         boolean finReportChecked = executeJavaScript("return  document.getElementById(\"fin_reporting\").checked;");
 
-        assertEquals(data.isGroupJournal(), gropJournalCheked);
+        assertEquals(data.isGroupJournal(), groupJournalChecked);
         assertEquals(data.isFinReport(), finReportChecked);
 
         if (data.isFinReport()) {
@@ -196,10 +165,10 @@ public class CreateDocumentTypePage implements WorkingWithBrowserTabs {
         assertEquals(serviceDropdown.getText(), data.getService());
         assertEquals(gatewayDropdown.getText(), data.getGateway());
 
-        boolean gropJournalCheked = executeJavaScript("return document.getElementById(\"group_journal\").checked;");
+        boolean groupJournalChecked = executeJavaScript("return document.getElementById(\"group_journal\").checked;");
         boolean finReportChecked = executeJavaScript("return  document.getElementById(\"fin_reporting\").checked;");
 
-        assertEquals(data.isGroupJournal(), gropJournalCheked);
+        assertEquals(data.isGroupJournal(), groupJournalChecked);
         assertEquals(data.isFinReport(), finReportChecked);
 
         if (data.isFinReport()) {
@@ -222,8 +191,16 @@ public class CreateDocumentTypePage implements WorkingWithBrowserTabs {
 
     @Step("Сохранить текущий документ")
     public String saveCurrentDocAndReturnId(){
-        saveButton.click();
-        return $(By.id("page_title")).getText().replaceAll("\\D+", "");
+        saveButton.shouldBe(visible).click();
+        sleep(1000);
+
+        if (modalConfirmWindow.is(visible)) {
+            closeConfirmWindow.shouldBe(visible).click();
+            goToMainPage();
+            confirm();
+            return "Ошибка";
+        }
+        else return $(By.id("page_title")).getText().replaceAll("\\D+", "");
     }
 
     @Step("Перейти на создание докумета \"J0301206\"")

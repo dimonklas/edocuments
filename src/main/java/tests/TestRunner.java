@@ -91,7 +91,8 @@ public class TestRunner extends BaseTest {
         documentObject = new CreateDocumentObject();
         /***** Тест *****/
         CreateDocumentTypePage typePage = new MainPage().openCreateNewTypePage();
-        String docId = typePage.createNewDocumentType(documentObject.getDocumentDataFirst());
+        typePage.setDataToDocumentType(documentObject.getDocumentDataFirst());
+        String docId = typePage.saveCurrentDocAndReturnId();
         MainPage mainPage = typePage.goToMainPage();
         DocumentTypesListPage typesListPage = mainPage.openReportTypesListPage();
         typePage = typesListPage.searchAndOpenDocument(documentObject.getDocumentDataFirst().getDocName());
@@ -107,7 +108,8 @@ public class TestRunner extends BaseTest {
 
         /***** Тест *****/
         CreateDocumentTypePage typePage = new MainPage().openCreateNewTypePage();
-        String docId = typePage.createNewDocumentType(documentObject.getDocumentDataFirst(), versionsList.getVersionList());
+        typePage.setDataToDocumentType(documentObject.getDocumentDataFirst(), versionsList.getVersionList());
+        String docId = typePage.saveCurrentDocAndReturnId();
         MainPage mainPage = typePage.goToMainPage();
         DocumentTypesListPage typesListPage = mainPage.openReportTypesListPage();
         typePage = typesListPage.searchAndOpenDocument(documentObject.getDocumentDataFirst().getDocName());
@@ -123,7 +125,8 @@ public class TestRunner extends BaseTest {
 
         /***** Тест *****/
         CreateDocumentTypePage typePage = new MainPage().openCreateNewTypePage();
-        typePage.createNewDocumentType(documentObject.getDocumentDataFirst(), versionsList.getVersionList());
+        typePage.setDataToDocumentType(documentObject.getDocumentDataFirst(), versionsList.getVersionList());
+        typePage.saveCurrentDocAndReturnId();
         MainPage mainPage = typePage.goToMainPage();
         DocumentTypesListPage typesListPage = mainPage.openReportTypesListPage();
         typesListPage.searchDocument(documentObject.getDocumentDataFirst().getDocName());
@@ -144,7 +147,8 @@ public class TestRunner extends BaseTest {
         documentObject = new CreateDocumentObject();
         /***** Тест *****/
         CreateDocumentTypePage typePage = new MainPage().openCreateNewTypePage();
-        typePage.createNewDocumentType(documentObject.getDocumentDataFirst());
+        typePage.setDataToDocumentType(documentObject.getDocumentDataFirst());
+        typePage.saveCurrentDocAndReturnId();
         MainPage mainPage = typePage.goToMainPage();
         DocumentTypesListPage typesListPage = mainPage.openReportTypesListPage();
         typesListPage.searchDocument(documentObject.getDocumentDataFirst().getDocName());
@@ -403,14 +407,16 @@ public class TestRunner extends BaseTest {
         /***** Тест *****/
         CreateDocumentTypePage typePage = new MainPage().openCreateNewTypePage();
         /***** Создаем документ *****/
-        typePage.createNewDocumentType(documentObject.getDocumentDataFirst());
+        typePage.setDataToDocumentType(documentObject.getDocumentDataFirst());
+        typePage.saveCurrentDocAndReturnId();
         MainPage mainPage = typePage.goToMainPage();
         DocumentTypesListPage typesListPage = mainPage.openReportTypesListPage();
 
         typePage = typesListPage.searchAndOpenDocument(documentObject.getDocumentDataFirst().getDocName());
         typePage.getEditButton().shouldBe(Condition.visible).click();
         /***** Редактируем документ *****/
-        String docEditId = typePage.createNewDocumentType(documentObject.getDocumentDataSecond(), versionsList.getVersionList());
+        typePage.setDataToDocumentType(documentObject.getDocumentDataSecond(), versionsList.getVersionList());
+        String docEditId = typePage.saveCurrentDocAndReturnId();
         mainPage = typePage.goToMainPage();
         typesListPage = mainPage.openReportTypesListPage();
         /***** Проверяем документ после редактирования *****/
@@ -430,14 +436,16 @@ public class TestRunner extends BaseTest {
         /***** Тест *****/
         CreateDocumentTypePage typePage = new MainPage().openCreateNewTypePage();
         /***** Создаем документ *****/
-        typePage.createNewDocumentType(documentObject.getDocumentDataFirst(), versionsList.getVersionList());
+        typePage.setDataToDocumentType(documentObject.getDocumentDataFirst(), versionsList.getVersionList());
+        typePage.saveCurrentDocAndReturnId();
         MainPage mainPage = typePage.goToMainPage();
         DocumentTypesListPage typesListPage = mainPage.openReportTypesListPage();
 
         typePage = typesListPage.searchAndOpenDocument(documentObject.getDocumentDataFirst().getDocName());
         typePage.getEditButton().shouldBe(Condition.visible).click();
         /***** Редатируем документ (добавляем версию) *****/
-        String docCopyId = typePage.createNewDocumentType(documentObject.getDocumentDataSecond(), versionData);
+        typePage.setDataToDocumentType(documentObject.getDocumentDataSecond(), versionData);
+        String docEditId = typePage.saveCurrentDocAndReturnId();
         mainPage = typePage.goToMainPage();
         typesListPage = mainPage.openReportTypesListPage();
         typePage = typesListPage.searchAndOpenDocument(documentObject.getDocumentDataSecond().getDocName());
@@ -453,23 +461,25 @@ public class TestRunner extends BaseTest {
         /***** Проверяем документ *****/
         versionsList.getVersionList().add(versionData);
         versionsList.getVersionList().add(versionData);
-        typePage.checkDocument(documentObject.getDocumentDataSecond(), docCopyId, versionsList.getVersionList());
+        typePage.checkDocument(documentObject.getDocumentDataSecond(), docEditId, versionsList.getVersionList());
 
         typePage.getEditButton().shouldBe(Condition.visible).click();
         /***** Редактируем документ (удаляем все версии) *****/
-        typePage.createNewDocumentType(documentObject.getDocumentDataFirst());
+        typePage.setDataToDocumentType(documentObject.getDocumentDataFirst());
+        typePage.saveCurrentDocAndReturnId();
         mainPage = typePage.goToMainPage();
         typesListPage = mainPage.openReportTypesListPage();
         typePage = typesListPage.searchAndOpenDocument(documentObject.getDocumentDataFirst().getDocName());
         /***** Проверяем документ *****/
-        typePage.checkDocument(documentObject.getDocumentDataFirst(), docCopyId);
+        typePage.checkDocument(documentObject.getDocumentDataFirst(), docEditId);
     }
 
     @Story("Проверка отображения ошибки при некорректном создании типа документа")
     @Test(description = "Проверка отображения ошибки при создании документа без версии", dataProvider = "incorrectDataForCreateForm")
     public void checkErrorWhileCreateNewDoc(CreateDocumentData documentData) {
         CreateDocumentTypePage typePage = new MainPage().openCreateNewTypePage();
-        assertEquals("Ошибка", typePage.createNewDocumentType(documentData));
+        typePage.setDataToDocumentType(documentData);
+        assertEquals("Ошибка", typePage.saveCurrentDocAndReturnId());
     }
 
     @Story("Проверка отображения ошибки при некорректном создании типа документа")
@@ -479,7 +489,8 @@ public class TestRunner extends BaseTest {
         versionsList = new VersionsObject();
 
         CreateDocumentTypePage typePage = new MainPage().openCreateNewTypePage();
-        assertEquals("Ошибка", typePage.createNewDocumentType(documentData, versionsList.getVersionList()));
+        typePage.setDataToDocumentType(documentData, versionsList.getVersionList());
+        assertEquals("Ошибка", typePage.saveCurrentDocAndReturnId());
     }
 
     @Story("Проверка открытия и закрытия документа")
