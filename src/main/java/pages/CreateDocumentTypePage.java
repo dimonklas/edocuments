@@ -8,15 +8,14 @@ import lombok.extern.log4j.Log4j;
 import org.openqa.selenium.By;
 import pages.document.CreateDocumentData;
 import pages.document.VersionData;
-import utils.DateUtil;
 import utils.WorkingWithBrowserTabs;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
 import static org.testng.Assert.*;
+import static utils.SupportActions.isAlertPresent;
 
 
 @Log4j
@@ -26,6 +25,7 @@ public class CreateDocumentTypePage implements WorkingWithBrowserTabs {
     private SelenideElement saveButton = $(By.id("btn_save"));
     private SelenideElement cancelButton = $(By.id("btn_cancel"));
     private SelenideElement editButton = $(By.id("btn_edit"));
+    private SelenideElement deleteButton = $(By.id("btn_delete"));
     private SelenideElement groupJournalCheckBox = $(By.xpath("//*[@id='group_journal']/../label"));
     private SelenideElement finReportCheckBox = $(By.xpath("//*[@id='fin_reporting']/../label"));
     private SelenideElement serviceDropdown = $(By.id("service"));
@@ -190,6 +190,13 @@ public class CreateDocumentTypePage implements WorkingWithBrowserTabs {
         return new MainPage();
     }
 
+    @Step("Переход на главную страницу")
+    public MainPage goToMainPageWithConfirm(){
+        linkOnHeader.shouldBe(visible).click();
+        if(isAlertPresent()) confirm();
+        return new MainPage();
+    }
+
     @Step("Сохранить текущий документ")
     public String saveCurrentDocAndReturnId(){
         saveButton.shouldBe(visible).click();
@@ -207,6 +214,14 @@ public class CreateDocumentTypePage implements WorkingWithBrowserTabs {
     @Step("Отмена изменений в типе документа")
     public void cancelChanges() {
         cancelButton.shouldBe(visible).click();
+        sleep(1000);
+        if ($(By.className("modal-header")).is(visible)) $(By.id("btn_yes")).shouldBe(visible).click();
+        sleep(1000);
+    }
+
+    @Step("Удаление документа")
+    public void removeDocument(){
+        deleteButton.shouldBe(visible).click();
         sleep(1000);
         if ($(By.className("modal-header")).is(visible)) $(By.id("btn_yes")).shouldBe(visible).click();
         sleep(1000);

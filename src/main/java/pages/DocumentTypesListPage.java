@@ -101,7 +101,7 @@ public class DocumentTypesListPage implements WorkingWithBrowserTabs {
     }
 
     @Step("Проверка поиска по значению \"{value}\"")
-    public void searchDocument(String value) {
+    public boolean searchDocument(String value) {
         refresh();
         searchField.shouldBe(visible).sendKeys(value);
         StringBuilder stringBuilder = new StringBuilder();
@@ -112,9 +112,10 @@ public class DocumentTypesListPage implements WorkingWithBrowserTabs {
             }
             String result = stringBuilder.toString();
             log.info(result);
-            Assert.assertTrue(result.contains(value), "Записи отсутствуют");
+            return true;
         } else {
             log.info("Записи отсутствуют");
+            return false;
         }
     }
 

@@ -3,8 +3,10 @@ package utils;
 import com.codeborne.selenide.SelenideElement;
 import lombok.extern.log4j.Log4j;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.NoAlertPresentException;
 
 import static com.codeborne.selenide.Selenide.sleep;
+import static com.codeborne.selenide.Selenide.switchTo;
 
 @Log4j
 public class SupportActions {
@@ -23,5 +25,14 @@ public class SupportActions {
 //        for (int i = 0; i < length; i++) {
 //            element.sendKeys(Keys.chord(Keys.BACK_SPACE));
 //        }
+    }
+
+    public static boolean isAlertPresent() {
+        try {
+            switchTo().alert();
+            return true;
+        }catch (NoAlertPresentException e){
+            return false;
+        }
     }
 }

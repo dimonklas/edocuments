@@ -80,7 +80,7 @@ public class BaseTest {
         }
     }
 
-    @AfterSuite(enabled = false)
+    @AfterSuite(enabled = true)
     public void tearDown() {
         open(Configuration.baseUrl);
         switchToDefaultContent();

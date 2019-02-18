@@ -16,6 +16,8 @@ import pages.documentObjects.VersionsObject;
 import utils.AllureOnFailListener;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
 
 
 @Log4j
@@ -545,6 +547,53 @@ public class TestRunner extends BaseTest {
         typesListPage = mainPage.openReportTypesListPage();
         typePage = typesListPage.searchAndOpenDocument(documentObject.getDocumentDataFirst().getDocName());
         typePage.checkDocument(documentObject.getDocumentDataFirst(), docId);
+    }
+
+    @Story("Проверка кнопки \"Удалить\" в типе документа")
+    @Test(description = "Удаление документа с версиями")
+    public void checkDeleteButtonInDocTypeWithVersions() {
+        /***** Генерим тестовые данные *****/
+        documentObject = new CreateDocumentObject();
+
+        /***** Тест *****/
+        CreateDocumentTypePage typePage = new MainPage().openCreateNewTypePage();
+        /***** Создаем документ *****/
+        typePage.setDataToDocumentType(documentObject.getDocumentDataFirst());
+        typePage.saveCurrentDocAndReturnId();
+        MainPage mainPage = typePage.goToMainPage();
+        DocumentTypesListPage typesListPage = mainPage.openReportTypesListPage();
+
+        typePage = typesListPage.searchAndOpenDocument(documentObject.getDocumentDataFirst().getDocName());
+
+        /***** Удаляем документ *****/
+        typePage.removeDocument();
+        mainPage = typePage.goToMainPageWithConfirm();
+        typesListPage = mainPage.openReportTypesListPage();
+        assertFalse(typesListPage.searchDocument(documentObject.getDocumentDataFirst().getDocName()), "Тип документа не удалился");
+    }
+
+    @Story("Проверка кнопки \"Удалить\" в типе документа")
+    @Test(description = "Удаление документа без версий")
+    public void checkDeleteButtonInDocTypeWithoutVersions() {
+        /***** Генерим тестовые данные *****/
+        documentObject = new CreateDocumentObject();
+        versionsList = new VersionsObject();
+
+        /***** Тест *****/
+        CreateDocumentTypePage typePage = new MainPage().openCreateNewTypePage();
+        /***** Создаем документ *****/
+        typePage.setDataToDocumentType(documentObject.getDocumentDataFirst(), versionsList.getVersionList());
+        typePage.saveCurrentDocAndReturnId();
+        MainPage mainPage = typePage.goToMainPage();
+        DocumentTypesListPage typesListPage = mainPage.openReportTypesListPage();
+
+        typePage = typesListPage.searchAndOpenDocument(documentObject.getDocumentDataFirst().getDocName());
+
+        /***** Удаляем документ *****/
+        typePage.removeDocument();
+        mainPage = typePage.goToMainPageWithConfirm();
+        typesListPage = mainPage.openReportTypesListPage();
+        assertFalse(typesListPage.searchDocument(documentObject.getDocumentDataFirst().getDocName()), "Тип документа не удалился");
     }
 
     @Story("Проверка открытия и закрытия документа")
