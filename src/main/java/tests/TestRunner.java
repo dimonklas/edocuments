@@ -17,7 +17,6 @@ import utils.AllureOnFailListener;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertTrue;
 
 
 @Log4j
@@ -556,12 +555,13 @@ public class TestRunner extends BaseTest {
         documentObject = new CreateDocumentObject();
 
         /***** Тест *****/
-        CreateDocumentTypePage typePage = new MainPage().openCreateNewTypePage();
+        DocumentTypesListPage typesListPage = new MainPage().openReportTypesListPage();
+        CreateDocumentTypePage typePage =  typesListPage.goToCreateNewDocumentPage();
         /***** Создаем документ *****/
         typePage.setDataToDocumentType(documentObject.getDocumentDataFirst());
         typePage.saveCurrentDocAndReturnId();
         MainPage mainPage = typePage.goToMainPage();
-        DocumentTypesListPage typesListPage = mainPage.openReportTypesListPage();
+        typesListPage = mainPage.openReportTypesListPage();
 
         typePage = typesListPage.searchAndOpenDocument(documentObject.getDocumentDataFirst().getDocName());
 
@@ -580,12 +580,13 @@ public class TestRunner extends BaseTest {
         versionsList = new VersionsObject();
 
         /***** Тест *****/
-        CreateDocumentTypePage typePage = new MainPage().openCreateNewTypePage();
+        DocumentTypesListPage typesListPage = new MainPage().openReportTypesListPage();
+        CreateDocumentTypePage typePage =  typesListPage.goToCreateNewDocumentPage();
         /***** Создаем документ *****/
         typePage.setDataToDocumentType(documentObject.getDocumentDataFirst(), versionsList.getVersionList());
         typePage.saveCurrentDocAndReturnId();
         MainPage mainPage = typePage.goToMainPage();
-        DocumentTypesListPage typesListPage = mainPage.openReportTypesListPage();
+        typesListPage = mainPage.openReportTypesListPage();
 
         typePage = typesListPage.searchAndOpenDocument(documentObject.getDocumentDataFirst().getDocName());
 
