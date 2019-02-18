@@ -17,6 +17,7 @@ import utils.AllureOnFailListener;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
 
 
 @Log4j
@@ -598,10 +599,23 @@ public class TestRunner extends BaseTest {
     }
 
     @Story("Проверка открытия и закрытия документа")
-    @Test(description = "Открытие и закрытие документа", enabled = false)
-    public void checkOpenAndCloseDocument() {
+    @Test(description = "Открытие и закрытие документа через список документов")
+    public void checkOpenDocumentThroughList() {
+        /***** Генерим тестовые данные *****/
+        documentObject = new CreateDocumentObject();
+        versionsList = new VersionsObject();
+
+        /***** Тест *****/
         DocumentTypesListPage typesListPage = new MainPage().openReportTypesListPage();
-        typesListPage.searchDocument("bla_name_1107");
-        typesListPage.checkOpenCloseDocument();
+        CreateDocumentTypePage typePage =  typesListPage.goToCreateNewDocumentPage();
+        /***** Создаем документ *****/
+        typePage.setDataToDocumentType(documentObject.getDocumentDataFirst(), versionsList.getVersionList());
+        typePage.saveCurrentDocAndReturnId();
+        MainPage mainPage = typePage.goToMainPage();
+        typesListPage = mainPage.openReportTypesListPage();
+
+        typesListPage.searchDocument(documentObject.getDocumentDataFirst().getDocName());
+        assertTrue(typesListPage.openDocument(), "Документ не открылся");
+        assertTrue(typesListPage.closeDocument(), "Документ не закрылся");
     }
 }

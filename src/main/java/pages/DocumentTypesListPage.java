@@ -23,6 +23,8 @@ public class DocumentTypesListPage implements WorkingWithBrowserTabs {
     private SelenideElement deleteButton = $(By.id("btn_delete"));
     private SelenideElement copyButton = $(By.id("btn_copy"));
     private SelenideElement viewDocButton = $(By.id("btn_view"));
+    private SelenideElement openDocButton = $(By.id("btn_open"));
+    private SelenideElement closeDocButton = $(By.id("btn_close"));
     private SelenideElement acceptAlertButton = $(By.id("btn_yes"));
     private SelenideElement dissmisAlertButton = $(By.id("btn_no"));
 
@@ -103,6 +105,7 @@ public class DocumentTypesListPage implements WorkingWithBrowserTabs {
     @Step("Проверка поиска по значению \"{value}\"")
     public boolean searchDocument(String value) {
         refresh();
+        searchField.shouldBe(visible).clear();
         searchField.shouldBe(visible).sendKeys(value);
         StringBuilder stringBuilder = new StringBuilder();
 
@@ -186,8 +189,27 @@ public class DocumentTypesListPage implements WorkingWithBrowserTabs {
         return new CreateDocumentTypePage();
     }
 
-    public void checkOpenCloseDocument() {
-        String s = $x("(//table[@id='types_table']//tbody//tr)[1]").attr("class");
-        log.info("value: " + s);
+    @Step("Открытие документа через сраницу \"Список докуменов\"")
+    public boolean openDocument() {
+        SelenideElement documentInList = $x("(//table[@id='types_table']//tbody//tr)[1]");
+        String elementClass = documentInList.attr("class");
+        if (!elementClass.contains("selected")) documentInList.click();
+        elementClass = documentInList.attr("class");
+        if (elementClass.equals("closed odd selected")) openDocButton.shouldBe(visible).click();
+        sleep(1000);
+
+        return closeDocButton.is(visible) && documentInList.attr("class").equals("odd selected");
+    }
+
+    @Step("Закрытие документа через сраницу \"Список докуменов\"")
+    public boolean closeDocument() {
+        SelenideElement documentInList = $x("(//table[@id='types_table']//tbody//tr)[1]");
+        String elementClass = documentInList.attr("class");
+        if (!elementClass.contains("selected")) documentInList.click();
+        elementClass = documentInList.attr("class");
+        if (elementClass.equals("odd selected")) closeDocButton.shouldBe(visible).click();
+        sleep(1000);
+
+        return openDocButton.is(visible) && documentInList.attr("class").equals("odd selected closed");
     }
 }
