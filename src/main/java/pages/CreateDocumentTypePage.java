@@ -26,15 +26,19 @@ public class CreateDocumentTypePage implements WorkingWithBrowserTabs {
     private SelenideElement cancelButton = $(By.id("btn_cancel"));
     private SelenideElement editButton = $(By.id("btn_edit"));
     private SelenideElement deleteButton = $(By.id("btn_delete"));
+    private SelenideElement openButton = $(By.id("btn_open"));
+    private SelenideElement closeButton = $(By.id("btn_close"));
     private SelenideElement groupJournalCheckBox = $(By.xpath("//*[@id='group_journal']/../label"));
     private SelenideElement finReportCheckBox = $(By.xpath("//*[@id='fin_reporting']/../label"));
     private SelenideElement serviceDropdown = $(By.id("service"));
     private SelenideElement gatewayDropdown = $(By.id("gateway"));
     private SelenideElement vddoc = $(By.id("fin_reporting_vddoc"));
     private SelenideElement groupId = $(By.id("fin_reporting_group"));
-    private SelenideElement addVersioButton = $(By.id("btn_version_add"));
-    private SelenideElement copyVersioButton = $(By.id("btn_version_copy"));
-    private SelenideElement deleteVersioButton = $(By.id("btn_version_delete"));
+    private SelenideElement addVersionButton = $(By.id("btn_version_add"));
+    private SelenideElement copyVersionButton = $(By.id("btn_version_copy"));
+    private SelenideElement openVersionButton = $(By.id("btn_version_open"));
+    private SelenideElement closeVersionButton = $(By.id("btn_version_close"));
+    private SelenideElement deleteVersionButton = $(By.id("btn_version_delete"));
     private SelenideElement createDocumentButton = $(By.id("btn_document_create"));
     private SelenideElement checkBoxInTable = $(By.xpath("//td[@class=' row-checkbox']"));
     private ElementsCollection dateFromVersion = $$(By.name("version_date_start"));
@@ -121,7 +125,7 @@ public class CreateDocumentTypePage implements WorkingWithBrowserTabs {
     @Step("Добавление версии в документ")
     public void addVersionToDocument(ArrayList<VersionData> versions) {
         for (int i = 0; i < versions.size(); i++) {
-            addVersioButton.shouldBe(visible).click();
+            addVersionButton.shouldBe(visible).click();
             dateFromVersion.last().sendKeys(versions.get(i).getDate());
             comTypeVersion.last().sendKeys(versions.get(i).getComType());
             periodTypeVersion.last().sendKeys(versions.get(i).getTypeReportPeriod());
@@ -131,7 +135,7 @@ public class CreateDocumentTypePage implements WorkingWithBrowserTabs {
 
     @Step("Добавление версии в документ")
     public void addVersionToDocument(VersionData version) {
-        addVersioButton.shouldBe(visible).click();
+        addVersionButton.shouldBe(visible).click();
         dateFromVersion.last().sendKeys(version.getDate());
         comTypeVersion.last().sendKeys(version.getComType());
         periodTypeVersion.last().sendKeys(version.getTypeReportPeriod());
@@ -251,18 +255,52 @@ public class CreateDocumentTypePage implements WorkingWithBrowserTabs {
         int count = comTypeVersion.size();
         for (int i = 0; i < count ; i++) {
             $(By.xpath("//table[@id='versions_table']//td[@class=' row-checkbox']")).click();
-            deleteVersioButton.click();
+            deleteVersionButton.click();
         }
     }
 
     @Step("Копирование последней версии в документе")
     public void copyLastVersion() {
         $x("(//table[@id='versions_table']//tbody//tr)[last()]/td").shouldBe(visible).click();
-        copyVersioButton.shouldBe(visible).click();
+        copyVersionButton.shouldBe(visible).click();
     }
 
     @Step("Проверка наличия версий в документе")
     public boolean checkVersionExists() {
         return  $(By.xpath("//table[@id='versions_table']//td[@class=' row-checkbox']")).exists();
+    }
+
+    @Step("Открытие документа")
+    public boolean openDocument() {
+        if (openButton.is(visible) && $x("//div[@id='type_data']//span").is(visible)){
+            openButton.click();
+            sleep(500);
+            return closeButton.is(visible) && $x("//div[@id='type_data']//span").is(not(visible));
+        } else return false;
+    }
+
+    @Step("Закрытие документа")
+    public boolean closeDocument() {
+        if (closeButton.is(visible) && $x("//div[@id='type_data']//span").is(not(visible))){
+            closeButton.click();
+            sleep(500);
+            return openButton.is(visible) && $x("//div[@id='type_data']//span").is(visible);
+        } else return false;
+    }
+
+    @Step("Открытие версии документа")
+    public boolean openAllVersion() {
+        int count = comTypeVersion.size();
+        int currentCloseVersion = $$x("//table[@id='versions_table']//tr[contains(.,('Закрыта'))]").size();
+        int countCloseVersion = 0;
+
+        for (int i = 1; i <= count; i++) {
+            $x("(//table[@id='versions_table']//tbody//tr)[" + i + "]/td").click();
+            openVersionButton.shouldBe(visible).click();
+            sleep(500);
+            if (closeVersionButton.is(visible) && $x("(//table[@id='versions_table']//tbody//tr)[" + i + "]//td[3]").getText().equals("Открыта"))
+                countCloseVersion++;
+        }
+        return countCloseVersion == currentCloseVersion ;
     }
 }

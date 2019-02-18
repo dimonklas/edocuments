@@ -600,7 +600,7 @@ public class TestRunner extends BaseTest {
 
     @Story("Проверка открытия и закрытия документа")
     @Test(description = "Открытие и закрытие документа через список документов")
-    public void checkOpenDocumentThroughList() {
+    public void checkOpenCloseDocumentThroughList() {
         /***** Генерим тестовые данные *****/
         documentObject = new CreateDocumentObject();
         versionsList = new VersionsObject();
@@ -617,5 +617,46 @@ public class TestRunner extends BaseTest {
         typesListPage.searchDocument(documentObject.getDocumentDataFirst().getDocName());
         assertTrue(typesListPage.openDocument(), "Документ не открылся");
         assertTrue(typesListPage.closeDocument(), "Документ не закрылся");
+    }
+
+    @Story("Проверка открытия и закрытия документа")
+    @Test(description = "Открытие и закрытие документа через список редактирование документа")
+    public void checkOpenCloseDocumentThroughDocumentPage() {
+        /***** Генерим тестовые данные *****/
+        documentObject = new CreateDocumentObject();
+        versionsList = new VersionsObject();
+
+        /***** Тест *****/
+        DocumentTypesListPage typesListPage = new MainPage().openReportTypesListPage();
+        CreateDocumentTypePage typePage =  typesListPage.goToCreateNewDocumentPage();
+        /***** Создаем документ *****/
+        typePage.setDataToDocumentType(documentObject.getDocumentDataFirst(), versionsList.getVersionList());
+        typePage.saveCurrentDocAndReturnId();
+        MainPage mainPage = typePage.goToMainPage();
+        typesListPage = mainPage.openReportTypesListPage();
+
+        typePage = typesListPage.searchAndOpenDocument(documentObject.getDocumentDataFirst().getDocName());
+        assertTrue(typePage.openDocument(), "Документ не открылся");
+        assertTrue(typePage.closeDocument(), "Документ не открылся");
+    }
+
+    @Story("Проверка открытия и закрытия документа")
+    @Test(description = "Открытие и закрытие документа через список редактирование документа")
+    public void checkOpenDocumentVersion() {
+        /***** Генерим тестовые данные *****/
+        documentObject = new CreateDocumentObject();
+        versionsList = new VersionsObject();
+
+        /***** Тест *****/
+        DocumentTypesListPage typesListPage = new MainPage().openReportTypesListPage();
+        CreateDocumentTypePage typePage = typesListPage.goToCreateNewDocumentPage();
+        /***** Создаем документ *****/
+        typePage.setDataToDocumentType(documentObject.getDocumentDataFirst(), versionsList.getVersionList());
+        typePage.saveCurrentDocAndReturnId();
+        MainPage mainPage = typePage.goToMainPage();
+        typesListPage = mainPage.openReportTypesListPage();
+
+        typePage = typesListPage.searchAndOpenDocument(documentObject.getDocumentDataFirst().getDocName());
+        assertTrue(typePage.openAllVersion(), "Версия не открылась");
     }
 }
