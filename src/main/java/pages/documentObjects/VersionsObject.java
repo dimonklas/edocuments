@@ -1,5 +1,6 @@
 package pages.documentObjects;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import org.aeonbits.owner.ConfigFactory;
 import pages.document.VersionData;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 @Getter
 public class VersionsObject {
 
+    @Getter(AccessLevel.NONE)
     private final IConfigurationVariables CV = ConfigFactory.create(IConfigurationVariables.class, System.getProperties());
 
     ArrayList<VersionData> versionList = new ArrayList<>();

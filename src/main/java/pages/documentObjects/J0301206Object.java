@@ -1,5 +1,6 @@
 package pages.documentObjects;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import org.aeonbits.owner.ConfigFactory;
 import pages.CreateReportDeclarationJ0301206;
@@ -13,6 +14,7 @@ import static utils.SupportActions.generateRandomFloatNumber;
 @Getter
 public class J0301206Object {
 
+    @Getter(AccessLevel.NONE)
     private final IConfigurationVariables CV = ConfigFactory.create(IConfigurationVariables.class, System.getProperties());
 
     /***** Генерим данные для заполнения документа *****/

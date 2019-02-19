@@ -1,5 +1,6 @@
 package pages.documentObjects;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import org.aeonbits.owner.ConfigFactory;
 import pages.document.DeclarationDataS0501408;
@@ -8,6 +9,7 @@ import utils.IConfigurationVariables;
 @Getter
 public class S0501408Object {
 
+    @Getter(AccessLevel.NONE)
     private final IConfigurationVariables CV = ConfigFactory.create(IConfigurationVariables.class, System.getProperties());
 
     DeclarationDataS0501408 dataDeclaration = DeclarationDataS0501408.builder()

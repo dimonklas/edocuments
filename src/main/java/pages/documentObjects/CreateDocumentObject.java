@@ -1,5 +1,6 @@
 package pages.documentObjects;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import org.aeonbits.owner.ConfigFactory;
 import pages.document.CreateDocumentData;
@@ -9,6 +10,7 @@ import utils.IConfigurationVariables;
 @Getter
 public class CreateDocumentObject {
 
+    @Getter(AccessLevel.NONE)
     private final IConfigurationVariables CV = ConfigFactory.create(IConfigurationVariables.class, System.getProperties());
 
     CreateDocumentData documentDataFirst = CreateDocumentData.builder()

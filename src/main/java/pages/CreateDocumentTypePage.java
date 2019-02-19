@@ -7,7 +7,9 @@ import lombok.Getter;
 import lombok.extern.log4j.Log4j;
 import org.openqa.selenium.By;
 import pages.document.CreateDocumentData;
+import pages.document.TabsData;
 import pages.document.VersionData;
+import pages.documentObjects.TabsObject;
 import utils.WorkingWithBrowserTabs;
 
 import java.util.ArrayList;
@@ -48,6 +50,9 @@ public class CreateDocumentTypePage implements WorkingWithBrowserTabs {
     private ElementsCollection cumulativeControl = $$(By.xpath("//input[@name='cumulative']/../.."));
     private SelenideElement modalConfirmWindow = $(By.className("modal-header"));
     private SelenideElement closeConfirmWindow = $(By.id("btn_close_red"));
+    /***** Вкладки *****/
+    private SelenideElement addTabButton = $(By.id("btn_tab_add"));
+    private SelenideElement deleteTabButton = $(By.id("btn_tab_delete"));
 
 
     @Step("Создание нового типа документа без версии")
@@ -81,11 +86,11 @@ public class CreateDocumentTypePage implements WorkingWithBrowserTabs {
         serviceDropdown.selectOption(data.getService());
         gatewayDropdown.selectOption(data.getGateway());
 
-        boolean gropJournalCheked = executeJavaScript("return document.getElementById(\"group_journal\").checked;");
+        boolean groupJournalChecked = executeJavaScript("return document.getElementById(\"group_journal\").checked;");
         boolean finReportChecked = executeJavaScript("return  document.getElementById(\"fin_reporting\").checked;");
 
-        if (data.isGroupJournal() && !gropJournalCheked) groupJournalCheckBox.click();
-        if (!data.isGroupJournal() && gropJournalCheked) groupJournalCheckBox.click();
+        if (data.isGroupJournal() && !groupJournalChecked) groupJournalCheckBox.click();
+        if (!data.isGroupJournal() && groupJournalChecked) groupJournalCheckBox.click();
         if (data.isFinReport() && !finReportChecked) {
             finReportCheckBox.click();
             vddoc.clear();
@@ -122,6 +127,30 @@ public class CreateDocumentTypePage implements WorkingWithBrowserTabs {
         addVersionToDocument(versions);
     }
 
+    @Step("Создание нового типа документа с версиями и вкладками")
+    public void setDataToDocumentType(CreateDocumentData data, ArrayList<VersionData> versionsList, TabsObject tabsObject) {
+        fieldName.shouldBe(visible).clear();
+        fieldName.shouldBe(visible).sendKeys(data.getDocName());
+        serviceDropdown.selectOption(data.getService());
+        gatewayDropdown.selectOption(data.getGateway());
+
+        boolean groupJournalChecked = executeJavaScript("return document.getElementById(\"group_journal\").checked;");
+        boolean finReportChecked = executeJavaScript("return  document.getElementById(\"fin_reporting\").checked;");
+
+        if (data.isGroupJournal() && !groupJournalChecked) groupJournalCheckBox.click();
+        if (!data.isGroupJournal() && groupJournalChecked) groupJournalCheckBox.click();
+        if (data.isFinReport() && !finReportChecked) {
+            finReportCheckBox.click();
+            vddoc.clear();
+            vddoc.sendKeys(data.getVddoc());
+            groupId.clear();
+            groupId.sendKeys(data.getGroupId());
+        }
+        if (!data.isFinReport() && finReportChecked) finReportCheckBox.click();
+
+        addVersionAndTabsToDocument(versionsList, tabsObject);
+    }
+
     @Step("Добавление версии в документ")
     public void addVersionToDocument(ArrayList<VersionData> versions) {
         for (int i = 0; i < versions.size(); i++) {
@@ -140,6 +169,37 @@ public class CreateDocumentTypePage implements WorkingWithBrowserTabs {
         comTypeVersion.last().sendKeys(version.getComType());
         periodTypeVersion.last().sendKeys(version.getTypeReportPeriod());
         if (version.isCumulativeTotal()) cumulativeControl.last().click();
+    }
+
+    @Step("Добавление версии в документ")
+    public void addVersionAndTabsToDocument(ArrayList<VersionData> versions, TabsObject tabs) {
+        for (int i = 0; i < versions.size(); i++) {
+            addVersionButton.shouldBe(visible).click();
+            dateFromVersion.last().sendKeys(versions.get(i).getDate());
+            comTypeVersion.last().sendKeys(versions.get(i).getComType());
+            periodTypeVersion.last().sendKeys(versions.get(i).getTypeReportPeriod());
+            if (versions.get(i).isCumulativeTotal()) cumulativeControl.last().click();
+
+            if (i < tabs.getArrayLists().size()) addTabsToDocument(tabs.getArrayLists().get(i));
+        }
+    }
+
+    @Step("Добавление вкладок в документ")
+    public void addTabsToDocument(ArrayList<TabsData> tabsData){
+
+        for (int i = 1; i <= tabsData.size(); i++) {
+
+            addTabButton.shouldBe(visible).click();
+
+            if(i == 1){
+                $x("//*[@id='tabs_table']//tr[last()]//td[5]//input[@name='form_code']").shouldBe(visible).setValue(tabsData.get(i - 1).getFormCode());
+            }
+
+            if (i > 1) {
+                $x("//*[@id='tabs_table']//tr[last()]//td[4]/input").shouldBe(visible).setValue(tabsData.get(i - 1).getName());
+                $x("//*[@id='tabs_table']//tr[last()]//td[5]//input[@name='form_code']").shouldBe(visible).setValue(tabsData.get(i - 1).getFormCode());
+            }
+        }
     }
 
     @Step("Проверка документа после создания")
@@ -188,21 +248,73 @@ public class CreateDocumentTypePage implements WorkingWithBrowserTabs {
         }
     }
 
+
+    @Step("Проверка документа после создания")
+    public void checkDocument(CreateDocumentData data, String docId, ArrayList<VersionData> versions, TabsObject tabsObject) {
+        assertEquals($(By.id("page_title")).shouldBe(visible).getText().replaceAll("\\D+", ""), docId);
+        assertEquals($(By.id("type_id")).shouldBe(visible).getValue(), docId);
+        assertEquals(fieldName.getValue(), data.getDocName());
+        assertEquals(serviceDropdown.getText(), data.getService());
+        assertEquals(gatewayDropdown.getText(), data.getGateway());
+
+        boolean groupJournalChecked = executeJavaScript("return document.getElementById(\"group_journal\").checked;");
+        boolean finReportChecked = executeJavaScript("return  document.getElementById(\"fin_reporting\").checked;");
+
+        assertEquals(data.isGroupJournal(), groupJournalChecked);
+        assertEquals(data.isFinReport(), finReportChecked);
+
+        if (data.isFinReport()) {
+            assertEquals(vddoc.getValue(), data.getVddoc());
+            assertEquals(groupId.getValue(), data.getGroupId());
+        }
+
+        ElementsCollection tabs = $$x("//table[@id='versions_table']//tbody/tr/td[1]");
+        for (int i = 0; i < versions.size(); i++) {
+            assertEquals(dateFromVersion.get(i).getValue(), versions.get(i).getDate());
+            assertEquals(comTypeVersion.get(i).getText(), versions.get(i).getComType());
+            assertEquals(periodTypeVersion.get(i).getText(), versions.get(i).getTypeReportPeriod());
+
+            tabs.get(i).click();
+            if (i < tabsObject.getArrayLists().size()) checkTabsInDocType(tabsObject.getArrayLists().get(i));
+        }
+    }
+
+    @Step("Проверка вкладок в документе")
+    public void checkTabsInDocType(ArrayList<TabsData> tabsData) {
+        int xpathCount = 1;
+        for (int i = 0; i < tabsData.size(); i++) {
+
+            if (i == 0) {
+                assertEquals($x("//*[@id='tabs_table']//tr[not(@hidden='hidden')][" + xpathCount + "]//td[2]/span").getText(), i + "");
+                assertEquals($x("//*[@id='tabs_table']//tr[not(@hidden='hidden')][" + xpathCount + "]//td[3]/input").getText(), "");
+                assertEquals($x("//*//*[@id='tabs_table']//tr[not(@hidden='hidden')][" + xpathCount + "]//td[4]/input").getValue(), "Главная форма");
+                assertEquals($x("//*//*[@id='tabs_table']//tr[not(@hidden='hidden')][" + xpathCount + "]//td[5]//input[@name='form_code']").getValue(), tabsData.get(i).getFormCode());
+            }
+            if (i > 1) {
+                assertEquals($x("//*[@id='tabs_table']//tr[not(@hidden='hidden')][" + xpathCount + "]//td[2]/span").getText(), i + "");
+                assertEquals($x("//*[@id='tabs_table']//tr[not(@hidden='hidden')][" + xpathCount + "]//td[3]/input").getText(), "");
+                assertEquals($x("//*//*[@id='tabs_table']//tr[not(@hidden='hidden')][" + xpathCount + "]//td[4]/input").getValue(), tabsData.get(i).getName());
+                assertEquals($x("//*//*[@id='tabs_table']//tr[not(@hidden='hidden')][" + xpathCount + "]//td[5]//input[@name='form_code']").getValue(), tabsData.get(i).getFormCode());
+            }
+            xpathCount++;
+        }
+    }
+
     @Step("Переход на главную страницу")
-    public MainPage goToMainPage(){
+    public MainPage goToMainPage() {
         linkOnHeader.shouldBe(visible).click();
         return new MainPage();
     }
 
     @Step("Переход на главную страницу")
-    public MainPage goToMainPageWithConfirm(){
+    public MainPage goToMainPageWithConfirm() {
         linkOnHeader.shouldBe(visible).click();
-        if(isAlertPresent()) confirm();
+        if (isAlertPresent()) confirm();
         return new MainPage();
     }
 
     @Step("Сохранить текущий документ")
-    public String saveCurrentDocAndReturnId(){
+    public String saveCurrentDocAndReturnId() {
         saveButton.shouldBe(visible).click();
         sleep(1000);
 
@@ -211,8 +323,7 @@ public class CreateDocumentTypePage implements WorkingWithBrowserTabs {
             goToMainPage();
             confirm();
             return "Ошибка";
-        }
-        else return $(By.id("page_title")).getText().replaceAll("\\D+", "");
+        } else return $(By.id("page_title")).getText().replaceAll("\\D+", "");
     }
 
     @Step("Отмена изменений в типе документа")
@@ -224,7 +335,7 @@ public class CreateDocumentTypePage implements WorkingWithBrowserTabs {
     }
 
     @Step("Удаление документа")
-    public void removeDocument(){
+    public void removeDocument() {
         deleteButton.shouldBe(visible).click();
         sleep(1000);
         if ($(By.className("modal-header")).is(visible)) $(By.id("btn_yes")).shouldBe(visible).click();
@@ -253,7 +364,7 @@ public class CreateDocumentTypePage implements WorkingWithBrowserTabs {
     @Step("Удаление всех версий с документа")
     public void removeAllVersions() {
         int count = comTypeVersion.size();
-        for (int i = 0; i < count ; i++) {
+        for (int i = 0; i < count; i++) {
             $(By.xpath("//table[@id='versions_table']//td[@class=' row-checkbox']")).click();
             deleteVersionButton.click();
         }
@@ -267,12 +378,12 @@ public class CreateDocumentTypePage implements WorkingWithBrowserTabs {
 
     @Step("Проверка наличия версий в документе")
     public boolean checkVersionExists() {
-        return  $(By.xpath("//table[@id='versions_table']//td[@class=' row-checkbox']")).exists();
+        return $(By.xpath("//table[@id='versions_table']//td[@class=' row-checkbox']")).exists();
     }
 
     @Step("Открытие документа")
     public boolean openDocument() {
-        if (openButton.is(visible) && $x("//div[@id='type_data']//span").is(visible)){
+        if (openButton.is(visible) && $x("//div[@id='type_data']//span").is(visible)) {
             openButton.click();
             sleep(500);
             return closeButton.is(visible) && $x("//div[@id='type_data']//span").is(not(visible));
@@ -281,7 +392,7 @@ public class CreateDocumentTypePage implements WorkingWithBrowserTabs {
 
     @Step("Закрытие документа")
     public boolean closeDocument() {
-        if (closeButton.is(visible) && $x("//div[@id='type_data']//span").is(not(visible))){
+        if (closeButton.is(visible) && $x("//div[@id='type_data']//span").is(not(visible))) {
             closeButton.click();
             sleep(500);
             return openButton.is(visible) && $x("//div[@id='type_data']//span").is(visible);
@@ -303,7 +414,7 @@ public class CreateDocumentTypePage implements WorkingWithBrowserTabs {
             if (closeVersionButton.is(visible) && $x("(//table[@id='versions_table']//tbody//tr)[" + i + "]//td[3]").getText().equals("Открыта"))
                 countCloseVersion++;
         }
-        return countCloseVersion == currentCloseVersion ;
+        return countCloseVersion == currentCloseVersion;
     }
 
     @Step("Открытие версии документа")
@@ -313,7 +424,7 @@ public class CreateDocumentTypePage implements WorkingWithBrowserTabs {
         int countCloseVersion = 0;
 
         for (int i = 1; i <= count; i++) {
-            if ($x("(//table[@id='versions_table']//tbody//tr)[" + i + "]/td[contains(.,'Открыта')]").is(exist)){
+            if ($x("(//table[@id='versions_table']//tbody//tr)[" + i + "]/td[contains(.,'Открыта')]").is(exist)) {
                 $x("(//table[@id='versions_table']//tbody//tr)[" + i + "]/td").click();
                 closeVersionButton.shouldBe(visible).click();
             }
@@ -322,6 +433,6 @@ public class CreateDocumentTypePage implements WorkingWithBrowserTabs {
             if (openVersionButton.is(visible) && $x("(//table[@id='versions_table']//tbody//tr)[" + i + "]//td[3]").getText().equals("Закрыта"))
                 countCloseVersion++;
         }
-        return countCloseVersion == currentCloseVersion ;
+        return countCloseVersion == currentCloseVersion;
     }
 }

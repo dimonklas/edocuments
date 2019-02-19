@@ -9,11 +9,10 @@ import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 import pages.*;
 import pages.document.*;
-import pages.documentObjects.CreateDocumentObject;
-import pages.documentObjects.J0301206Object;
-import pages.documentObjects.S0501408Object;
-import pages.documentObjects.VersionsObject;
+import pages.documentObjects.*;
 import utils.AllureOnFailListener;
+
+import java.util.ArrayList;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
@@ -29,16 +28,17 @@ public class TestRunner extends BaseTest {
     private VersionsObject versionsList;
     private J0301206Object j0301206Object;
     private S0501408Object s0501408Object;
+    private TabsObject tabsObject;
 
     @DataProvider
     public Object[][] getDataForSort() {
         return new Object[][]
                 {
                         {"ID"},
-                        {"Код формы"},
-                        {"Наименование документа"},
-                        {"Служба"},
-                        {"Шлюз"},
+//                        {"Код формы"},
+//                        {"Наименование документа"},
+//                        {"Служба"},
+//                        {"Шлюз"},
                 };
     }
 
@@ -659,5 +659,26 @@ public class TestRunner extends BaseTest {
         typePage = typesListPage.searchAndOpenDocument(documentObject.getDocumentDataFirst().getDocName());
         assertTrue(typePage.openAllVersion(), "Версия не открылась");
         assertTrue(typePage.closeAllVersion(), "Версия не закрылась");
+    }
+
+    @Story("Создание типа документа с вкладками")
+    @Test(description = "Создание типа документа с вкладками")
+    public void checkCreateDocTypeWithTabs(){
+        /***** Генерим тестовые данные *****/
+        documentObject = new CreateDocumentObject();
+        versionsList = new VersionsObject();
+        tabsObject = new TabsObject();
+
+
+        /***** Тест *****/
+        CreateDocumentTypePage typePage = new MainPage().openCreateNewTypePage();
+        /***** Создаем документ *****/
+        typePage.setDataToDocumentType(documentObject.getDocumentDataFirst(), versionsList.getVersionList(), tabsObject);
+        String docId = typePage.saveCurrentDocAndReturnId();
+        MainPage mainPage = typePage.goToMainPage();
+        DocumentTypesListPage typesListPage = mainPage.openReportTypesListPage();
+
+        typePage = typesListPage.searchAndOpenDocument(documentObject.getDocumentDataFirst().getDocName());
+        typePage.checkDocument(documentObject.getDocumentDataFirst(), docId, versionsList.getVersionList(), tabsObject);
     }
 }
