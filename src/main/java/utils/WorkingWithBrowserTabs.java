@@ -6,7 +6,7 @@ import static com.codeborne.selenide.Selenide.switchTo;
 
 public interface WorkingWithBrowserTabs {
 
-    @Step("Закрыть вкладку {nameTitle}: и переключиться на основную")
+    @Step("Закрыть вкладку {nameTittle}: и переключиться на основную")
     default void closeBrowserTab(String nameTittle) {
         switchTo().window(nameTittle).close();
         switchTo().window(0);
