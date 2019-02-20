@@ -10,6 +10,7 @@ import static com.codeborne.selenide.Selenide.$;
 public class MainPage implements WorkingWithBrowserTabs {
     private SelenideElement switchToReportTypeList = $(By.xpath("//h5[normalize-space()='Типы отчетных документов']/..//a[contains(.,'список')]"));
     private SelenideElement createNewType = $(By.xpath("//h5[normalize-space()='Типы отчетных документов']/..//a[contains(.,'тип')]"));
+    private SelenideElement formDocumentList = $(By.xpath("//h5[normalize-space()='Формы отчетных документов']/..//a[contains(.,'список')]"));
 
     @Step("Перейти на страницу со списком отчетных докуметов")
     public DocumentTypesListPage openReportTypesListPage() {
@@ -23,5 +24,12 @@ public class MainPage implements WorkingWithBrowserTabs {
         createNewType.click();
         closeBrowserTab("Конструктор отчетов");
         return new CreateDocumentTypePage();
+    }
+
+    @Step("Перейти на страницу со 'Формы документов'")
+    public DocumentFormPage openDocumentFormTypePage() {
+        formDocumentList.click();
+        closeBrowserTab("Конструктор отчетов");
+        return new DocumentFormPage();
     }
 }

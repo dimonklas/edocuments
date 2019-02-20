@@ -63,6 +63,14 @@ public class TestRunner extends BaseTest {
         };
     }
 
+    @DataProvider
+    public Object[][] formDocumentSort(){
+        return new Object[][] {
+                {"Код формы"},
+                {"Описание"}
+        };
+    }
+
     @Story("Проверка сортировки по возростанию")
     @Test(dataProvider = "getDataForSort", description = "Сортировка по значению ->", enabled = false)
     public void checkSortedAsc(String sorted) {
@@ -695,5 +703,23 @@ public class TestRunner extends BaseTest {
         /***** Создаем документ *****/
         typePage.setDataToDocumentType(documentObject.getDocumentDataFirst(), versionsList.getVersionList(), tabsObject.tabsArrayNegative());
         assertEquals("Ошибка", typePage.saveCurrentDocAndReturnId(), "Документ сохранился с некорректными данными");
+    }
+
+
+
+
+    /***** Формы документов *****/
+    @Story("Проверка сортировки на странице \"Формы документов\"")
+    @Test(description = "сортировка по возростанию", dataProvider = "formDocumentSort")
+    public void checkAscSortInFormDoc(String valueForSort) {
+        DocumentFormPage formPage = new MainPage().openDocumentFormTypePage();
+        formPage.checkSortAsc(valueForSort);
+    }
+
+    @Story("Проверка сортировки на странице \"Формы документов\"")
+    @Test(description = "сортировка по убыванию", dataProvider = "formDocumentSort")
+    public void checkDescSortInFormDoc(String valueForSort) {
+        DocumentFormPage formPage = new MainPage().openDocumentFormTypePage();
+        formPage.checkSortDesc(valueForSort);
     }
 }

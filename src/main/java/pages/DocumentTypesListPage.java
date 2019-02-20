@@ -14,6 +14,8 @@ import java.util.LinkedList;
 
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 @Log4j
 public class DocumentTypesListPage implements WorkingWithBrowserTabs {
@@ -62,8 +64,8 @@ public class DocumentTypesListPage implements WorkingWithBrowserTabs {
         Collections.sort(dataStrings);
 
         if (dataIntegers.size() > dataStrings.size())
-            Assert.assertTrue(dataIntegers.equals(dataIntegersAfterSort), "Сортировка чисел неправильная");
-        else Assert.assertTrue(dataStrings.equals(dataStringsAfterSort), "Сортировка строк неправильная");
+            assertEquals(dataIntegers, dataIntegersAfterSort, "Сортировка чисел неправильная");
+        else assertEquals(dataStrings, dataStringsAfterSort, "Сортировка строк неправильная");
 
     }
 
@@ -93,12 +95,12 @@ public class DocumentTypesListPage implements WorkingWithBrowserTabs {
             else dataStringsAfterSort.add(element.getText().toLowerCase());
         }
 
-        Collections.sort(dataIntegers, Collections.reverseOrder());
-        Collections.sort(dataStrings, Collections.reverseOrder());
+        dataIntegers.sort(Collections.reverseOrder());
+        dataStrings.sort(Collections.reverseOrder());
 
         if (dataIntegers.size() > dataStrings.size())
-            Assert.assertTrue(dataIntegers.equals(dataIntegersAfterSort), "Сортировка чисел неправильная");
-        else Assert.assertTrue(dataStrings.equals(dataStringsAfterSort), "Сортировка строк неправильная");
+            assertEquals(dataIntegers, dataIntegersAfterSort, "Сортировка чисел неправильная");
+        else assertEquals(dataStrings, dataStringsAfterSort, "Сортировка строк неправильная");
 
     }
 
@@ -149,7 +151,7 @@ public class DocumentTypesListPage implements WorkingWithBrowserTabs {
             acceptAlertButton.shouldBe(visible).click();
             sleep(1000);
         }
-        Assert.assertTrue($(By.xpath("//*[@id='types_table']//td[text()='Записи отсутствуют.']")).exists());
+        assertTrue($(By.xpath("//*[@id='types_table']//td[text()='Записи отсутствуют.']")).exists());
     }
 
     @Step("Переход на страницу создания документа")
