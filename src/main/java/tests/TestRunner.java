@@ -481,7 +481,7 @@ public class TestRunner extends BaseTest {
     public void checkErrorWhileCreateNewDoc(CreateDocumentData documentData) {
         CreateDocumentTypePage typePage = new MainPage().openCreateNewTypePage();
         typePage.setDataToDocumentType(documentData);
-        assertEquals("Ошибка", typePage.saveCurrentDocAndReturnId());
+        assertEquals("Ошибка", typePage.saveCurrentDocAndReturnId(), "Документ сохранился с некорректными данными");
     }
 
     @Story("Проверка отображения ошибки при некорректном создании типа документа")
@@ -694,6 +694,6 @@ public class TestRunner extends BaseTest {
         CreateDocumentTypePage typePage = new MainPage().openCreateNewTypePage();
         /***** Создаем документ *****/
         typePage.setDataToDocumentType(documentObject.getDocumentDataFirst(), versionsList.getVersionList(), tabsObject.tabsArrayNegative());
-        assertEquals("Ошибка", typePage.saveCurrentDocAndReturnId());
+        assertEquals("Ошибка", typePage.saveCurrentDocAndReturnId(), "Документ сохранился с некорректными данными");
     }
 }
