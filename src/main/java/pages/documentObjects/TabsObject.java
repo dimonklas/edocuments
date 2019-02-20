@@ -17,14 +17,14 @@ public class TabsObject {
     ArrayList<ArrayList<TabsData>> arrayLists = new ArrayList<>();
 
     public TabsObject() {
-        arrayLists.add(TabsObject1());
-        arrayLists.add(TabsObject2());
-        arrayLists.add(TabsObject3());
-        arrayLists.add(TabsObject4());
-        arrayLists.add(TabsObject5());
+        arrayLists.add(getTabsObject1());
+        arrayLists.add(getTabsObject2());
+        arrayLists.add(getTabsObject3());
+        arrayLists.add(getTabsObject4());
+        arrayLists.add(getTabsObject5());
     }
 
-    private ArrayList<TabsData> TabsObject1() {
+    private ArrayList<TabsData> getTabsObject1() {
         ArrayList<TabsData> tabsArrayObjects = new ArrayList<>();
 
         tabsArrayObjects.add(TabsData.builder().name("").formCode("J0100114").build());
@@ -35,7 +35,7 @@ public class TabsObject {
         return tabsArrayObjects;
     }
 
-    private ArrayList<TabsData> TabsObject2() {
+    private ArrayList<TabsData> getTabsObject2() {
         ArrayList<TabsData> tabsArrayObjects = new ArrayList<>();
 
         tabsArrayObjects.add(TabsData.builder().name("").formCode("J0100114").build());
@@ -46,7 +46,7 @@ public class TabsObject {
         return tabsArrayObjects;
     }
 
-    private ArrayList<TabsData> TabsObject3() {
+    private ArrayList<TabsData> getTabsObject3() {
         ArrayList<TabsData> tabsArrayObjects = new ArrayList<>();
 
         tabsArrayObjects.add(TabsData.builder().name("").formCode("J0100114").build());
@@ -60,7 +60,7 @@ public class TabsObject {
         return tabsArrayObjects;
     }
 
-    private ArrayList<TabsData> TabsObject4() {
+    private ArrayList<TabsData> getTabsObject4() {
         ArrayList<TabsData> tabsArrayObjects = new ArrayList<>();
 
         tabsArrayObjects.add(TabsData.builder().name("").formCode("J0100114").build());
@@ -71,7 +71,7 @@ public class TabsObject {
         return tabsArrayObjects;
     }
 
-    private ArrayList<TabsData> TabsObject5() {
+    private ArrayList<TabsData> getTabsObject5() {
         ArrayList<TabsData> tabsArrayObjects = new ArrayList<>();
 
         tabsArrayObjects.add(TabsData.builder().name("").formCode("J0100114").build());
