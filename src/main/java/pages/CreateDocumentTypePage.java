@@ -128,7 +128,7 @@ public class CreateDocumentTypePage implements WorkingWithBrowserTabs {
     }
 
     @Step("Создание нового типа документа с версиями и вкладками")
-    public void setDataToDocumentType(CreateDocumentData data, ArrayList<VersionData> versionsList, TabsObject tabsObject) {
+    public void setDataToDocumentType(CreateDocumentData data, ArrayList<VersionData> versionsList, ArrayList<ArrayList<TabsData>> tabsObject) {
         fieldName.shouldBe(visible).clear();
         fieldName.shouldBe(visible).sendKeys(data.getDocName());
         serviceDropdown.selectOption(data.getService());
@@ -172,7 +172,7 @@ public class CreateDocumentTypePage implements WorkingWithBrowserTabs {
     }
 
     @Step("Добавление версии в документ")
-    public void addVersionAndTabsToDocument(ArrayList<VersionData> versions, TabsObject tabs) {
+    public void addVersionAndTabsToDocument(ArrayList<VersionData> versions, ArrayList<ArrayList<TabsData>> tabsObject) {
         for (int i = 0; i < versions.size(); i++) {
             addVersionButton.shouldBe(visible).click();
             dateFromVersion.last().sendKeys(versions.get(i).getDate());
@@ -180,7 +180,7 @@ public class CreateDocumentTypePage implements WorkingWithBrowserTabs {
             periodTypeVersion.last().sendKeys(versions.get(i).getTypeReportPeriod());
             if (versions.get(i).isCumulativeTotal()) cumulativeControl.last().click();
 
-            if (i < tabs.getArrayLists().size()) addTabsToDocument(tabs.getArrayLists().get(i));
+            if (i < tabsObject.size()) addTabsToDocument(tabsObject.get(i));
         }
     }
 
@@ -250,7 +250,7 @@ public class CreateDocumentTypePage implements WorkingWithBrowserTabs {
 
 
     @Step("Проверка документа после создания")
-    public void checkDocument(CreateDocumentData data, String docId, ArrayList<VersionData> versions, TabsObject tabsObject) {
+    public void checkDocument(CreateDocumentData data, String docId, ArrayList<VersionData> versions, ArrayList<ArrayList<TabsData>> tabsObject) {
         assertEquals($(By.id("page_title")).shouldBe(visible).getText().replaceAll("\\D+", ""), docId);
         assertEquals($(By.id("type_id")).shouldBe(visible).getValue(), docId);
         assertEquals(fieldName.getValue(), data.getDocName());
@@ -275,7 +275,7 @@ public class CreateDocumentTypePage implements WorkingWithBrowserTabs {
             assertEquals(periodTypeVersion.get(i).getText(), versions.get(i).getTypeReportPeriod());
 
             tabs.get(i).click();
-            if (i < tabsObject.getArrayLists().size()) checkTabsInDocType(tabsObject.getArrayLists().get(i));
+            if (i < tabsObject.size()) checkTabsInDocType(tabsObject.get(i));
         }
     }
 

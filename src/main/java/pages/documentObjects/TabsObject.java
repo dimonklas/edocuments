@@ -14,14 +14,27 @@ public class TabsObject {
     @Getter(AccessLevel.NONE)
     private final IConfigurationVariables CV = ConfigFactory.create(IConfigurationVariables.class, System.getProperties());
 
-    ArrayList<ArrayList<TabsData>> arrayLists = new ArrayList<>();
+    public ArrayList<ArrayList<TabsData>> tabsArray() {
 
-    public TabsObject() {
+        ArrayList<ArrayList<TabsData>> arrayLists = new ArrayList<>();
+
         arrayLists.add(getTabsObject1());
         arrayLists.add(getTabsObject2());
         arrayLists.add(getTabsObject3());
         arrayLists.add(getTabsObject4());
         arrayLists.add(getTabsObject5());
+
+        return arrayLists;
+    }
+
+    public ArrayList<ArrayList<TabsData>> tabsArrayNegative() {
+
+        ArrayList<ArrayList<TabsData>> arrayLists = new ArrayList<>();
+
+        arrayLists.add(getTabsObject1());
+        arrayLists.add(getTabsObject6());
+
+        return arrayLists;
     }
 
     private ArrayList<TabsData> getTabsObject1() {
@@ -78,6 +91,15 @@ public class TabsObject {
         tabsArrayObjects.add(TabsData.builder().name("Тест5").formCode("S0501408").build());
         tabsArrayObjects.add(TabsData.builder().name("Тест під номером 5").formCode("S0100113").build());
         tabsArrayObjects.add(TabsData.builder().name("Test 5").formCode("S0100113").build());
+
+        return tabsArrayObjects;
+    }
+
+    private ArrayList<TabsData> getTabsObject6() {
+        ArrayList<TabsData> tabsArrayObjects = new ArrayList<>();
+
+        tabsArrayObjects.add(TabsData.builder().name("").formCode("------").build());
+        tabsArrayObjects.add(TabsData.builder().name("").formCode("321").build());
 
         return tabsArrayObjects;
     }

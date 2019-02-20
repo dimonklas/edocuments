@@ -673,12 +673,27 @@ public class TestRunner extends BaseTest {
         /***** Тест *****/
         CreateDocumentTypePage typePage = new MainPage().openCreateNewTypePage();
         /***** Создаем документ *****/
-        typePage.setDataToDocumentType(documentObject.getDocumentDataFirst(), versionsList.getVersionList(), tabsObject);
+        typePage.setDataToDocumentType(documentObject.getDocumentDataFirst(), versionsList.getVersionList(), tabsObject.tabsArray());
         String docId = typePage.saveCurrentDocAndReturnId();
         MainPage mainPage = typePage.goToMainPage();
         DocumentTypesListPage typesListPage = mainPage.openReportTypesListPage();
 
         typePage = typesListPage.searchAndOpenDocument(documentObject.getDocumentDataFirst().getDocName());
-        typePage.checkDocument(documentObject.getDocumentDataFirst(), docId, versionsList.getVersionList(), tabsObject);
+        typePage.checkDocument(documentObject.getDocumentDataFirst(), docId, versionsList.getVersionList(), tabsObject.tabsArray());
+    }
+
+    @Story("Создание типа документа с вкладками (негативный сценарий. некорректные данные для вкладок)")
+    @Test(description = "Создание типа документа с вкладками")
+    public void checkCreateDocTypeWithTabsNegative(){
+        /***** Генерим тестовые данные *****/
+        documentObject = new CreateDocumentObject();
+        versionsList = new VersionsObject();
+        tabsObject = new TabsObject();
+
+        /***** Тест *****/
+        CreateDocumentTypePage typePage = new MainPage().openCreateNewTypePage();
+        /***** Создаем документ *****/
+        typePage.setDataToDocumentType(documentObject.getDocumentDataFirst(), versionsList.getVersionList(), tabsObject.tabsArrayNegative());
+        assertEquals("Ошибка", typePage.saveCurrentDocAndReturnId());
     }
 }
