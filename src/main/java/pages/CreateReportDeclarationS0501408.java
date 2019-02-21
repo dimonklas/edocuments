@@ -22,7 +22,7 @@ import static utils.SupportActions.clearField;
 @Getter
 public class CreateReportDeclarationS0501408 {
 
-    IConfigurationVariables CV = ConfigFactory.create(IConfigurationVariables.class, System.getProperties());
+    private final IConfigurationVariables CV = ConfigFactory.create(IConfigurationVariables.class, System.getProperties());
 
     private SelenideElement uploadFromFileButton = $(By.xpath("//input[@value='Завантажити з файлу']"));
     private SelenideElement editButton = $(By.xpath("//input[@value='Редагувати']"));
