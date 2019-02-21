@@ -225,8 +225,8 @@ public class CreateReportDeclarationJ0301206 {
     @Step("Ожидание изменения статуса")
     public String waitReportStatusChange() {
         int countWait = 0;
-        while (!reportStage.getText().equals("Надіслано, очікуйте...") && countWait < 5) {
-            sleep(5000);
+        while (!reportStage.getText().equals("Надіслано, очікуйте...") && countWait < 60) {
+            sleep(1000);
             refresh();
             countWait++;
         }
