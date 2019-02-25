@@ -727,7 +727,7 @@ public class TestRunner extends BaseTest {
 
     @Story("Создание формы, \"J3040812\" при существующей форме")
     @Test(description = "Загрузка файла \"J3040812\" и создание формы")
-    public void createNewFormIfExist() {
+    public void createNewForm() {
         /***** Генерим данные для заполнения документа *****/
         FormDataS1605110 dataS1605110 = FormDataS1605110.builder().fields(new FormFieldsObjectS1605110().originalFields()).build();
 
@@ -737,6 +737,23 @@ public class TestRunner extends BaseTest {
         CreateForm createForm = mainPage.openCreateForm();
         assertTrue(createForm.uploadFile("S1605110.xsd"), "Новый файл не подгрузился");
         createForm.checkForm(dataS1605110);
+    }
 
+    @Story("Создание формы, \"J3040812\" при существующей форме")
+    @Test(description = "Загрузка файла \"J3040812\" и создание формы")
+    public void createNewFormWhileExists() {
+        /***** Генерим данные для заполнения документа *****/
+        FormDataS1605110 dataS1605110 = FormDataS1605110.builder().fields(new FormFieldsObjectS1605110().originalFields()).build();
+
+        DocumentFormListPage listPage = new MainPage().openDocumentFormListPage();
+        listPage.deleteForm(dataS1605110.getCODE());
+        MainPage mainPage = listPage.goToMainPage();
+        CreateForm createForm = mainPage.openCreateForm();
+        assertTrue(createForm.uploadFile("S1605110.xsd"), "Новый файл не подгрузился");
+        createForm.goToMainPage();
+        mainPage = listPage.goToMainPage();
+        createForm = mainPage.openCreateForm();
+        assertFalse(createForm.uploadFile("S1605110.xsd"), "Не нашло созданную форму");
+        createForm.checkForm(dataS1605110);
     }
 }

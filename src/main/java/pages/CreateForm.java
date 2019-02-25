@@ -34,18 +34,26 @@ public class CreateForm {
     private SelenideElement searchFieldInput = $(By.id("field_search"));
     private SelenideElement onlyNotUsedFildsCheckBox = $(By.className("custom-control custom-checkbox"));
     private SelenideElement modalWindowError = $x("//div[@class='modal-content' and contains(.,'Ошибка')]");
+    private SelenideElement linkOnHeader = $(By.id("section_title"));
 
 
-    @Step("Загрузка фала формы")
-    public boolean uploadFile(String fileName){
-//        String fileName = FilenameUtils.removeExtension(new File("src/main/resources/supportFiles/" + CV.fileS0501408xsd()).getName());
-        uploadFileInput.uploadFile(new File("src/main/resources/supportFiles/" + fileName).getAbsoluteFile());
+    @Step("Загрузка файла формы")
+    public boolean uploadFile(String file){
+        String fileName = FilenameUtils.removeExtension(new File("src/main/resources/supportFiles/" + file).getName());
+        uploadFileInput.uploadFile(new File("src/main/resources/supportFiles/" + file).getAbsoluteFile());
         sleep(2000);
         if (modalWindowError.isDisplayed()){
             $x("//a[contains(.,\"Перейти в форму '" + fileName + "'\")]").shouldBe(Condition.visible).click();
             return false;
         } else return true;
     }
+
+    @Step("Переход на главную страницу")
+    public MainPage goToMainPage() {
+        linkOnHeader.shouldBe(visible).click();
+        return new MainPage();
+    }
+
 
     @Step("Заполнение формы")
     public void setValuesToForm(){
