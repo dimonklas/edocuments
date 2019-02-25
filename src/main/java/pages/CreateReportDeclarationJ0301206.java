@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.extern.log4j.Log4j;
 import org.aeonbits.owner.ConfigFactory;
 import org.openqa.selenium.By;
-import pages.document.*;
+import pages.document.j0301206.*;
 import utils.IConfigurationVariables;
 
 import java.io.File;
@@ -102,13 +102,18 @@ public class CreateReportDeclarationJ0301206 {
     private SelenideElement resultSum = $(By.name("T1RXXXXG7__row1"));
     private SelenideElement resultSumForReportPeriod = $(By.name("R03G7"));
 
-    public CreateReportDeclarationJ0301206(IConfigurationVariables CV) {
-        this.CV = CV;
-    }
+//    public CreateReportDeclarationJ0301206(IConfigurationVariables CV) {
+//        this.CV = CV;
+//    }
+//
+//    public HashMap<SelenideElement, String> declarationJ0301206Fields = new HashMap<>();
+//
+//    public CreateReportDeclarationJ0301206() {
+//
+//    }
 
-    public HashMap<SelenideElement, String> declarationJ0301206Fields = new HashMap<>();
-
-    public CreateReportDeclarationJ0301206() {
+    public HashMap<SelenideElement, String> getAllFields() {
+        HashMap<SelenideElement, String> declarationJ0301206Fields = new HashMap<>();
         /***** І. Загальні відомості *****/
         declarationJ0301206Fields.put(year, "Рік");
         declarationJ0301206Fields.put(sequenceNumber, "порядковий N");
@@ -143,6 +148,7 @@ public class CreateReportDeclarationJ0301206 {
         declarationJ0301206Fields.put(inn, "Реєстраційний номер");
         declarationJ0301206Fields.put(accountant, "Головний бухгалтер");
         declarationJ0301206Fields.put(accountantInn, "Реєстраційний номер бухгалтера");
+        return declarationJ0301206Fields;
     }
 
 

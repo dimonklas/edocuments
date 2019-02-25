@@ -4,9 +4,9 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import org.aeonbits.owner.ConfigFactory;
 import pages.CreateReportDeclarationJ0301206;
-import pages.document.DeclarationDataCalculationTaxJ0301206;
-import pages.document.DeclarationDataGeneralInformationJ0301206;
-import pages.document.DeclarationDataPersonInfoJ0301206;
+import pages.document.j0301206.DeclarationDataCalculationTaxJ0301206;
+import pages.document.j0301206.DeclarationDataGeneralInformationJ0301206;
+import pages.document.j0301206.DeclarationDataPersonInfoJ0301206;
 import utils.IConfigurationVariables;
 
 import static utils.SupportActions.generateRandomFloatNumber;
@@ -19,8 +19,8 @@ public class J0301206Object {
 
     /***** Генерим данные для заполнения документа *****/
     DeclarationDataGeneralInformationJ0301206 declarationData = DeclarationDataGeneralInformationJ0301206.builder()
-            .declarationType(new CreateReportDeclarationJ0301206(CV).chooseReportNewCheckBox)
-            .specifiedPeriodType(new CreateReportDeclarationJ0301206(CV).chooseSpecifiedPeriodYear)
+            .declarationType(new CreateReportDeclarationJ0301206().chooseReportNewCheckBox)
+            .specifiedPeriodType(new CreateReportDeclarationJ0301206().chooseSpecifiedPeriodYear)
             .year(CV.year())
             .comName(CV.comName())
             .zip(CV.zip())
@@ -62,8 +62,8 @@ public class J0301206Object {
 
     public DeclarationDataGeneralInformationJ0301206 generateGeneralInfoFromDataProvider(String dataProviderValue) {
         return declarationData = DeclarationDataGeneralInformationJ0301206.builder()
-                .declarationType(new CreateReportDeclarationJ0301206(CV).chooseReportNewCheckBox)
-                .specifiedPeriodType(new CreateReportDeclarationJ0301206(CV).chooseSpecifiedPeriodYear)
+                .declarationType(new CreateReportDeclarationJ0301206().chooseReportNewCheckBox)
+                .specifiedPeriodType(new CreateReportDeclarationJ0301206().chooseSpecifiedPeriodYear)
                 .year(dataProviderValue)
                 .comName(CV.comName())
                 .zip(dataProviderValue)

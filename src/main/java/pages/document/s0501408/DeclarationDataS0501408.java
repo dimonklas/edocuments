@@ -1,4 +1,4 @@
-package pages.document;
+package pages.document.s0501408;
 
 import lombok.Builder;
 import lombok.Getter;

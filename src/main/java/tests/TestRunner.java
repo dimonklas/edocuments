@@ -9,11 +9,13 @@ import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 import pages.*;
 import pages.document.*;
+import pages.document.s1605110.FormDataS1605110;
 import pages.documentObjects.*;
 import utils.AllureOnFailListener;
 
-import java.util.ArrayList;
 
+import static io.restassured.RestAssured.given;
+import static io.restassured.RestAssured.request;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
@@ -192,13 +194,13 @@ public class TestRunner extends BaseTest {
         j0301206Object.getDeclarationData().getDeclarationType().chooseTypeDeclaration();
         j0301206Object.getDeclarationData().getSpecifiedPeriodType().chooseReportSpecifiedPeriod();
 
-        reportDeclaration.declarationJ0301206Fields.forEach((key, value) -> reportDeclaration.setValueToGeneralInfo(key, value, j0301206Object.getDeclarationData()));
+        reportDeclaration.getAllFields().forEach((key, value) -> reportDeclaration.setValueToGeneralInfo(key, value, j0301206Object.getDeclarationData()));
 
         /**** ІІ. Розрахунок податкових зобов'язань збору за місця для паркування транспортних засобів *****/
-        reportDeclaration.declarationJ0301206Fields.forEach((key, value) -> reportDeclaration.setValueToCalculationTax(key, value, j0301206Object.getCalculationTax()));
+        reportDeclaration.getAllFields().forEach((key, value) -> reportDeclaration.setValueToCalculationTax(key, value, j0301206Object.getCalculationTax()));
 
         /***** Заполнение персональных данных (футер страницы) *****/
-        reportDeclaration.declarationJ0301206Fields.forEach((key, value) -> reportDeclaration.setValueToPersonalInfo(key, value, j0301206Object.getPersonInfo()));
+        reportDeclaration.getAllFields().forEach((key, value) -> reportDeclaration.setValueToPersonalInfo(key, value, j0301206Object.getPersonInfo()));
 
         /**** Проверка формул в документе *****/
         String expectedTax = reportDeclaration.calculationExpectedTax(j0301206Object.getCalculationTax().getSquare(), j0301206Object.getCalculationTax().getMinSalary(), j0301206Object.getCalculationTax().getCountDays(), j0301206Object.getCalculationTax().getPercent());
@@ -210,9 +212,9 @@ public class TestRunner extends BaseTest {
         reportDeclaration.saveReport();
 
         /***** Проверяем данные после сохраниния *****/
-        reportDeclaration.declarationJ0301206Fields.forEach((key, value) -> reportDeclaration.checkValueToGeneralInfo(key, value, j0301206Object.getDeclarationData()));
-        reportDeclaration.declarationJ0301206Fields.forEach((key, value) -> reportDeclaration.checkValueToCalculationTax(key, value, j0301206Object.getCalculationTax()));
-        reportDeclaration.declarationJ0301206Fields.forEach((key, value) -> reportDeclaration.checkValueToPersonalInfo(key, value, j0301206Object.getPersonInfo()));
+        reportDeclaration.getAllFields().forEach((key, value) -> reportDeclaration.checkValueToGeneralInfo(key, value, j0301206Object.getDeclarationData()));
+        reportDeclaration.getAllFields().forEach((key, value) -> reportDeclaration.checkValueToCalculationTax(key, value, j0301206Object.getCalculationTax()));
+        reportDeclaration.getAllFields().forEach((key, value) -> reportDeclaration.checkValueToPersonalInfo(key, value, j0301206Object.getPersonInfo()));
 
         /***** Отправляем отчет *****/
         reportDeclaration.subscribeAndSendReport();
@@ -238,22 +240,22 @@ public class TestRunner extends BaseTest {
         j0301206Object.getDeclarationData().getDeclarationType().chooseTypeDeclaration();
         j0301206Object.getDeclarationData().getSpecifiedPeriodType().chooseReportSpecifiedPeriod();
 
-        reportDeclaration.declarationJ0301206Fields.forEach((key, value) -> reportDeclaration.setValueToGeneralInfo(key, value, j0301206Object.generateGeneralInfoFromDataProvider(dataProviderValue)));
+        reportDeclaration.getAllFields().forEach((key, value) -> reportDeclaration.setValueToGeneralInfo(key, value, j0301206Object.generateGeneralInfoFromDataProvider(dataProviderValue)));
 
         /**** ІІ. Розрахунок податкових зобов'язань збору за місця для паркування транспортних засобів *****/
-        reportDeclaration.declarationJ0301206Fields.forEach((key, value) -> reportDeclaration.setValueToCalculationTax(key, value, j0301206Object.generateCalculationTaxFromDataProvider(dataProviderValue)));
+        reportDeclaration.getAllFields().forEach((key, value) -> reportDeclaration.setValueToCalculationTax(key, value, j0301206Object.generateCalculationTaxFromDataProvider(dataProviderValue)));
 
         /***** Заполнение персональных данных (футер страницы) *****/
-        reportDeclaration.declarationJ0301206Fields.forEach((key, value) -> reportDeclaration.setValueToPersonalInfo(key, value, j0301206Object.generatePersonalInfoFromDataProvider(dataProviderValue)));
+        reportDeclaration.getAllFields().forEach((key, value) -> reportDeclaration.setValueToPersonalInfo(key, value, j0301206Object.generatePersonalInfoFromDataProvider(dataProviderValue)));
 
         /***** Проверка значений в полях хедера *****/
-        reportDeclaration.declarationJ0301206Fields.forEach((key, value) -> reportDeclaration.checkValueInGeneralInfo(key, value, dataProviderValue));
+        reportDeclaration.getAllFields().forEach((key, value) -> reportDeclaration.checkValueInGeneralInfo(key, value, dataProviderValue));
 
         /***** Проверка значений в полях расчетов *****/
-        reportDeclaration.declarationJ0301206Fields.forEach(reportDeclaration::checkValueInCalculationTax);
+        reportDeclaration.getAllFields().forEach(reportDeclaration::checkValueInCalculationTax);
 
         /***** Проверка значений в полях футера *****/
-        reportDeclaration.declarationJ0301206Fields.forEach(reportDeclaration::checkValueInPersonalInfo);
+        reportDeclaration.getAllFields().forEach(reportDeclaration::checkValueInPersonalInfo);
 
         /**** Проверка формул в документе *****/
         assertEquals("0.00", reportDeclaration.getResultSum().getValue(), "Неправильный расчет суммы");
@@ -263,13 +265,13 @@ public class TestRunner extends BaseTest {
         reportDeclaration.saveReport();
 
         /***** Проверка значений в полях хедера после сохранения *****/
-        reportDeclaration.declarationJ0301206Fields.forEach((key, value) -> reportDeclaration.checkValueInGeneralInfo(key, value, dataProviderValue));
+        reportDeclaration.getAllFields().forEach((key, value) -> reportDeclaration.checkValueInGeneralInfo(key, value, dataProviderValue));
 
         /***** Проверка значений в полях расчетов после сохранения *****/
-        reportDeclaration.declarationJ0301206Fields.forEach(reportDeclaration::checkValueInCalculationTax);
+        reportDeclaration.getAllFields().forEach(reportDeclaration::checkValueInCalculationTax);
 
         /***** Проверка значений в полях футера после сохранения *****/
-        reportDeclaration.declarationJ0301206Fields.forEach(reportDeclaration::checkValueInPersonalInfo);
+        reportDeclaration.getAllFields().forEach(reportDeclaration::checkValueInPersonalInfo);
     }
 
     @Story("Создание документа (позитивный сценарий) S0501408")
@@ -712,14 +714,29 @@ public class TestRunner extends BaseTest {
     @Story("Проверка сортировки на странице \"Формы документов\"")
     @Test(description = "сортировка по возростанию", dataProvider = "formDocumentSort")
     public void checkAscSortInFormDoc(String valueForSort) {
-        DocumentFormPage formPage = new MainPage().openDocumentFormTypePage();
+        DocumentFormListPage formPage = new MainPage().openDocumentFormListPage();
         formPage.checkSortAsc(valueForSort);
     }
 
     @Story("Проверка сортировки на странице \"Формы документов\"")
     @Test(description = "сортировка по убыванию", dataProvider = "formDocumentSort")
     public void checkDescSortInFormDoc(String valueForSort) {
-        DocumentFormPage formPage = new MainPage().openDocumentFormTypePage();
+        DocumentFormListPage formPage = new MainPage().openDocumentFormListPage();
         formPage.checkSortDesc(valueForSort);
+    }
+
+    @Story("Создание формы, \"J3040812\" при существующей форме")
+    @Test(description = "Загрузка файла \"J3040812\" и создание формы")
+    public void createNewFormIfExist() {
+        /***** Генерим данные для заполнения документа *****/
+        FormDataS1605110 dataS1605110 = FormDataS1605110.builder().fields(new FormFieldsObjectS1605110().originalFields()).build();
+
+        DocumentFormListPage listPage = new MainPage().openDocumentFormListPage();
+        listPage.deleteForm(dataS1605110.getCODE());
+        MainPage mainPage = listPage.goToMainPage();
+        CreateForm createForm = mainPage.openCreateForm();
+        assertTrue(createForm.uploadFile("S1605110.xsd"), "Новый файл не подгрузился");
+        createForm.checkForm(dataS1605110);
+
     }
 }

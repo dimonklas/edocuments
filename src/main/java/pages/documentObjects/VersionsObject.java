@@ -14,7 +14,7 @@ public class VersionsObject {
     @Getter(AccessLevel.NONE)
     private final IConfigurationVariables CV = ConfigFactory.create(IConfigurationVariables.class, System.getProperties());
 
-    public ArrayList<VersionData> versionList = new ArrayList<>();
+    private ArrayList<VersionData> versionList = new ArrayList<>();
 
     public VersionsObject() {
         versionList.add(VersionData.builder().date("2018-01-25").comType("Юр. лицо").typeReportPeriod("Квартал").cumulativeTotal(true).build());

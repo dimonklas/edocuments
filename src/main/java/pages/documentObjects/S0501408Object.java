@@ -3,7 +3,7 @@ package pages.documentObjects;
 import lombok.AccessLevel;
 import lombok.Getter;
 import org.aeonbits.owner.ConfigFactory;
-import pages.document.DeclarationDataS0501408;
+import pages.document.s0501408.DeclarationDataS0501408;
 import utils.IConfigurationVariables;
 
 @Getter

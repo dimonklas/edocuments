@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.extern.log4j.Log4j;
 import org.aeonbits.owner.ConfigFactory;
 import org.openqa.selenium.By;
-import pages.document.DeclarationDataS0501408;
+import pages.document.s0501408.DeclarationDataS0501408;
 import utils.IConfigurationVariables;
 
 import java.io.File;

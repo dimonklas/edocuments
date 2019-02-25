@@ -1,4 +1,4 @@
-package pages.document;
+package pages.document.j0301206;
 
 @FunctionalInterface
 public interface ReportPeriodType {
