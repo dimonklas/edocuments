@@ -66,8 +66,8 @@ public class TestRunner extends BaseTest {
     }
 
     @DataProvider
-    public Object[][] formDocumentSort(){
-        return new Object[][] {
+    public Object[][] formDocumentSort() {
+        return new Object[][]{
                 {"Код формы"},
                 {"Описание"}
         };
@@ -567,7 +567,7 @@ public class TestRunner extends BaseTest {
 
         /***** Тест *****/
         DocumentTypesListPage typesListPage = new MainPage().openReportTypesListPage();
-        CreateDocumentTypePage typePage =  typesListPage.goToCreateNewDocumentPage();
+        CreateDocumentTypePage typePage = typesListPage.goToCreateNewDocumentPage();
         /***** Создаем документ *****/
         typePage.setDataToDocumentType(documentObject.getDocumentDataFirst());
         typePage.saveCurrentDocAndReturnId();
@@ -592,7 +592,7 @@ public class TestRunner extends BaseTest {
 
         /***** Тест *****/
         DocumentTypesListPage typesListPage = new MainPage().openReportTypesListPage();
-        CreateDocumentTypePage typePage =  typesListPage.goToCreateNewDocumentPage();
+        CreateDocumentTypePage typePage = typesListPage.goToCreateNewDocumentPage();
         /***** Создаем документ *****/
         typePage.setDataToDocumentType(documentObject.getDocumentDataFirst(), versionsList.getVersionList());
         typePage.saveCurrentDocAndReturnId();
@@ -617,7 +617,7 @@ public class TestRunner extends BaseTest {
 
         /***** Тест *****/
         DocumentTypesListPage typesListPage = new MainPage().openReportTypesListPage();
-        CreateDocumentTypePage typePage =  typesListPage.goToCreateNewDocumentPage();
+        CreateDocumentTypePage typePage = typesListPage.goToCreateNewDocumentPage();
         /***** Создаем документ *****/
         typePage.setDataToDocumentType(documentObject.getDocumentDataFirst(), versionsList.getVersionList());
         typePage.saveCurrentDocAndReturnId();
@@ -638,7 +638,7 @@ public class TestRunner extends BaseTest {
 
         /***** Тест *****/
         DocumentTypesListPage typesListPage = new MainPage().openReportTypesListPage();
-        CreateDocumentTypePage typePage =  typesListPage.goToCreateNewDocumentPage();
+        CreateDocumentTypePage typePage = typesListPage.goToCreateNewDocumentPage();
         /***** Создаем документ *****/
         typePage.setDataToDocumentType(documentObject.getDocumentDataFirst(), versionsList.getVersionList());
         typePage.saveCurrentDocAndReturnId();
@@ -673,7 +673,7 @@ public class TestRunner extends BaseTest {
 
     @Story("Создание типа документа с вкладками")
     @Test(description = "Создание типа документа с вкладками")
-    public void checkCreateDocTypeWithTabs(){
+    public void checkCreateDocTypeWithTabs() {
         /***** Генерим тестовые данные *****/
         documentObject = new CreateDocumentObject();
         versionsList = new VersionsObject();
@@ -694,7 +694,7 @@ public class TestRunner extends BaseTest {
 
     @Story("Создание типа документа с вкладками (негативный сценарий. некорректные данные для вкладок)")
     @Test(description = "Создание типа документа с вкладками")
-    public void checkCreateDocTypeWithTabsNegative(){
+    public void checkCreateDocTypeWithTabsNegative() {
         /***** Генерим тестовые данные *****/
         documentObject = new CreateDocumentObject();
         versionsList = new VersionsObject();
@@ -706,8 +706,6 @@ public class TestRunner extends BaseTest {
         typePage.setDataToDocumentType(documentObject.getDocumentDataFirst(), versionsList.getVersionList(), tabsObject.tabsArrayNegative());
         assertEquals("Ошибка", typePage.saveCurrentDocAndReturnId(), "Документ сохранился с некорректными данными");
     }
-
-
 
 
     /***** Формы документов *****/
