@@ -88,7 +88,7 @@ public class CreateReportDeclarationS0501408 {
     private SelenideElement decrtyptReceiptButton = $(By.xpath("//*[@class='btn_decrypt p24_btn_green']"));
 
     public HashMap<SelenideElement, String> declarationS0501408Fields = new HashMap<>();
-    
+
     public CreateReportDeclarationS0501408() {
         /***** Респондент *****/
         declarationS0501408Fields.put(comEDRPOU, "код ЄДРПОУ");
@@ -144,7 +144,7 @@ public class CreateReportDeclarationS0501408 {
         subscribeAndSendButton.shouldBe(visible).click();
         sleep(2000);
         switchTo().frame(iframeSendReport.shouldBe(visible));
-        if (pbKeysSelect.is(visible)){
+        if (pbKeysSelect.is(visible)) {
             sleep(2000);
             pbKeysSelect.shouldBe(visible).click();
             keyPathInput.shouldBe(visible).sendKeys(new File("src/main/resources/supportFiles/" + CV.pbKey() + "").getAbsolutePath());
@@ -188,16 +188,16 @@ public class CreateReportDeclarationS0501408 {
 
     @Step("Копирование отчета")
     public void copyReport() {
-        String originalId = ($(By.xpath("//*[@id='report_stage']/following-sibling::span")).getText()).replaceAll("\\D+","");
+        String originalId = ($(By.xpath("//*[@id='report_stage']/following-sibling::span")).getText()).replaceAll("\\D+", "");
         copyReportButton.shouldBe(visible).click();
         $(By.xpath("//span[text()='Створити']/..")).shouldBe(visible).click();
         sleep(1000);
-        String copyId = $(By.xpath("//*[@id='report_stage']/following-sibling::span")).getText().replaceAll("\\D+","");
+        String copyId = $(By.xpath("//*[@id='report_stage']/following-sibling::span")).getText().replaceAll("\\D+", "");
         assertNotEquals(originalId, copyId);
     }
 
     @Step("Ввести в поле значение \"{value}\"")
-    public void setValueToField(SelenideElement element, String value){
+    public void setValueToField(SelenideElement element, String value) {
         clearField(element);
         element.shouldBe(visible).setValue(value);
         element.pressEnter();
@@ -205,75 +205,100 @@ public class CreateReportDeclarationS0501408 {
 
     /***** Заполнений формы *****/
     @Step("заполненяем в \"Респонтент\' поле {name}")
-    public void setValueToHeader(SelenideElement element, String name, DeclarationDataS0501408 data){
+    public void setValueToHeader(SelenideElement element, String name, DeclarationDataS0501408 data) {
         switch (name) {
-            case "код ЄДРПОУ":setValueToField(element, data.getComEDRPOU());
+            case "код ЄДРПОУ":
+                setValueToField(element, data.getComEDRPOU());
                 break;
-            case "Найменування":setValueToField(element, data.getComName());
+            case "Найменування":
+                setValueToField(element, data.getComName());
                 break;
-            case "юридична адреса":setValueToField(element, data.getLocationAddress());
+            case "юридична адреса":
+                setValueToField(element, data.getLocationAddress());
                 break;
-            case "фактична адреса":setValueToField(element, data.getLocationAddressFact());
+            case "фактична адреса":
+                setValueToField(element, data.getLocationAddressFact());
                 break;
         }
     }
 
     @Step("заполненяев в \"Експорт товарів\' поле {name}")
-    public void setValueToExportProducts(SelenideElement element, String name, DeclarationDataS0501408 data){
+    public void setValueToExportProducts(SelenideElement element, String name, DeclarationDataS0501408 data) {
         switch (name) {
-            case "Назва країни експорт":setValueToField(element, data.getCountryNameExport());
+            case "Назва країни експорт":
+                setValueToField(element, data.getCountryNameExport());
                 break;
-            case "Найменування товару експорт":setValueToField(element, data.getProductNameExport());
+            case "Найменування товару експорт":
+                setValueToField(element, data.getProductNameExport());
                 break;
-            case "Код товару експорт":setValueToField(element, data.getProductCodeExport());
+            case "Код товару експорт":
+                setValueToField(element, data.getProductCodeExport());
                 break;
-            case "Код країни експорт":setValueToField(element, data.getCountryCodeExport());
+            case "Код країни експорт":
+                setValueToField(element, data.getCountryCodeExport());
                 break;
-            case "Назва валюти експорт":setValueToField(element, data.getCurrencyNameExport());
+            case "Назва валюти експорт":
+                setValueToField(element, data.getCurrencyNameExport());
                 break;
-            case "Код валюти експорт":setValueToField(element, data.getCurrencyCodeExport());
+            case "Код валюти експорт":
+                setValueToField(element, data.getCurrencyCodeExport());
                 break;
-            case "Кількість експортваних товарів експорт":setValueToField(element, data.getCountProductsExport());
+            case "Кількість експортваних товарів експорт":
+                setValueToField(element, data.getCountProductsExport());
                 break;
-            case "Вартість експортованих товарів експорт":setValueToField(element, data.getProductPriceExport());
+            case "Вартість експортованих товарів експорт":
+                setValueToField(element, data.getProductPriceExport());
                 break;
         }
     }
 
     @Step("заполненяем в \"Імпорт товарів\' поле {name}")
-    public void setValueToImportProducts(SelenideElement element, String name, DeclarationDataS0501408 data){
+    public void setValueToImportProducts(SelenideElement element, String name, DeclarationDataS0501408 data) {
         switch (name) {
-            case "Назва країни імпорт":setValueToField(element, data.getCountryNameImport());
+            case "Назва країни імпорт":
+                setValueToField(element, data.getCountryNameImport());
                 break;
-            case "Найменування товару імпорт":setValueToField(element, data.getProductNameImport());
+            case "Найменування товару імпорт":
+                setValueToField(element, data.getProductNameImport());
                 break;
-            case "Код товару імпорт":setValueToField(element, data.getProductCodeImport());
+            case "Код товару імпорт":
+                setValueToField(element, data.getProductCodeImport());
                 break;
-            case "Код країни імпорт":setValueToField(element, data.getCountryCodeImport());
+            case "Код країни імпорт":
+                setValueToField(element, data.getCountryCodeImport());
                 break;
-            case "Назва валюти імпорт":setValueToField(element, data.getCurrencyNameImport());
+            case "Назва валюти імпорт":
+                setValueToField(element, data.getCurrencyNameImport());
                 break;
-            case "Код валюти імпорт":setValueToField(element, data.getCurrencyCodeImport());
+            case "Код валюти імпорт":
+                setValueToField(element, data.getCurrencyCodeImport());
                 break;
-            case "Кількість імпортованих товарів":setValueToField(element, data.getCountProductsImport());
+            case "Кількість імпортованих товарів":
+                setValueToField(element, data.getCountProductsImport());
                 break;
-            case "Вартість імпортованих товарів":setValueToField(element, data.getProductPriceImport());
+            case "Вартість імпортованих товарів":
+                setValueToField(element, data.getProductPriceImport());
                 break;
         }
     }
 
     @Step("заполняем в  \"футер\' поле {name}")
-    public void setValueToFooter(SelenideElement element, String name, DeclarationDataS0501408 data){
+    public void setValueToFooter(SelenideElement element, String name, DeclarationDataS0501408 data) {
         switch (name) {
-            case "ФІО дир":setValueToField(element, data.getFioDir());
+            case "ФІО дир":
+                setValueToField(element, data.getFioDir());
                 break;
-            case "ФІО бух":setValueToField(element, data.getFio());
+            case "ФІО бух":
+                setValueToField(element, data.getFio());
                 break;
-            case "телефон":setValueToField(element, data.getTelNumber());
+            case "телефон":
+                setValueToField(element, data.getTelNumber());
                 break;
-            case "факс":setValueToField(element, data.getFax());
+            case "факс":
+                setValueToField(element, data.getFax());
                 break;
-            case "електронна пошта":setValueToField(element, data.getEmail());
+            case "електронна пошта":
+                setValueToField(element, data.getEmail());
                 break;
         }
     }
@@ -281,96 +306,125 @@ public class CreateReportDeclarationS0501408 {
 
     /***** Проверка формы *****/
     @Step("проверяем в \"Респонтент\' поле {name}")
-    public void checkValueToHeader(SelenideElement element, String name, DeclarationDataS0501408 data){
+    public void checkValueToHeader(SelenideElement element, String name, DeclarationDataS0501408 data) {
         switch (name) {
             /***** Респондент *****/
-            case "код ЄДРПОУ": assertEquals(element.getValue(), data.getComEDRPOU());
+            case "код ЄДРПОУ":
+                assertEquals(element.getValue(), data.getComEDRPOU());
                 break;
-            case "Найменування":assertEquals(element.getValue(), data.getComName());
+            case "Найменування":
+                assertEquals(element.getValue(), data.getComName());
                 break;
-            case "юридична адреса":assertEquals(element.getValue(), data.getLocationAddress());
+            case "юридична адреса":
+                assertEquals(element.getValue(), data.getLocationAddress());
                 break;
-            case "фактична адреса":assertEquals(element.getValue(), data.getLocationAddressFact());
-                break;
-        }
-    }
-
-    @Step("проверяем в \"Експорт товарів\' поле {name}")
-    public void checkValueToExportProducts(SelenideElement element, String name, DeclarationDataS0501408 data){
-        switch (name) {
-            case "Назва країни експорт":assertEquals(element.getValue(), data.getCountryNameExport());
-                break;
-            case "Найменування товару експорт":assertEquals(element.getValue(), data.getProductNameExport());
-                break;
-            case "Код товару експорт":assertEquals(element.getValue(), data.getProductCodeExport());
-                break;
-            case "Код країни експорт":assertEquals(element.getValue(), data.getCountryCodeExport());
-                break;
-            case "Назва валюти експорт":assertEquals(element.getValue(), data.getCurrencyNameExport());
-                break;
-            case "Код валюти експорт":assertEquals(element.getValue(), data.getCurrencyCodeExport());
-                break;
-            case "Кількість експортваних товарів експорт":assertEquals(element.getValue(), data.getCountProductsExport());
-                break;
-            case "Вартість експортованих товарів експорт":assertEquals(element.getValue(), data.getProductPriceExport());
+            case "фактична адреса":
+                assertEquals(element.getValue(), data.getLocationAddressFact());
                 break;
         }
     }
 
     @Step("проверяем в \"Експорт товарів\' поле {name}")
-    public void checkValueToExportProducts(SelenideElement element, String name){
+    public void checkValueToExportProducts(SelenideElement element, String name, DeclarationDataS0501408 data) {
         switch (name) {
-            case "Кількість експортваних товарів експорт":assertEquals(element.getValue(), "0.000000");
+            case "Назва країни експорт":
+                assertEquals(element.getValue(), data.getCountryNameExport());
                 break;
-            case "Вартість експортованих товарів експорт":assertEquals(element.getValue(), "0.000000");
+            case "Найменування товару експорт":
+                assertEquals(element.getValue(), data.getProductNameExport());
+                break;
+            case "Код товару експорт":
+                assertEquals(element.getValue(), data.getProductCodeExport());
+                break;
+            case "Код країни експорт":
+                assertEquals(element.getValue(), data.getCountryCodeExport());
+                break;
+            case "Назва валюти експорт":
+                assertEquals(element.getValue(), data.getCurrencyNameExport());
+                break;
+            case "Код валюти експорт":
+                assertEquals(element.getValue(), data.getCurrencyCodeExport());
+                break;
+            case "Кількість експортваних товарів експорт":
+                assertEquals(element.getValue(), data.getCountProductsExport());
+                break;
+            case "Вартість експортованих товарів експорт":
+                assertEquals(element.getValue(), data.getProductPriceExport());
+                break;
+        }
+    }
+
+    @Step("проверяем в \"Експорт товарів\' поле {name}")
+    public void checkValueToExportProducts(SelenideElement element, String name) {
+        switch (name) {
+            case "Кількість експортваних товарів експорт":
+                assertEquals(element.getValue(), "0.000000");
+                break;
+            case "Вартість експортованих товарів експорт":
+                assertEquals(element.getValue(), "0.000000");
                 break;
         }
     }
 
     @Step("проверяем в \"Імпорт товарів\' поле {name}")
-    public void checkValueToImportProducts(SelenideElement element, String name, DeclarationDataS0501408 data){
+    public void checkValueToImportProducts(SelenideElement element, String name, DeclarationDataS0501408 data) {
         switch (name) {
-            case "Назва країни імпорт":assertEquals(element.getValue(), data.getCountryNameImport());
+            case "Назва країни імпорт":
+                assertEquals(element.getValue(), data.getCountryNameImport());
                 break;
-            case "Найменування товару імпорт":assertEquals(element.getValue(), data.getProductNameImport());
+            case "Найменування товару імпорт":
+                assertEquals(element.getValue(), data.getProductNameImport());
                 break;
-            case "Код товару імпорт":assertEquals(element.getValue(), data.getProductCodeImport());
+            case "Код товару імпорт":
+                assertEquals(element.getValue(), data.getProductCodeImport());
                 break;
-            case "Код країни імпорт":assertEquals(element.getValue(), data.getCountryCodeImport());
+            case "Код країни імпорт":
+                assertEquals(element.getValue(), data.getCountryCodeImport());
                 break;
-            case "Назва валюти імпорт":assertEquals(element.getValue(), data.getCurrencyNameImport());
+            case "Назва валюти імпорт":
+                assertEquals(element.getValue(), data.getCurrencyNameImport());
                 break;
-            case "Код валюти імпорт":assertEquals(element.getValue(), data.getCurrencyCodeImport());
+            case "Код валюти імпорт":
+                assertEquals(element.getValue(), data.getCurrencyCodeImport());
                 break;
-            case "Кількість експортваних товарів імпорт":assertEquals(element.getValue(), data.getCountProductsImport());
+            case "Кількість експортваних товарів імпорт":
+                assertEquals(element.getValue(), data.getCountProductsImport());
                 break;
-            case "Вартість експортованих товарів імпорт":assertEquals(element.getValue(), data.getProductPriceImport());
+            case "Вартість експортованих товарів імпорт":
+                assertEquals(element.getValue(), data.getProductPriceImport());
                 break;
         }
     }
 
     @Step("проверяем в \"Імпорт товарів\' поле {name}")
-    public void checkValueToImportProducts(SelenideElement element, String name){
+    public void checkValueToImportProducts(SelenideElement element, String name) {
         switch (name) {
-            case "Кількість експортваних товарів імпорт":assertEquals(element.getValue(), "0.000000");
+            case "Кількість експортваних товарів імпорт":
+                assertEquals(element.getValue(), "0.000000");
                 break;
-            case "Вартість експортованих товарів імпорт":assertEquals(element.getValue(), "0.000000");
+            case "Вартість експортованих товарів імпорт":
+                assertEquals(element.getValue(), "0.000000");
                 break;
         }
     }
 
     @Step("проверяем в \"футер\' поле {name}")
-    public void checkValueToFooter(SelenideElement element, String name, DeclarationDataS0501408 data){
+    public void checkValueToFooter(SelenideElement element, String name, DeclarationDataS0501408 data) {
         switch (name) {
-            case "ФІО дир":assertEquals(element.getValue(), data.getFioDir());
+            case "ФІО дир":
+                assertEquals(element.getValue(), data.getFioDir());
                 break;
-            case "ФІО бух":assertEquals(element.getValue(), data.getFio());
+            case "ФІО бух":
+                assertEquals(element.getValue(), data.getFio());
                 break;
-            case "телефон":assertEquals(element.getValue(), data.getTelNumber());
+            case "телефон":
+                assertEquals(element.getValue(), data.getTelNumber());
                 break;
-            case "факс":assertEquals(element.getValue(), data.getFax());
+            case "факс":
+                assertEquals(element.getValue(), data.getFax());
                 break;
-            case "електронна пошта":assertEquals(element.getValue(), data.getEmail());
+            case "електронна пошта":
+                assertEquals(element.getValue(), data.getEmail());
                 break;
         }
     }
