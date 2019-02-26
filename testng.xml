@@ -6,7 +6,10 @@
         <classes>
             <class name="tests.TestRunner">
                 <methods>
+                    <!--<include name="createNewReportDeclarationJ0301206"/>-->
+                    <!--<include name="createNewReportDeclarationNegativeJ0301206"/>-->
                     <!--<include name="createNewReportDeclarationS0501408"/>-->
+                    <!--<include name="createNewReportDeclarationS0501408NegativeDoc"/>-->
                 </methods>
             </class>
         </classes>

@@ -692,6 +692,29 @@ public class TestRunner extends BaseTest {
         typePage.checkDocument(documentObject.getDocumentDataFirst(), docId, versionsList.getVersionList(), tabsObject.tabsArray());
     }
 
+    @Story("Проверка удаления вкладок с документа")
+    @Test(description = "Удаление вкладок с документа")
+    public void checkDeleteTabsFromDocument() {
+        /***** Генерим тестовые данные *****/
+        documentObject = new CreateDocumentObject();
+        versionsList = new VersionsObject();
+        tabsObject = new TabsObject();
+
+
+        /***** Тест *****/
+        CreateDocumentTypePage typePage = new MainPage().openCreateNewTypePage();
+        /***** Создаем документ *****/
+        typePage.setDataToDocumentType(documentObject.getDocumentDataFirst(), versionsList.getVersionList(), tabsObject.tabsArray());
+        String docId = typePage.saveCurrentDocAndReturnId();
+        MainPage mainPage = typePage.goToMainPage();
+        DocumentTypesListPage typesListPage = mainPage.openReportTypesListPage();
+
+        typePage = typesListPage.searchAndOpenDocument(documentObject.getDocumentDataFirst().getDocName());
+        typePage.deleteTabsFromDocument();
+        /////////////////////////////////////////////////////////////////////////////////////////////////////
+        typePage.checkDocument(documentObject.getDocumentDataFirst(), docId, versionsList.getVersionList());
+    }
+
     @Story("Создание типа документа с вкладками (негативный сценарий. некорректные данные для вкладок)")
     @Test(description = "Создание типа документа с вкладками")
     public void checkCreateDocTypeWithTabsNegative() {

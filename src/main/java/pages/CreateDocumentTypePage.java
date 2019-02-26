@@ -202,6 +202,23 @@ public class CreateDocumentTypePage implements WorkingWithBrowserTabs {
         }
     }
 
+    @Step("Удаление вкладко с документа")
+    public void deleteTabsFromDocument() {
+        editButton.shouldBe(visible).click();
+        int versionsCount = $$x("//table[@id='versions_table']//tbody/tr").size();
+
+        for (int i = 1; i <= versionsCount; i++) {
+            $x("//table[@id='versions_table']//tbody/tr[" + i + "]/td[1]").click();
+            int tabsCount = $$x("//table[@id='tabs_table']//tbody/tr[not(@hidden='hidden')]").size();
+            for (int j = 0; j < tabsCount; j++) {
+                $x("//table[@id='tabs_table']//tbody/tr[1]/td[1]").click();
+                deleteTabButton.shouldBe(visible).click();
+            }
+        }
+        assertEquals($x("//table[@id='tabs_table']//tbody//td").getText(), "В таблице отсутствуют данные");
+        saveButton.shouldBe(visible).click();
+    }
+
     @Step("Проверка документа после создания")
     public void checkDocument(CreateDocumentData data, String docId) {
         assertEquals($(By.id("page_title")).getText().replaceAll("\\D+", ""), docId);
@@ -220,10 +237,12 @@ public class CreateDocumentTypePage implements WorkingWithBrowserTabs {
             assertEquals(groupId.getValue(), data.getGroupId());
         }
         assertEquals("В таблице отсутствуют данные", $(By.xpath("//table[@id='versions_table']//tbody//td")).getText());
+        assertEquals($x("//table[@id='tabs_table']//tbody//td").getText(), "В таблице отсутствуют данные");
     }
 
     @Step("Проверка документа после создания")
     public void checkDocument(CreateDocumentData data, String docId, ArrayList<VersionData> versions) {
+        editButton.shouldBe(visible).click();
         assertEquals($(By.id("page_title")).shouldBe(visible).getText().replaceAll("\\D+", ""), docId);
         assertEquals($(By.id("type_id")).shouldBe(visible).getValue(), docId);
         assertEquals(fieldName.getValue(), data.getDocName());
@@ -241,11 +260,16 @@ public class CreateDocumentTypePage implements WorkingWithBrowserTabs {
             assertEquals(groupId.getValue(), data.getGroupId());
         }
 
+        int xpathValue = 1;
         for (int i = 0; i < versions.size(); i++) {
+            $x("//table[@id='versions_table']//tbody/tr[" + xpathValue + "]/td[1]").click();
             assertEquals(dateFromVersion.get(i).getValue(), versions.get(i).getDate());
             assertEquals(comTypeVersion.get(i).getText(), versions.get(i).getComType());
             assertEquals(periodTypeVersion.get(i).getText(), versions.get(i).getTypeReportPeriod());
+            assertEquals($x("//table[@id='tabs_table']//tbody//td").getText(), "В таблице отсутствуют данные");
+            xpathValue++;
         }
+        saveCurrentDocAndReturnId();
     }
 
 
