@@ -32,6 +32,7 @@ public class DropDownElementsListObject {
         arrayList.add(ElementListData.builder().key("testKey3").value("testValue3").build());
         arrayList.add(ElementListData.builder().key("testKey4").value("testValue4").build());
         arrayList.add(ElementListData.builder().key("testKey5").value("testValue5").build());
+        arrayList.add(ElementListData.builder().key("testKey6").value("testValue5").build());
 
         return arrayList;
     }
