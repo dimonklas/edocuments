@@ -11,6 +11,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Listeners;
 import pages.DocumentTypesListPage;
+import pages.DropDownListPage;
 import pages.LoginPage;
 import pages.MainPage;
 import utils.AllureOnFailListener;
@@ -90,7 +91,11 @@ public class BaseTest {
         LoginPage loginPage = new LoginPage();
         if (loginPage.needAuth()) loginPage.login(confVariable.userLogin(), confVariable.userPassword());
         DocumentTypesListPage typesListPage = new MainPage().openReportTypesListPage();
-        typesListPage.searchDocument(confVariable.docName());
         typesListPage.deleteAllDocument(confVariable.docName());
+
+        typesListPage.goToMainPage();
+        DropDownListPage dropDownListPage = new MainPage().openDropDownList();
+        dropDownListPage.deleteAllDocument(confVariable.docName());
+
     }
 }

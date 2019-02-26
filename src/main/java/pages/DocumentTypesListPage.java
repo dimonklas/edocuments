@@ -29,12 +29,19 @@ public class DocumentTypesListPage implements WorkingWithBrowserTabs {
     private SelenideElement closeDocButton = $(By.id("btn_close"));
     private SelenideElement acceptAlertButton = $(By.id("btn_yes"));
     private SelenideElement dissmisAlertButton = $(By.id("btn_no"));
+    private SelenideElement linkOnHeader = $(By.id("section_title"));
 
 
     @Step("Проверка страницы \"Типы документов\"")
     public boolean checkDocumentTypesListPage() {
         String pageText = pageTittle.innerText();
         return pageText.equals("Типы документов");
+    }
+
+    @Step("Переход на главную страницу")
+    public MainPage goToMainPage() {
+        linkOnHeader.shouldBe(visible).click();
+        return new MainPage();
     }
 
     @Step("Проверка сортировки по \"{sort}\"")
@@ -144,6 +151,7 @@ public class DocumentTypesListPage implements WorkingWithBrowserTabs {
 
     @Step("Удаление всех документов по значению \"{valueForDelete}\"")
     public void deleteAllDocument(String valueForDelete) {
+        searchField.shouldBe(visible).setValue(valueForDelete);
         int count =  $$(By.xpath("//tbody//tr[@role='row']/td[contains(.,'" + valueForDelete + "')]")).size();
         for (int i = 0; i < count; i++) {
             $(By.xpath("//tbody//tr[@role='row']/td[contains(.,'" + valueForDelete + "')]")).click();

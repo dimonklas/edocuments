@@ -9,6 +9,7 @@ import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 import pages.*;
 import pages.document.*;
+import pages.document.dropDownListData.DropDownListData;
 import pages.document.s1605110.FormDataS1605110;
 import pages.documentObjects.*;
 import utils.AllureOnFailListener;
@@ -776,5 +777,33 @@ public class TestRunner extends BaseTest {
         createForm = mainPage.openCreateForm();
         assertFalse(createForm.uploadFile("S1605110.xsd"), "Не нашло созданную форму");
         createForm.checkForm(dataS1605110);
+    }
+
+    @Story("Проверка создание выпадающего списка")
+    @Test(description = "Создание выпадающего списка")
+    public void checkAddDropDownElement() {
+        DropDownListData listData = new DropDownElementsListObject().getListDataObject();
+
+        DropDownListPage dropDownListPage = new MainPage().openDropDownList();
+        CreateDropDownListPage createDropDownListPage = dropDownListPage.createNewDropDownList();
+        createDropDownListPage.createNewDropDownList(listData);
+        String idList = createDropDownListPage.saveCurrentDocAndReturnId();
+        createDropDownListPage.goToMainPage();
+
+        dropDownListPage = new MainPage().openDropDownList();
+        createDropDownListPage = dropDownListPage.searchAndOpenDocument(idList);
+        createDropDownListPage.checkDropDownList(listData, idList);
+    }
+
+    @Story("Проверка создание выпадающего списка (негативный сценарий)")
+    @Test(description = "Создание выпадающего списка (негативный сценарий)")
+    public void checkAddDropDownElementNegative() {
+        DropDownListData listData = new DropDownElementsListObject().getListDataObjectNegative();
+
+        DropDownListPage dropDownListPage = new MainPage().openDropDownList();
+        CreateDropDownListPage createDropDownListPage = dropDownListPage.createNewDropDownList();
+        createDropDownListPage.createNewDropDownList(listData);
+        assertEquals(createDropDownListPage.saveCurrentDocAndReturnId(), "Ошибка", "Произошло сохраниение с повторяющимся ключем");
+
     }
 }
