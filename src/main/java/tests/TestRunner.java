@@ -803,7 +803,7 @@ public class TestRunner extends BaseTest {
         DropDownListPage dropDownListPage = new MainPage().openDropDownList();
         CreateDropDownListPage createDropDownListPage = dropDownListPage.createNewDropDownList();
         createDropDownListPage.createNewDropDownList(listData);
-        assertEquals(createDropDownListPage.saveCurrentDocAndReturnId(), "Ошибка", "Произошло сохранение с повторяющимся ключом");
+        assertEquals(createDropDownListPage.saveCurrentDocAndReturnId(), "Ошибка", "Произошло сохранение с повторяющимся ключом!");
 
     }
 }
