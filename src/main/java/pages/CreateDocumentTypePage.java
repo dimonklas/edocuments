@@ -216,7 +216,6 @@ public class CreateDocumentTypePage implements WorkingWithBrowserTabs {
             }
         }
         assertEquals($x("//table[@id='tabs_table']//tbody//td").getText(), "В таблице отсутствуют данные");
-        saveButton.shouldBe(visible).click();
     }
 
     @Step("Проверка документа после создания")
