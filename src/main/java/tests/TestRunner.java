@@ -317,14 +317,8 @@ public class TestRunner extends BaseTest {
 
         /***** Отправляем отчет *****/
         reportDeclaration.subscribeAndSendReport();
-        // Временный костыль
-        if (reportDeclaration.waitReportStatusChange().equals("Не розшифрований") || reportDeclaration.waitReportStatusChange().equals("Не прийнятий")){
-            assertTrue(true);
-        } else fail();
-
-//        assertEquals("Не розшифрований", reportDeclaration.waitReportStatusChange(), "Неверный статус формы");
+        assertEquals("Не розшифрований", reportDeclaration.waitReportStatusChange(), "Неверный статус формы");
         reportDeclaration.decryptionReceipt();
-
     }
 
     @Story("Создание документа (негативный сценарий) S0501408")
