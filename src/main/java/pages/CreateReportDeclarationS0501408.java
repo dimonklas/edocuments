@@ -154,10 +154,12 @@ public class CreateReportDeclarationS0501408 {
             roleSelect.shouldBe(visible).selectOption("Директор");
             keysSave.shouldBe(visible).click();
             switchTo().defaultContent();
+            log.info("Отправляем отчет");
         } else {
             passwordKeyInput.shouldBe(visible).sendKeys(CV.pbKeyPassword());
             signAndSendButton.shouldBe(visible).click();
             switchTo().defaultContent();
+            log.info("Отправляем отчет");
         }
     }
 
