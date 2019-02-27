@@ -15,6 +15,9 @@ import pages.documentObjects.*;
 import utils.AllureOnFailListener;
 
 
+import java.util.Collections;
+import java.util.stream.IntStream;
+
 import static io.restassured.RestAssured.given;
 import static io.restassured.RestAssured.request;
 import static org.testng.Assert.*;
@@ -785,7 +788,7 @@ public class TestRunner extends BaseTest {
         DropDownListData listData = new DropDownElementsListObject().getListDataObject();
 
         DropDownListPage dropDownListPage = new MainPage().openDropDownList();
-        CreateDropDownListPage createDropDownListPage = dropDownListPage.createNewDropDownList();
+        CreateDropDownListPage createDropDownListPage = dropDownListPage.openCreateNewDropDownList();
         createDropDownListPage.createNewDropDownList(listData);
         String idList = createDropDownListPage.saveCurrentDocAndReturnId();
         createDropDownListPage.goToMainPage();
@@ -801,9 +804,36 @@ public class TestRunner extends BaseTest {
         DropDownListData listData = new DropDownElementsListObject().getListDataObjectNegative();
 
         DropDownListPage dropDownListPage = new MainPage().openDropDownList();
-        CreateDropDownListPage createDropDownListPage = dropDownListPage.createNewDropDownList();
+        CreateDropDownListPage createDropDownListPage = dropDownListPage.openCreateNewDropDownList();
         createDropDownListPage.createNewDropDownList(listData);
         assertEquals(createDropDownListPage.saveCurrentDocAndReturnId(), "Ошибка", "Произошло сохранение с повторяющимся ключом!");
+    }
 
+    @Story("Проверка редактирования выпадающего списка")
+    @Test(description = "редактирования выпадающего списка")
+    public void checkEditDropDownElement() {
+        DropDownListData listData = new DropDownElementsListObject().getListDataObject();
+        DropDownListData listDataOneElement = new DropDownElementsListObject().getListDataObjectWithOneElement();
+
+
+        DropDownListPage dropDownListPage = new MainPage().openDropDownList();
+        CreateDropDownListPage createDropDownListPage = dropDownListPage.openCreateNewDropDownList();
+        createDropDownListPage.createNewDropDownList(listData);
+        String idList = createDropDownListPage.saveCurrentDocAndReturnId();
+        createDropDownListPage.goToMainPage();
+
+        dropDownListPage = new MainPage().openDropDownList();
+        createDropDownListPage = dropDownListPage.searchAndOpenDocument(idList);
+        createDropDownListPage.createNewDropDownList(listDataOneElement);
+        createDropDownListPage.saveCurrentDocAndReturnId();
+        createDropDownListPage.goToMainPage();
+
+        dropDownListPage = new MainPage().openDropDownList();
+        createDropDownListPage = dropDownListPage.searchAndOpenDocument(idList);
+
+        /***** Проверка элементов после редактирование выпадающего списка *****/
+        IntStream.range(0, listData.getElementListData().size()).forEach(i -> listDataOneElement.getElementListData().add(listData.getElementListData().get(i)));
+
+        createDropDownListPage.checkDropDownList(listDataOneElement, idList);
     }
 }

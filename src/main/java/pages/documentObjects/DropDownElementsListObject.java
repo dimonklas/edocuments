@@ -7,6 +7,7 @@ import utils.DateUtil;
 import utils.IConfigurationVariables;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class DropDownElementsListObject {
     private final IConfigurationVariables CV = ConfigFactory.create(IConfigurationVariables.class, System.getProperties());
@@ -15,6 +16,12 @@ public class DropDownElementsListObject {
         return DropDownListData.builder()
                 .name(CV.docName() + new DateUtil().getCurrentDateTime("hhmmssSSS"))
                 .elementListData(getElementList()).build();
+    }
+
+    public DropDownListData getListDataObjectWithOneElement() {
+        return DropDownListData.builder()
+                .name(CV.docName() + new DateUtil().getCurrentDateTime("hhmmssSSS"))
+                .elementListData(getElementListOneElement()).build();
     }
 
     public DropDownListData getListDataObjectNegative() {
@@ -33,6 +40,7 @@ public class DropDownElementsListObject {
         arrayList.add(ElementListData.builder().key("testKey4").value("testValue4").build());
         arrayList.add(ElementListData.builder().key("testKey5").value("testValue5").build());
         arrayList.add(ElementListData.builder().key("testKey6").value("testValue5").build());
+        arrayList.add(ElementListData.builder().key("testKey23").value("testValue23").build());
 
         return arrayList;
     }
@@ -46,6 +54,14 @@ public class DropDownElementsListObject {
         arrayList.add(ElementListData.builder().key("testKey4").value("testValue4").build());
         arrayList.add(ElementListData.builder().key("testKey5").value("testValue5").build());
         arrayList.add(ElementListData.builder().key("testKey5").value("testValue6").build());
+
+        return arrayList;
+    }
+
+    private ArrayList<ElementListData> getElementListOneElement() {
+        ArrayList<ElementListData> arrayList = new ArrayList<>();
+
+        arrayList.add(ElementListData.builder().key("testKey13").value("testValue13").build());
 
         return arrayList;
     }

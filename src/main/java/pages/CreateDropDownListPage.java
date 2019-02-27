@@ -8,6 +8,8 @@ import lombok.extern.log4j.Log4j;
 import org.openqa.selenium.By;
 import pages.document.dropDownListData.DropDownListData;
 
+import java.util.Collections;
+
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.*;
 import static org.testng.Assert.assertEquals;
@@ -18,6 +20,7 @@ public class CreateDropDownListPage {
     private SelenideElement listName = $(By.id("list_name"));
     private SelenideElement saveButton = $(By.id("btn_save"));
     private SelenideElement deleteButton = $(By.id("btn_delete"));
+    private SelenideElement editButton = $(By.id("btn_edit"));
     private SelenideElement cancelButton = $(By.id("btn_cancel"));
     private SelenideElement elementAdd = $(By.id("btn_element_add"));
     private SelenideElement elementDelete = $(By.id("btn_element_delete"));
@@ -27,6 +30,8 @@ public class CreateDropDownListPage {
 
     @Step("Создание нового выпадающего списка")
     public void createNewDropDownList(DropDownListData listData) {
+        if (editButton.isDisplayed()) editButton.click();
+        listName.shouldBe(Condition.visible).clear();
         listName.shouldBe(Condition.visible).setValue(listData.getName());
 
         if (listData.getElementListData().size() > 0) {
@@ -59,6 +64,7 @@ public class CreateDropDownListPage {
 
     @Step("Проверка выпадающего списка")
     public void checkDropDownList(DropDownListData listData, String idList) {
+        Collections.sort(listData.getElementListData());
         assertEquals(idList, $(By.id("list_id")).shouldBe(visible).getValue(), "Неверный ID у выпадающего списка");
         assertEquals(listData.getName(), listName.shouldBe(visible).getValue(), "Неверное наименование у выпадающего списка");
 

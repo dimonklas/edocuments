@@ -24,7 +24,7 @@ public class DropDownListPage implements WorkingWithBrowserTabs {
 
 
     @Step("Перейти на создание нового Выпадающего списка")
-    public CreateDropDownListPage createNewDropDownList() {
+    public CreateDropDownListPage openCreateNewDropDownList() {
         createButton.shouldBe(Condition.visible).click();
         closeBrowserTab("Выпадающие списки");
         return new CreateDropDownListPage();
