@@ -321,8 +321,7 @@ public class TestRunner extends BaseTest {
 
         /***** Отправляем отчет *****/
         reportDeclaration.subscribeAndSendReport();
-        assertEquals("Не розшифрований", reportDeclaration.waitReportStatusChange(), "Неверный статус формы");
-        reportDeclaration.decryptionReceipt();
+        assertEquals(reportDeclaration.waitReportStatusChange(), "Не прийнятий", "Неверный статус формы");
     }
 
     @Story("Создание документа (негативный сценарий) S0501408")
