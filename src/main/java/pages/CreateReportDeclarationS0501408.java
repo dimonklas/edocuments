@@ -164,13 +164,14 @@ public class CreateReportDeclarationS0501408 {
     @Step("Ожидание изменения статуса")
     public String waitReportStatusChange() {
         int countWait = 0;
+
         while (!reportStage.getText().equals("Не прийнятий") && countWait < 300) {
             sleep(1000);
             refresh();
             countWait++;
-
             if (reportStage.getText().equals("Не розшифрований")) decryptionReceipt();
         }
+
         return reportStage.getText();
     }
 
