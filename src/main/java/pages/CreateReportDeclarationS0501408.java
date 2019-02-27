@@ -170,7 +170,6 @@ public class CreateReportDeclarationS0501408 {
             countWait++;
 
             if (reportStage.getText().equals("Не розшифрований")) decryptionReceipt();
-            if (reportStage.getText().equals("Не надіслано")) subscribeAndSendReport();
         }
         return reportStage.getText();
     }
