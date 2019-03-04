@@ -141,6 +141,7 @@ public class CreateReportDeclarationS0501408 {
 
     @Step("Подписать и отправить отчет")
     public void subscribeAndSendReport() {
+        log.info($x("(//div[@id='page_header']//span)[3]").getText());
         subscribeAndSendButton.shouldBe(visible).click();
         sleep(2000);
         switchTo().frame(iframeSendReport.shouldBe(visible));
