@@ -209,6 +209,7 @@ public class CreateReportDeclarationJ0301206 {
 
     @Step("Подписать и отправить отчет")
     public void subscribeAndSendReport() {
+        log.info($x("(//div[@id='page_header']//span)[3]").getText());
         subscribeAndSendButton.shouldBe(visible).click();
         confirmSaveReport.shouldBe(visible).click(); //для отчета у которого есть ошибка
         sleep(2000);
