@@ -39,6 +39,7 @@ public class CreateForm {
 
     @Step("Загрузка файла формы")
     public boolean uploadFile(String file){
+        uploadFileButton.shouldBe(visible);
         String fileName = FilenameUtils.removeExtension(new File("src/main/resources/supportFiles/" + file).getName());
         uploadFileInput.uploadFile(new File("src/main/resources/supportFiles/" + file).getAbsoluteFile());
         sleep(2000);
@@ -62,6 +63,7 @@ public class CreateForm {
 
     @Step("Проверка формы")
     public void checkForm(FormDataAbstract form) {
+        unloadFileButton.shouldBe(visible);
         int xpathValue = 1;
         assertEquals(codeFormInput.getValue(), form.getCODE(), "Код формы неправильный");
         assertEquals(descriptionFormInput.getValue(), form.getDESCRIPTION(), "Наименование формы неправильное");

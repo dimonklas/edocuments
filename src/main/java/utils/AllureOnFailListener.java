@@ -18,7 +18,7 @@ public final class AllureOnFailListener implements ITestListener {
 
     @Override
     public void onTestSuccess(ITestResult iTestResult) {
-        log.info("Start test: " + iTestResult.getName() + " successfully ended");
+        log.info("Test: " + iTestResult.getName() + " successfully ended");
     }
 
     @Override
@@ -28,7 +28,7 @@ public final class AllureOnFailListener implements ITestListener {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        log.info("TestClass " + iTestResult.getName() + " ended failed");
+        log.info("Test " + iTestResult.getName() + " ended failed!");
     }
 
     @Override

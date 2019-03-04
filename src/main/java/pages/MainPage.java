@@ -14,6 +14,7 @@ public class MainPage implements WorkingWithBrowserTabs {
     private SelenideElement formDocumentList = $(By.xpath("//h5[normalize-space()='Формы отчетных документов']/..//a[contains(.,'список')]"));
     private SelenideElement createForm = $(By.xpath("//h5[normalize-space()='Формы отчетных документов']/..//a[contains(.,'Создать новую форму')]"));
     private SelenideElement dropDownList = $(By.xpath("//h5[normalize-space()='Справочники']/..//a[contains(.,'Выпадающие списки')]"));
+    private SelenideElement generalDataTypesList = $(By.xpath("//h5[normalize-space()='Справочники']/..//a[contains(.,'Общие типы данных')]"));
 
     @Step("Перейти на страницу со списком отчетных докуметов")
     public DocumentTypesListPage openReportTypesListPage() {
@@ -48,5 +49,12 @@ public class MainPage implements WorkingWithBrowserTabs {
         dropDownList.click();
         closeBrowserTab("Конструктор отчетов");
         return new DropDownListPage();
+    }
+
+    @Step("Перейти на страницу 'Общие типы данных'")
+    public GeneralDataTypesPage openGeneralDataTypes() {
+        generalDataTypesList.click();
+        closeBrowserTab("Конструктор отчетов");
+        return new GeneralDataTypesPage();
     }
 }

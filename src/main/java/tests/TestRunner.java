@@ -20,6 +20,7 @@ import java.util.stream.IntStream;
 
 import static io.restassured.RestAssured.given;
 import static io.restassured.RestAssured.request;
+import static io.restassured.specification.ProxySpecification.host;
 import static org.testng.Assert.*;
 
 
@@ -297,7 +298,7 @@ public class TestRunner extends BaseTest {
         /**** Экспорт товаров *****/
         reportDeclaration.declarationS0501408Fields.forEach((key, value) -> reportDeclaration.setValueToExportProducts(key, value, s0501408Object.getDataDeclaration()));
 
-        /**** Импорт товаров товаров *****/
+        /**** Импорт товаров *****/
         reportDeclaration.declarationS0501408Fields.forEach((key, value) -> reportDeclaration.setValueToImportProducts(key, value, s0501408Object.getDataDeclaration()));
 
         /***** Персональные данные *****/
@@ -313,7 +314,7 @@ public class TestRunner extends BaseTest {
         /**** Экспорт товаров *****/
         reportDeclaration.declarationS0501408Fields.forEach((key, value) -> reportDeclaration.checkValueToExportProducts(key, value, s0501408Object.getDataDeclaration()));
 
-        /**** Импорт товаров товаров *****/
+        /**** Импорт товаров *****/
         reportDeclaration.declarationS0501408Fields.forEach((key, value) -> reportDeclaration.checkValueToImportProducts(key, value, s0501408Object.getDataDeclaration()));
 
         /***** Персональные данные *****/
@@ -361,7 +362,7 @@ public class TestRunner extends BaseTest {
         /**** Экспорт товаров *****/
         reportDeclaration.declarationS0501408Fields.forEach(reportDeclaration::checkValueToExportProducts);
 
-        /**** Импорт товаров товаров *****/
+        /**** Импорт товаров *****/
         reportDeclaration.declarationS0501408Fields.forEach(reportDeclaration::checkValueToImportProducts);
 
         /***** Персональные данные *****/
@@ -388,7 +389,7 @@ public class TestRunner extends BaseTest {
         /**** Экспорт товаров *****/
         reportDeclaration.declarationS0501408Fields.forEach((key, value) -> reportDeclaration.setValueToExportProducts(key, value, s0501408Object.getDataDeclaration()));
 
-        /**** Импорт товаров товаров *****/
+        /**** Импорт товаров *****/
         reportDeclaration.declarationS0501408Fields.forEach((key, value) -> reportDeclaration.setValueToImportProducts(key, value, s0501408Object.getDataDeclaration()));
 
         /***** Персональные данные *****/
@@ -749,36 +750,54 @@ public class TestRunner extends BaseTest {
         formPage.checkSortDesc(valueForSort);
     }
 
-    @Story("Создание формы, \"J3040812\" при существующей форме")
-    @Test(description = "Загрузка файла \"J3040812\" и создание формы")
+    @Story("Создание формы, \"S1605110\" при существующей форме")
+    @Test(description = "Загрузка файла \"S1605110\" и создание формы")
     public void createNewForm() {
         /***** Генерим данные для заполнения документа *****/
         FormDataS1605110 dataS1605110 = FormDataS1605110.builder().fields(new FormFieldsObjectS1605110().originalFields()).build();
 
-        DocumentFormListPage listPage = new MainPage().openDocumentFormListPage();
+        GeneralDataTypesPage dataTypesPage = new MainPage().openGeneralDataTypes();
+        dataTypesPage.editDataTypes(dataS1605110.getFields());
+        MainPage mainPage = dataTypesPage.goToMainPage();
+
+        DocumentFormListPage listPage = mainPage.openDocumentFormListPage();
         listPage.deleteForm(dataS1605110.getCODE());
-        MainPage mainPage = listPage.goToMainPage();
+        mainPage = listPage.goToMainPage();
         CreateForm createForm = mainPage.openCreateForm();
         assertTrue(createForm.uploadFile("S1605110.xsd"), "Новый файл не подгрузился");
         createForm.checkForm(dataS1605110);
     }
 
-    @Story("Создание формы, \"J3040812\" при существующей форме")
-    @Test(description = "Загрузка файла \"J3040812\" и создание формы")
+    @Story("Создание формы, \"S1605110\"")
+    @Test(description = "Загрузка файла \"S1605110\" и создание формы")
     public void createNewFormWhileExists() {
         /***** Генерим данные для заполнения документа *****/
         FormDataS1605110 dataS1605110 = FormDataS1605110.builder().fields(new FormFieldsObjectS1605110().originalFields()).build();
+        FormDataS1605110 dataS1605110Edit = FormDataS1605110.builder().fields(new FormFieldsObjectS1605110().editFields()).build();
 
-        DocumentFormListPage listPage = new MainPage().openDocumentFormListPage();
+        GeneralDataTypesPage dataTypesPage = new MainPage().openGeneralDataTypes();
+        dataTypesPage.editDataTypes(dataS1605110.getFields());
+        MainPage mainPage = dataTypesPage.goToMainPage();
+
+        DocumentFormListPage listPage = mainPage.openDocumentFormListPage();
         listPage.deleteForm(dataS1605110.getCODE());
-        MainPage mainPage = listPage.goToMainPage();
+        mainPage = listPage.goToMainPage();
         CreateForm createForm = mainPage.openCreateForm();
         assertTrue(createForm.uploadFile("S1605110.xsd"), "Новый файл не подгрузился");
         createForm.goToMainPage();
         mainPage = listPage.goToMainPage();
         createForm = mainPage.openCreateForm();
-        assertFalse(createForm.uploadFile("S1605110.xsd"), "Не нашло созданную форму");
+        assertFalse(createForm.uploadFile("S1605110.xsd"), "Созданная форма не найдена");
         createForm.checkForm(dataS1605110);
+        createForm.goToMainPage();
+
+
+        dataTypesPage = new MainPage().openGeneralDataTypes();
+        dataTypesPage.editDataTypes(dataS1605110Edit.getFields());
+        mainPage = dataTypesPage.goToMainPage();
+        createForm = mainPage.openCreateForm();
+        assertFalse(createForm.uploadFile("S1605110.xsd"), "Созданная форма не найдена");
+        createForm.checkForm(dataS1605110Edit);
     }
 
     @Story("Проверка создание выпадающего списка")

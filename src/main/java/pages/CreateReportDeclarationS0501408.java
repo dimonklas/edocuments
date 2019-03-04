@@ -161,6 +161,7 @@ public class CreateReportDeclarationS0501408 {
             switchTo().defaultContent();
             log.info("Отправляем отчет");
         }
+        sleep(5000);
     }
 
     @Step("Ожидание изменения статуса")
