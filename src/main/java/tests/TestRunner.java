@@ -76,7 +76,7 @@ public class TestRunner extends BaseTest {
         };
     }
 
-    @Story("Проверка сортировки по возростанию")
+    @Story("Сортировка по возростанию")
     @Test(dataProvider = "getDataForSort", description = "Сортировка по значению ->", enabled = false)
     public void checkSortedAsc(String sorted) {
         DocumentTypesListPage documentTypesListPage = new MainPage().openReportTypesListPage();
@@ -84,7 +84,7 @@ public class TestRunner extends BaseTest {
         documentTypesListPage.checkSortingAsc(sorted);
     }
 
-    @Story("Проверка сортировки по убыванию")
+    @Story("Сортировка по убыванию")
     @Test(dataProvider = "getDataForSort", description = "Сортировка по значению ->", enabled = false)
     public void checkSortedDesc(String sorted) {
         DocumentTypesListPage documentTypesListPage = new MainPage().openReportTypesListPage();
@@ -131,7 +131,7 @@ public class TestRunner extends BaseTest {
         typePage.checkDocument(documentObject.getDocumentDataFirst(), docId, versionsList.getVersionList());
     }
 
-    @Story("Проверка создания копии документа с версией")
+    @Story("Создание копии документа с версией")
     @Test(description = "Создание копии документа с версией")
     public void checkCopyDocumentWithVersion() {
         /***** Генерим тестовые данные *****/
@@ -155,7 +155,7 @@ public class TestRunner extends BaseTest {
         typePage.checkDocument(documentObject.getDocumentDataFirst(), docCopyId, versionsList.getVersionList());
     }
 
-    @Story("Проверка создания копии документа без версии")
+    @Story("Создание копии документа без версии")
     @Test(description = "Создание копии документа без версии")
     public void checkCopyDocumentWithoutVersion() {
         /***** Генерим тестовые данные *****/
@@ -410,7 +410,7 @@ public class TestRunner extends BaseTest {
         reportDeclaration.declarationS0501408Fields.forEach((key, value) -> reportDeclaration.checkValueToExportProducts(key, value, s0501408Object.getDataDeclaration()));
     }
 
-    @Story("Проверка редактирования формы документа")
+    @Story("Редактирование формы документа")
     @Test(description = "Проверка редактирования документа без версий")
     public void checkEditDocType() {
         /***** Генерим тестовые данные *****/
@@ -437,7 +437,7 @@ public class TestRunner extends BaseTest {
         typePage.checkDocument(documentObject.getDocumentDataSecond(), docEditId, versionsList.getVersionList());
     }
 
-    @Story("Проверка редактирования формы документа")
+    @Story("Редактирование формы документа")
     @Test(description = "Проверка редактирования документа, с добавлением версий")
     public void checkEditDocTypeAddNewVersion() {
         /***** Генерим тестовые данные *****/
@@ -609,7 +609,7 @@ public class TestRunner extends BaseTest {
         assertFalse(typesListPage.searchDocument(documentObject.getDocumentDataFirst().getDocName()), "Тип документа не удалился");
     }
 
-    @Story("Проверка открытия и закрытия документа")
+    @Story("Открытие и закрытие документа")
     @Test(description = "Открытие и закрытие документа через список документов")
     public void checkOpenCloseDocumentThroughList() {
         /***** Генерим тестовые данные *****/
@@ -630,7 +630,7 @@ public class TestRunner extends BaseTest {
         assertTrue(typesListPage.closeDocument(), "Документ не закрылся");
     }
 
-    @Story("Проверка открытия и закрытия документа")
+    @Story("Открытие и закрытие документа")
     @Test(description = "Открытие и закрытие документа через список редактирование документа")
     public void checkOpenCloseDocumentThroughDocumentPage() {
         /***** Генерим тестовые данные *****/
@@ -651,8 +651,8 @@ public class TestRunner extends BaseTest {
         assertTrue(typePage.closeDocument(), "Документ не открылся");
     }
 
-    @Story("Проверка открытия и закрытия документа")
-    @Test(description = "Открытие и закрытие документа через список редактирование документа")
+    @Story("Открытие и закрытие документа")
+    @Test(description = "Открытие и закрытие документа через список редактирование документа + открытие версий")
     public void checkOpenDocumentVersion() {
         /***** Генерим тестовые данные *****/
         documentObject = new CreateDocumentObject();
@@ -693,7 +693,7 @@ public class TestRunner extends BaseTest {
         typePage.checkDocument(documentObject.getDocumentDataFirst(), docId, versionsList.getVersionList(), tabsObject.tabsArray());
     }
 
-    @Story("Проверка удаления вкладок с документа")
+    @Story("Удаление вкладок с документа")
     @Test(description = "Удаление вкладок с документа")
     public void checkDeleteTabsFromDocument() {
         /***** Генерим тестовые данные *****/
@@ -736,14 +736,14 @@ public class TestRunner extends BaseTest {
 
 
     /***** Формы документов *****/
-    @Story("Проверка сортировки на странице \"Формы документов\"")
+    @Story("Сортировка на странице \"Формы документов\"")
     @Test(description = "сортировка по возростанию", dataProvider = "formDocumentSort")
     public void checkAscSortInFormDoc(String valueForSort) {
         DocumentFormListPage formPage = new MainPage().openDocumentFormListPage();
         formPage.checkSortAsc(valueForSort);
     }
 
-    @Story("Проверка сортировки на странице \"Формы документов\"")
+    @Story("Сортировка на странице \"Формы документов\"")
     @Test(description = "сортировка по убыванию", dataProvider = "formDocumentSort")
     public void checkDescSortInFormDoc(String valueForSort) {
         DocumentFormListPage formPage = new MainPage().openDocumentFormListPage();
@@ -800,7 +800,7 @@ public class TestRunner extends BaseTest {
         createForm.checkForm(dataS1605110Edit);
     }
 
-    @Story("Проверка создание выпадающего списка")
+    @Story("Создание выпадающего списка")
     @Test(description = "Создание выпадающего списка")
     public void checkAddDropDownElement() {
         DropDownListData listData = new DropDownElementsListObject().getListDataObject();
@@ -816,7 +816,7 @@ public class TestRunner extends BaseTest {
         createDropDownListPage.checkDropDownList(listData, idList);
     }
 
-    @Story("Проверка создание выпадающего списка (негативный сценарий)")
+    @Story("Создание выпадающего списка (негативный сценарий)")
     @Test(description = "Создание выпадающего списка (негативный сценарий)")
     public void checkAddDropDownElementNegative() {
         DropDownListData listData = new DropDownElementsListObject().getListDataObjectNegative();
@@ -827,7 +827,7 @@ public class TestRunner extends BaseTest {
         assertEquals(createDropDownListPage.saveCurrentDocAndReturnId(), "Ошибка", "Произошло сохранение с повторяющимся ключом!");
     }
 
-    @Story("Проверка редактирования выпадающего списка")
+    @Story("Редактирования выпадающего списка")
     @Test(description = "редактирования выпадающего списка")
     public void checkEditDropDownElement() {
         DropDownListData listData = new DropDownElementsListObject().getListDataObject();
