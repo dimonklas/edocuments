@@ -247,7 +247,7 @@ public class DocumentTypesListPage implements WorkingWithBrowserTabs {
         }
 
         for (String pair : allIds) {
-            Response response = given()
+            given()
                 .proxy(host("proxy.pbank.com.ua").withPort(8080))
                 .relaxedHTTPSValidation()
                 .log().all()
@@ -259,8 +259,6 @@ public class DocumentTypesListPage implements WorkingWithBrowserTabs {
                 .formParam("type_id",pair)
                 .formParam("action","delete")
                 .post("http://buhonline.test.it.loc/admin/ajax.php");
-
-            response.then().log().all();
         }
     }
 }
