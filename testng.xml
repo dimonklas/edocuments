@@ -5,13 +5,19 @@
     <test name="eDocReportTest">
         <classes>
             <class name="tests.TestRunner">
-                <methods>
+                <!--<methods>-->
                     <!--<include name="createNewReportDeclarationJ0301206"/>-->
                     <!--<include name="createNewReportDeclarationNegativeJ0301206"/>-->
                     <!--<include name="createNewReportDeclarationS0501408"/>-->
                     <!--<include name="createNewReportDeclarationS0501408NegativeDoc"/>-->
-                </methods>
+                <!--</methods>-->
             </class>
+        </classes>
+    </test>
+
+    <test name="eDocReportTestSecond">
+        <classes>
+            <class name="tests.TestDelete"/>
         </classes>
     </test>
 

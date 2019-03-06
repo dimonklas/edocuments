@@ -15,12 +15,8 @@ import pages.documentObjects.*;
 import utils.AllureOnFailListener;
 
 
-import java.util.Collections;
 import java.util.stream.IntStream;
 
-import static io.restassured.RestAssured.given;
-import static io.restassured.RestAssured.request;
-import static io.restassured.specification.ProxySpecification.host;
 import static org.testng.Assert.*;
 
 
@@ -102,7 +98,7 @@ public class TestRunner extends BaseTest {
     @Story("Создание нового типа без версии документа")
     @Test(description = "Создание нового документа без указания версии")
     public void createNewDocument() {
-        /***** Генерим тестовые данные *****/;
+        /***** Генерим тестовые данные *****/
         documentObject = new CreateDocumentObject();
         /***** Тест *****/
         CreateDocumentTypePage typePage = new MainPage().openCreateNewTypePage();

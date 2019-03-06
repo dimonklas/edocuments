@@ -3,22 +3,33 @@ package pages;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
+import io.restassured.response.Response;
 import lombok.extern.log4j.Log4j;
+import org.aeonbits.owner.ConfigFactory;
 import org.openqa.selenium.By;
 import org.testng.Assert;
+import utils.IConfigurationVariables;
 import utils.WorkingWithBrowserTabs;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedList;
 
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
+import static io.restassured.RestAssured.given;
+import static io.restassured.specification.ProxySpecification.host;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
+import static utils.Cookie.csrfToken;
+import static utils.Cookie.phpsessid;
 
 @Log4j
 public class DocumentTypesListPage implements WorkingWithBrowserTabs {
+
+    private final IConfigurationVariables CV = ConfigFactory.create(IConfigurationVariables.class, System.getProperties());
+
     private SelenideElement pageTittle = $(By.xpath("//div[@id='page_title']"));
     private SelenideElement searchField = $(By.id("search"));
     private SelenideElement createButton = $(By.id("btn_create"));
@@ -221,5 +232,35 @@ public class DocumentTypesListPage implements WorkingWithBrowserTabs {
         sleep(1000);
 
         return openDocButton.is(visible) && documentInList.attr("class").equals("odd selected closed");
+    }
+
+    @Step("Удаление типов документов через рест")
+    public void deleteAllDocumentThroughRest() {
+        searchField.shouldBe(visible).clear();
+        searchField.shouldBe(visible).sendKeys(CV.docName());
+
+        ElementsCollection elementsId = $$x("//*[@id='types_table']//tbody//tr/td[1]");
+        HashSet<String> allIds = new HashSet<>();
+
+        for (SelenideElement anElementsId : elementsId) {
+            allIds.add(anElementsId.getText());
+        }
+
+        for (String pair : allIds) {
+            Response response = given()
+                .proxy(host("proxy.pbank.com.ua").withPort(8080))
+                .relaxedHTTPSValidation()
+                .log().all()
+                .cookie("PHPSESSID", phpsessid)
+                .cookie("CSRF-TOKEN", csrfToken)
+                .header("X-CSRF-Token",csrfToken)
+                .contentType("application/x-www-form-urlencoded; charset=UTF-8")
+                .formParam("object","type")
+                .formParam("type_id",pair)
+                .formParam("action","delete")
+                .post("http://buhonline.test.it.loc/admin/ajax.php");
+
+            response.then().log().all();
+        }
     }
 }
