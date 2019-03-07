@@ -235,9 +235,9 @@ public class DocumentTypesListPage implements WorkingWithBrowserTabs {
     }
 
     @Step("Удаление типов документов через рест")
-    public void deleteAllDocumentThroughRest() {
+    public void deleteAllDocumentThroughRest(String value) {
         searchField.shouldBe(visible).clear();
-        searchField.shouldBe(visible).sendKeys(CV.docName());
+        searchField.shouldBe(visible).sendKeys(value);
 
         ElementsCollection elementsId = $$x("//*[@id='types_table']//tbody//tr/td[1]");
         HashSet<String> allIds = new HashSet<>();
@@ -248,7 +248,7 @@ public class DocumentTypesListPage implements WorkingWithBrowserTabs {
 
         for (String pair : allIds) {
             given()
-                .proxy(host("proxy.pbank.com.ua").withPort(8080))
+//                .proxy(host("proxy.pbank.com.ua").withPort(8080))
                 .relaxedHTTPSValidation()
                 .log().all()
                 .cookie("PHPSESSID", phpsessid)

@@ -34,6 +34,7 @@ public class DropDownListPage implements WorkingWithBrowserTabs {
     private SelenideElement viewDropDownList = $(By.id("btn_view"));
     private SelenideElement deleteButton = $(By.id("btn_delete"));
     private SelenideElement acceptAlertButton = $(By.id("btn_yes"));
+    private SelenideElement linkOnHeader = $(By.id("section_title"));
 
 
     @Step("Перейти на создание нового Выпадающего списка")
@@ -66,10 +67,36 @@ public class DropDownListPage implements WorkingWithBrowserTabs {
         assertTrue($(By.xpath("//*[@id='lists_table']//td[text()='Записи отсутствуют.']")).exists());
     }
 
-    @Step("Удаление всех документов через REST-assured")
-    public void deleteAllDocumentThroughRest() {
+    @Step("Переход на главную страницу")
+    public MainPage goToMainPage() {
+        linkOnHeader.shouldBe(visible).click();
+        return new MainPage();
+    }
+
+    @Step("Проверка поиска по значению \"{value}\"")
+    public boolean searchDocument(String value) {
+        refresh();
         searchField.shouldBe(visible).clear();
-        searchField.shouldBe(visible).sendKeys(CV.docName());
+        searchField.shouldBe(visible).sendKeys(value);
+        StringBuilder stringBuilder = new StringBuilder();
+
+        if (!$(By.xpath("//*[@id='lists_table']//td[text()='Записи отсутствуют.']")).exists()) {
+            for (int i = 1; i < 6; i++) {
+                stringBuilder.append($(By.xpath("(//tbody//tr/td)[" + i + "]")).getText());
+            }
+            String result = stringBuilder.toString();
+            log.info(result);
+            return true;
+        } else {
+            log.info("Записи отсутствуют");
+            return false;
+        }
+    }
+
+    @Step("Удаление всех документов через REST-assured")
+    public void deleteAllDocumentThroughRest(String value) {
+        searchField.shouldBe(visible).clear();
+        searchField.shouldBe(visible).sendKeys(value);
 
         ElementsCollection elementsId = $$x("//*[@id='lists_table']//tbody//tr/td[1]");
         HashSet<String> allIds = new HashSet<>();

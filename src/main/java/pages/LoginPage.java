@@ -25,8 +25,11 @@ public class LoginPage {
         passwordField.shouldBe(visible).setValue(password);
         submitButton.shouldBe(visible).click();
 
-        if (warningMessage.exists()) warningSubmitButton.shouldBe(visible).click();
-        if (authenticationPageTitle.exists()) authenticationNextButton.shouldBe(visible).click();
+        warningSubmitButton.shouldBe(visible).click();
+        authenticationNextButton.shouldBe(visible).click();
+
+//        if (warningMessage.exists()) warningSubmitButton.shouldBe(visible).click();
+//        if (authenticationPageTitle.exists()) authenticationNextButton.shouldBe(visible).click();
     }
 
     public boolean needAuth() {
