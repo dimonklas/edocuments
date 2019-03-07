@@ -3,7 +3,9 @@ package pages;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import lombok.extern.log4j.Log4j;
+import org.aeonbits.owner.ConfigFactory;
 import org.openqa.selenium.By;
+import utils.IConfigurationVariables;
 
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
@@ -11,6 +13,8 @@ import static com.codeborne.selenide.Selenide.sleep;
 
 @Log4j
 public class LoginPage {
+
+    private final IConfigurationVariables CV = ConfigFactory.create(IConfigurationVariables.class, System.getProperties());
 
     private SelenideElement loginField = $(By.xpath("//input[@name='login']"));
     private SelenideElement passwordField = $(By.xpath("//input[@name='password']"));
@@ -21,9 +25,9 @@ public class LoginPage {
     private SelenideElement authenticationNextButton = $(By.xpath("//button[@id='region']"));
 
     @Step("Авторизация")
-    public void login(String login, String password) {
+    public void login(String login) {
         loginField.shouldBe(visible).setValue(login);
-        passwordField.shouldBe(visible).setValue(password);
+        passwordField.shouldBe(visible).setValue(CV.userPassword());
         submitButton.shouldBe(visible).click();
         sleep(1500);
 

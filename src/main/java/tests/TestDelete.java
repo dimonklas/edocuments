@@ -1,15 +1,22 @@
 package tests;
 
+import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
+import lombok.extern.log4j.Log4j;
 import org.aeonbits.owner.ConfigFactory;
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 import pages.DocumentTypesListPage;
 import pages.DropDownListPage;
 import pages.MainPage;
+import utils.AllureOnFailListener;
 import utils.IConfigurationVariables;
 
 import static org.testng.Assert.assertFalse;
 
+@Feature("Удаление данных после теста")
+@Listeners(AllureOnFailListener.class)
+@Log4j
 public class TestDelete extends BaseTest {
 
     private final IConfigurationVariables CV = ConfigFactory.create(IConfigurationVariables.class, System.getProperties());

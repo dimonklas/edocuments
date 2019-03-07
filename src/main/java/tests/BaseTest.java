@@ -53,7 +53,7 @@ public class BaseTest {
         sleep(1000);
 
         LoginPage loginPage = new LoginPage();
-        if (loginPage.needAuth()) loginPage.login(confVariable.userLogin(), confVariable.userPassword());
+        if (loginPage.needAuth()) loginPage.login(confVariable.userLogin());
         setCookie();
         sleep(200);
     }
@@ -92,7 +92,7 @@ public class BaseTest {
         sleep(1000);
 
         LoginPage loginPage = new LoginPage();
-        if (loginPage.needAuth()) loginPage.login(confVariable.userLogin(), confVariable.userPassword());
+        if (loginPage.needAuth()) loginPage.login(confVariable.userLogin());
         DocumentTypesListPage typesListPage = new MainPage().openReportTypesListPage();
         typesListPage.deleteAllDocument(confVariable.docName());
 

@@ -101,23 +101,26 @@ public class DropDownListPage implements WorkingWithBrowserTabs {
         ElementsCollection elementsId = $$x("//*[@id='lists_table']//tbody//tr/td[1]");
         HashSet<String> allIds = new HashSet<>();
 
-        for (SelenideElement anElementsId : elementsId) {
-            allIds.add(anElementsId.getText());
-        }
-
-        for (String pair : allIds) {
-            given()
+        if (!elementsId.get(0).getText().equals("Записи отсутствуют.")) {
+            for (SelenideElement anElementsId : elementsId) {
+                allIds.add(anElementsId.getText());
+            }
+            for (String pair : allIds) {
+                Response response = given()
 //                    .proxy(host("proxy.pbank.com.ua").withPort(8080))
-                    .relaxedHTTPSValidation()
-                    .log().all()
-                    .cookie("PHPSESSID", phpsessid)
-                    .cookie("CSRF-TOKEN", csrfToken)
-                    .header("X-CSRF-Token",csrfToken)
-                    .contentType("application/x-www-form-urlencoded; charset=UTF-8")
-                    .formParam("object","drop_down_list")
-                    .formParam("list_id",pair)
-                    .formParam("action","delete")
-                    .post("http://buhonline.test.it.loc/admin/ajax.php");
+                        .relaxedHTTPSValidation()
+//                        .log().all()
+                        .cookie("PHPSESSID", phpsessid)
+                        .cookie("CSRF-TOKEN", csrfToken)
+                        .header("X-CSRF-Token",csrfToken)
+                        .contentType("application/x-www-form-urlencoded; charset=UTF-8")
+                        .formParam("object","drop_down_list")
+                        .formParam("list_id",pair)
+                        .formParam("action","delete")
+                        .post("http://buhonline.test.it.loc/admin/ajax.php");
+
+                assertTrue(response.getBody().prettyPrint().contains("result\":\"success\""), "Операция по удалению документа неуспешна");
+            }
         }
     }
 }
