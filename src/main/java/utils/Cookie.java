@@ -23,6 +23,7 @@ public class Cookie {
                 phpSessId = WebDriverRunner.getWebDriver().manage().getCookieNamed("PHPSESSID").getValue();
                 csrfToken = WebDriverRunner.getWebDriver().manage().getCookieNamed("CSRF-TOKEN").getValue();
             } catch (NullPointerException e) {
+                System.out.println("####################NullPointerException#################");
                 refresh();
                 count++;
                 setCookie();

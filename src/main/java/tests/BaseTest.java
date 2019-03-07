@@ -20,6 +20,7 @@ import utils.IConfigurationVariables;
 
 import static com.codeborne.selenide.Selenide.*;
 import static utils.Cookie.*;
+import static utils.SupportActions.waitPreloader;
 
 @Log4j
 @Listeners({AllureOnFailListener.class, TextReport.class})
@@ -50,12 +51,11 @@ public class BaseTest {
         open(Configuration.baseUrl);
         switchToDefaultContent();
         clearBrowserCookiesAndCache();
-        sleep(1000);
+        waitPreloader();
 
         LoginPage loginPage = new LoginPage();
         if (loginPage.needAuth()) loginPage.login(confVariable.userLogin());
         setCookie();
-        sleep(200);
     }
 
     public void clearBrowserCookiesAndCache() {
