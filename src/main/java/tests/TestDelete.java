@@ -43,5 +43,4 @@ public class TestDelete extends BaseTest {
         listPage = mainPage.openDropDownList();
         assertFalse(listPage.searchDocument(CV.docName()), "записи не удалились");
     }
-
 }
