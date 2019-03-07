@@ -7,6 +7,7 @@ import org.openqa.selenium.By;
 
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
+import static com.codeborne.selenide.Selenide.sleep;
 
 @Log4j
 public class LoginPage {
@@ -24,12 +25,11 @@ public class LoginPage {
         loginField.shouldBe(visible).setValue(login);
         passwordField.shouldBe(visible).setValue(password);
         submitButton.shouldBe(visible).click();
+        sleep(1500);
 
-        warningSubmitButton.shouldBe(visible).click();
-        authenticationNextButton.shouldBe(visible).click();
-
-//        if (warningMessage.exists()) warningSubmitButton.shouldBe(visible).click();
-//        if (authenticationPageTitle.exists()) authenticationNextButton.shouldBe(visible).click();
+        if (warningMessage.exists()) warningSubmitButton.shouldBe(visible).click();
+        sleep(1500);
+        if (authenticationPageTitle.exists()) authenticationNextButton.shouldBe(visible).click();
     }
 
     public boolean needAuth() {
