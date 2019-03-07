@@ -5,11 +5,12 @@ import io.qameta.allure.Step;
 import lombok.extern.log4j.Log4j;
 import org.aeonbits.owner.ConfigFactory;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import utils.IConfigurationVariables;
 
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
-import static com.codeborne.selenide.Selenide.sleep;
+import static com.codeborne.selenide.Selenide.refresh;
 
 @Log4j
 public class LoginPage {
@@ -24,16 +25,27 @@ public class LoginPage {
     private SelenideElement authenticationPageTitle = $(By.xpath("//div[@class='header ng-binding']"));
     private SelenideElement authenticationNextButton = $(By.xpath("//button[@id='region']"));
 
+    private static int count = 0;
+
     @Step("Авторизация")
     public void login(String login) {
-        loginField.shouldBe(visible).setValue(login);
-        passwordField.shouldBe(visible).setValue(CV.userPassword());
-        submitButton.shouldBe(visible).click();
-        sleep(1500);
+//        loginField.shouldBe(visible).setValue(login);
+//        passwordField.shouldBe(visible).setValue(CV.userPassword());
+//        submitButton.shouldBe(visible).click();
 
-        if (warningMessage.exists()) warningSubmitButton.shouldBe(visible).click();
-        sleep(1500);
-        if (authenticationPageTitle.exists()) authenticationNextButton.shouldBe(visible).click();
+        if (count < 10) {
+            try {
+                loginField.shouldBe(visible).setValue(login);
+                passwordField.shouldBe(visible).setValue(CV.userPassword());
+                submitButton.shouldBe(visible).click();
+                if (warningMessage.exists()) warningSubmitButton.shouldBe(visible).click();
+                if (authenticationPageTitle.exists()) authenticationNextButton.shouldBe(visible).click();
+            } catch (NoSuchElementException e) {
+                count++;
+                refresh();
+                login(login);
+            }
+        }
     }
 
     public boolean needAuth() {

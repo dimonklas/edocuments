@@ -73,7 +73,7 @@ public class TestRunner extends BaseTest {
     }
 
     @Story("Сортировка по возростанию")
-    @Test(dataProvider = "getDataForSort", description = "Сортировка по значению ->", enabled = false)
+    @Test(dataProvider = "getDataForSort", description = "Сортировка по значению ->")
     public void checkSortedAsc(String sorted) {
         DocumentTypesListPage documentTypesListPage = new MainPage().openReportTypesListPage();
         documentTypesListPage.checkDocumentTypesListPage();
@@ -81,7 +81,7 @@ public class TestRunner extends BaseTest {
     }
 
     @Story("Сортировка по убыванию")
-    @Test(dataProvider = "getDataForSort", description = "Сортировка по значению ->", enabled = false)
+    @Test(dataProvider = "getDataForSort", description = "Сортировка по значению ->")
     public void checkSortedDesc(String sorted) {
         DocumentTypesListPage documentTypesListPage = new MainPage().openReportTypesListPage();
         documentTypesListPage.checkDocumentTypesListPage();

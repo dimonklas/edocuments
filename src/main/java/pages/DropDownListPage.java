@@ -18,10 +18,9 @@ import java.util.HashSet;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.*;
 import static io.restassured.RestAssured.given;
-import static io.restassured.specification.ProxySpecification.host;
 import static org.testng.Assert.assertTrue;
 import static utils.Cookie.csrfToken;
-import static utils.Cookie.phpsessid;
+import static utils.Cookie.phpSessId;
 
 @Getter
 @Log4j
@@ -110,7 +109,7 @@ public class DropDownListPage implements WorkingWithBrowserTabs {
 //                    .proxy(host("proxy.pbank.com.ua").withPort(8080))
                         .relaxedHTTPSValidation()
 //                        .log().all()
-                        .cookie("PHPSESSID", phpsessid)
+                        .cookie("PHPSESSID", phpSessId)
                         .cookie("CSRF-TOKEN", csrfToken)
                         .header("X-CSRF-Token",csrfToken)
                         .contentType("application/x-www-form-urlencoded; charset=UTF-8")
