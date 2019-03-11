@@ -31,6 +31,7 @@ public class LoginPage {
         passwordField.shouldBe(visible).setValue(CV.userPassword());
         waitPreloader();
         submitButton.shouldBe(visible).click();
+        waitPreloader();
         if (warningMessage.exists()) warningSubmitButton.shouldBe(visible).click();
         waitPreloader();
         if (authenticationPageTitle.exists()) authenticationNextButton.shouldBe(visible).click();
