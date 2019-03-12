@@ -344,7 +344,7 @@ public class CreateDocumentTypePage implements WorkingWithBrowserTabs {
         if (modalConfirmWindow.is(visible)) {
             closeConfirmWindow.shouldBe(visible).click();
             goToMainPage();
-            confirm();
+            if (isAlertPresent()) confirm();
             return "Ошибка";
         } else return $(By.id("page_title")).getText().replaceAll("\\D+", "");
     }

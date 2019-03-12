@@ -57,10 +57,10 @@ public class TestRunner extends BaseTest {
     @DataProvider
     public Object[][] incorrectDataForCreateForm() {
         return new Object[][]{
-                {documentObject.getDocumentIncorrectDataFirst()},
-                {documentObject.getDocumentIncorrectDataSecond()},
-                {documentObject.getDocumentIncorrectDataThird()},
-                {documentObject.getDocumentIncorrectDataFour()}
+                {new CreateDocumentObject().getDocumentIncorrectDataFirst()},
+                {new CreateDocumentObject().getDocumentIncorrectDataSecond()},
+                {new CreateDocumentObject().getDocumentIncorrectDataThird()},
+                {new CreateDocumentObject().getDocumentIncorrectDataFour()}
         };
     }
 

@@ -92,8 +92,8 @@ public class DocumentFormListPage {
     @Step("Удаление существующей формы")
     public void deleteForm(String valueForDelete) {
         searchButton.shouldBe(Condition.visible).setValue(valueForDelete);
-        if (!$x("//table[@id='forms_table']//tbody//tr").getText().equals("Записи отсутствуют.")) {
-            $x("//table[@id='forms_table']//tbody//tr").shouldBe(Condition.visible).click();
+        if (!$x("//table[@id='forms_table']//tbody//tr/td").getText().equals("Записи отсутствуют.")) {
+            $x("//table[@id='forms_table']//tbody//tr/td").shouldBe(Condition.visible).click();
             deleteButton.shouldBe(Condition.visible).click();
             sleep(1000);
             confirmButtonInModalWindow.shouldBe(Condition.visible).click();
