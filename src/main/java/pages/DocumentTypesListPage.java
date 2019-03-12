@@ -145,7 +145,7 @@ public class DocumentTypesListPage implements WorkingWithBrowserTabs {
     public CreateDocumentTypePage searchAndOpenDocument(String value) {
         refresh();
         searchField.shouldBe(visible).sendKeys(value);
-        $(By.xpath("//tbody//tr")).click();
+        $(By.xpath("//tbody//tr/td")).click();
         viewDocButton.click();
         closeBrowserTab("Типы документов");
         return new CreateDocumentTypePage();
@@ -213,7 +213,7 @@ public class DocumentTypesListPage implements WorkingWithBrowserTabs {
     public boolean openDocument() {
         SelenideElement documentInList = $x("(//table[@id='types_table']//tbody//tr)[1]");
         String elementClass = documentInList.attr("class");
-        if (!elementClass.contains("selected")) documentInList.click();
+        if (!elementClass.contains("selected")) $x("(//table[@id='types_table']//tbody//tr)[1]/td").click();
         elementClass = documentInList.attr("class");
         if (elementClass.equals("closed odd selected")) openDocButton.shouldBe(visible).click();
         sleep(1000);
@@ -225,7 +225,7 @@ public class DocumentTypesListPage implements WorkingWithBrowserTabs {
     public boolean closeDocument() {
         SelenideElement documentInList = $x("(//table[@id='types_table']//tbody//tr)[1]");
         String elementClass = documentInList.attr("class");
-        if (!elementClass.contains("selected")) documentInList.click();
+        if (!elementClass.contains("selected")) $x("(//table[@id='types_table']//tbody//tr)[1]/td").click();
         elementClass = documentInList.attr("class");
         if (elementClass.equals("odd selected")) closeDocButton.shouldBe(visible).click();
         sleep(1000);
