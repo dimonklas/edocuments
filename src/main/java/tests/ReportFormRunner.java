@@ -8,40 +8,24 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 import pages.*;
-import pages.document.*;
-import pages.document.dropDownListData.DropDownListData;
+import pages.document.VersionData;
 import pages.document.s1605110.FormDataS1605110;
 import pages.documentObjects.*;
 import utils.AllureOnFailListener;
 
-
-import java.util.stream.IntStream;
-
-import static org.testng.Assert.*;
-
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
 
 @Log4j
-@Feature("Тестирование документов")
+@Feature("Тестирование форм документов и создание отчетов")
 @Listeners(AllureOnFailListener.class)
-public class TestRunner extends BaseTest {
+public class ReportFormRunner extends BaseTest {
 
     private CreateDocumentObject documentObject;
     private VersionsObject versionsList;
     private J0301206Object j0301206Object;
     private S0501408Object s0501408Object;
-    private TabsObject tabsObject;
-
-    @DataProvider
-    public Object[][] getDataForSort() {
-        return new Object[][]
-                {
-                        {"ID"},
-//                        {"Код формы"},
-//                        {"Наименование документа"},
-//                        {"Служба"},
-//                        {"Шлюз"},
-                };
-    }
 
     @DataProvider
     public Object[][] getDataForCreateNegativeDoc() {
@@ -55,124 +39,12 @@ public class TestRunner extends BaseTest {
     }
 
     @DataProvider
-    public Object[][] incorrectDataForCreateForm() {
-        return new Object[][]{
-                {new CreateDocumentObject().getDocumentIncorrectDataFirst()},
-                {new CreateDocumentObject().getDocumentIncorrectDataSecond()},
-                {new CreateDocumentObject().getDocumentIncorrectDataThird()},
-                {new CreateDocumentObject().getDocumentIncorrectDataFour()}
-        };
-    }
-
-    @DataProvider
     public Object[][] formDocumentSort() {
         return new Object[][]{
                 {"Код формы"},
                 {"Описание"}
         };
     }
-
-    @Story("Сортировка по возростанию")
-    @Test(dataProvider = "getDataForSort", description = "Сортировка по значению ->")
-    public void checkSortedAsc(String sorted) {
-        DocumentTypesListPage documentTypesListPage = new MainPage().openReportTypesListPage();
-        documentTypesListPage.checkDocumentTypesListPage();
-        documentTypesListPage.checkSortingAsc(sorted);
-    }
-
-    @Story("Сортировка по убыванию")
-    @Test(dataProvider = "getDataForSort", description = "Сортировка по значению ->")
-    public void checkSortedDesc(String sorted) {
-        DocumentTypesListPage documentTypesListPage = new MainPage().openReportTypesListPage();
-        documentTypesListPage.checkDocumentTypesListPage();
-        documentTypesListPage.checkSortingDesc(sorted);
-    }
-
-    @Story("Тестирование поиска")
-    @Test(description = "Поиск документа \"S0210110\"")
-    public void checkSearchOnDocsTypes() {
-        DocumentTypesListPage documentTypesListPage = new MainPage().openReportTypesListPage();
-        documentTypesListPage.searchDocument("S0210110");
-    }
-
-    @Story("Создание нового типа без версии документа")
-    @Test(description = "Создание нового документа без указания версии")
-    public void createNewDocument() {
-        /***** Генерим тестовые данные *****/
-        documentObject = new CreateDocumentObject();
-        /***** Тест *****/
-        CreateDocumentTypePage typePage = new MainPage().openCreateNewTypePage();
-        typePage.setDataToDocumentType(documentObject.getDocumentDataFirst());
-        String docId = typePage.saveCurrentDocAndReturnId();
-        MainPage mainPage = typePage.goToMainPage();
-        DocumentTypesListPage typesListPage = mainPage.openReportTypesListPage();
-        typePage = typesListPage.searchAndOpenDocument(documentObject.getDocumentDataFirst().getDocName());
-        typePage.checkDocument(documentObject.getDocumentDataFirst(), docId);
-    }
-
-    @Story("Создание нового типа с версией документа")
-    @Test(description = "Создание нового документа с указанием версии")
-    public void createNewDocumentWithVersion() {
-        /***** Генерим тестовые данные *****/
-        documentObject = new CreateDocumentObject();
-        versionsList = new VersionsObject();
-
-        /***** Тест *****/
-        CreateDocumentTypePage typePage = new MainPage().openCreateNewTypePage();
-        typePage.setDataToDocumentType(documentObject.getDocumentDataFirst(), versionsList.getVersionList());
-        String docId = typePage.saveCurrentDocAndReturnId();
-        MainPage mainPage = typePage.goToMainPage();
-        DocumentTypesListPage typesListPage = mainPage.openReportTypesListPage();
-        typePage = typesListPage.searchAndOpenDocument(documentObject.getDocumentDataFirst().getDocName());
-        typePage.checkDocument(documentObject.getDocumentDataFirst(), docId, versionsList.getVersionList());
-    }
-
-    @Story("Создание копии документа с версией")
-    @Test(description = "Создание копии документа с версией")
-    public void checkCopyDocumentWithVersion() {
-        /***** Генерим тестовые данные *****/
-        documentObject = new CreateDocumentObject();
-        versionsList = new VersionsObject();
-
-        /***** Тест *****/
-        CreateDocumentTypePage typePage = new MainPage().openCreateNewTypePage();
-        typePage.setDataToDocumentType(documentObject.getDocumentDataFirst(), versionsList.getVersionList());
-        typePage.saveCurrentDocAndReturnId();
-        MainPage mainPage = typePage.goToMainPage();
-        DocumentTypesListPage typesListPage = mainPage.openReportTypesListPage();
-        typesListPage.searchDocument(documentObject.getDocumentDataFirst().getDocName());
-        typePage = typesListPage.selectAndCopyDocType(documentObject.getDocumentDataFirst().getDocName());
-        String docCopyId = typePage.saveCurrentDocAndReturnId();
-        mainPage = typePage.goToMainPage();
-        typesListPage = mainPage.openReportTypesListPage();
-        typesListPage.searchDocument(documentObject.getDocumentDataFirst().getDocName());
-        typesListPage.checkTwoRows();
-        typePage = typesListPage.searchAndOpenDocument(docCopyId);
-        typePage.checkDocument(documentObject.getDocumentDataFirst(), docCopyId, versionsList.getVersionList());
-    }
-
-    @Story("Создание копии документа без версии")
-    @Test(description = "Создание копии документа без версии")
-    public void checkCopyDocumentWithoutVersion() {
-        /***** Генерим тестовые данные *****/
-        documentObject = new CreateDocumentObject();
-        /***** Тест *****/
-        CreateDocumentTypePage typePage = new MainPage().openCreateNewTypePage();
-        typePage.setDataToDocumentType(documentObject.getDocumentDataFirst());
-        typePage.saveCurrentDocAndReturnId();
-        MainPage mainPage = typePage.goToMainPage();
-        DocumentTypesListPage typesListPage = mainPage.openReportTypesListPage();
-        typesListPage.searchDocument(documentObject.getDocumentDataFirst().getDocName());
-        typePage = typesListPage.selectAndCopyDocType(documentObject.getDocumentDataFirst().getDocName());
-        String docCopyId = typePage.saveCurrentDocAndReturnId();
-        mainPage = typePage.goToMainPage();
-        typesListPage = mainPage.openReportTypesListPage();
-        typesListPage.searchDocument(documentObject.getDocumentDataFirst().getDocName());
-        typesListPage.checkTwoRows();
-        typePage = typesListPage.searchAndOpenDocument(docCopyId);
-        typePage.checkDocument(documentObject.getDocumentDataFirst(), docCopyId);
-    }
-
 
     @Story("Создание документа (позитивный сценарий) J0301206")
     @Test(description = "Создать новый документ (J0301206)")
@@ -483,254 +355,6 @@ public class TestRunner extends BaseTest {
         typePage.checkDocument(documentObject.getDocumentDataFirst(), docEditId);
     }
 
-    @Story("Проверка отображения ошибки при некорректном создании типа документа")
-    @Test(description = "Проверка отображения ошибки при создании документа без версии", dataProvider = "incorrectDataForCreateForm")
-    public void checkErrorWhileCreateNewDoc(CreateDocumentData documentData) {
-        CreateDocumentTypePage typePage = new MainPage().openCreateNewTypePage();
-        typePage.setDataToDocumentType(documentData);
-        assertEquals("Ошибка", typePage.saveCurrentDocAndReturnId(), "Документ сохранился с некорректными данными");
-    }
-
-    @Story("Проверка отображения ошибки при некорректном создании типа документа")
-    @Test(description = "Проверка отображения ошибки при создании документа с версиями", dataProvider = "incorrectDataForCreateForm")
-    public void checkErrorWhileCreateNewDocWithVersions(CreateDocumentData documentData) {
-        /***** Генерим тестовые данные *****/
-        versionsList = new VersionsObject();
-
-        CreateDocumentTypePage typePage = new MainPage().openCreateNewTypePage();
-        typePage.setDataToDocumentType(documentData, versionsList.getVersionList());
-        assertEquals("Ошибка", typePage.saveCurrentDocAndReturnId());
-    }
-
-    @Story("Проверка кнопки \"Отменить\" в редактировании типа тендера")
-    @Test(description = "Проверка отмены изменений в редактировании тендера, с удалением версий")
-    public void checkCancelButtonRemoveVersions() {
-        /***** Генерим тестовые данные *****/
-        documentObject = new CreateDocumentObject();
-        versionsList = new VersionsObject();
-
-        /***** Тест *****/
-        CreateDocumentTypePage typePage = new MainPage().openCreateNewTypePage();
-        /***** Создаем документ *****/
-        typePage.setDataToDocumentType(documentObject.getDocumentDataFirst(), versionsList.getVersionList());
-        String docId = typePage.saveCurrentDocAndReturnId();
-        MainPage mainPage = typePage.goToMainPage();
-        DocumentTypesListPage typesListPage = mainPage.openReportTypesListPage();
-
-        typePage = typesListPage.searchAndOpenDocument(documentObject.getDocumentDataFirst().getDocName());
-        typePage.getEditButton().shouldBe(Condition.visible).click();
-        /***** Редактируем документ (добавляем версию) *****/
-        typePage.setDataToDocumentType(documentObject.getDocumentDataSecond());
-        typePage.cancelChanges();
-        typePage.checkDocument(documentObject.getDocumentDataFirst(), docId, versionsList.getVersionList());
-        mainPage = typePage.goToMainPage();
-        typesListPage = mainPage.openReportTypesListPage();
-        typePage = typesListPage.searchAndOpenDocument(documentObject.getDocumentDataFirst().getDocName());
-        typePage.checkDocument(documentObject.getDocumentDataFirst(), docId, versionsList.getVersionList());
-    }
-
-    @Story("Проверка кнопки \"Отменить\" в редактировании типа тендера")
-    @Test(description = "Проверка отмены изменений в редактировании тендера, с добавлением версий")
-    public void checkCancelButtonAddVersions() {
-        /***** Генерим тестовые данные *****/
-        documentObject = new CreateDocumentObject();
-        versionsList = new VersionsObject();
-
-        /***** Тест *****/
-        CreateDocumentTypePage typePage = new MainPage().openCreateNewTypePage();
-        /***** Создаем документ *****/
-        typePage.setDataToDocumentType(documentObject.getDocumentDataFirst());
-        String docId = typePage.saveCurrentDocAndReturnId();
-        MainPage mainPage = typePage.goToMainPage();
-        DocumentTypesListPage typesListPage = mainPage.openReportTypesListPage();
-
-        typePage = typesListPage.searchAndOpenDocument(documentObject.getDocumentDataFirst().getDocName());
-        typePage.getEditButton().shouldBe(Condition.visible).click();
-        /***** Редактируем документ (добавляем версию) *****/
-        typePage.setDataToDocumentType(documentObject.getDocumentDataSecond(), versionsList.getVersionList());
-        typePage.cancelChanges();
-        typePage.checkDocument(documentObject.getDocumentDataFirst(), docId);
-        mainPage = typePage.goToMainPage();
-        typesListPage = mainPage.openReportTypesListPage();
-        typePage = typesListPage.searchAndOpenDocument(documentObject.getDocumentDataFirst().getDocName());
-        typePage.checkDocument(documentObject.getDocumentDataFirst(), docId);
-    }
-
-    @Story("Проверка кнопки \"Удалить\" в типе документа")
-    @Test(description = "Удаление документа с версиями")
-    public void checkDeleteButtonInDocTypeWithVersions() {
-        /***** Генерим тестовые данные *****/
-        documentObject = new CreateDocumentObject();
-
-        /***** Тест *****/
-        DocumentTypesListPage typesListPage = new MainPage().openReportTypesListPage();
-        CreateDocumentTypePage typePage = typesListPage.goToCreateNewDocumentPage();
-        /***** Создаем документ *****/
-        typePage.setDataToDocumentType(documentObject.getDocumentDataFirst());
-        typePage.saveCurrentDocAndReturnId();
-        MainPage mainPage = typePage.goToMainPage();
-        typesListPage = mainPage.openReportTypesListPage();
-
-        typePage = typesListPage.searchAndOpenDocument(documentObject.getDocumentDataFirst().getDocName());
-
-        /***** Удаляем документ *****/
-        typePage.removeDocument();
-        mainPage = typePage.goToMainPageWithConfirm();
-        typesListPage = mainPage.openReportTypesListPage();
-        assertFalse(typesListPage.searchDocument(documentObject.getDocumentDataFirst().getDocName()), "Тип документа не удалился");
-    }
-
-    @Story("Проверка кнопки \"Удалить\" в типе документа")
-    @Test(description = "Удаление документа без версий")
-    public void checkDeleteButtonInDocTypeWithoutVersions() {
-        /***** Генерим тестовые данные *****/
-        documentObject = new CreateDocumentObject();
-        versionsList = new VersionsObject();
-
-        /***** Тест *****/
-        DocumentTypesListPage typesListPage = new MainPage().openReportTypesListPage();
-        CreateDocumentTypePage typePage = typesListPage.goToCreateNewDocumentPage();
-        /***** Создаем документ *****/
-        typePage.setDataToDocumentType(documentObject.getDocumentDataFirst(), versionsList.getVersionList());
-        typePage.saveCurrentDocAndReturnId();
-        MainPage mainPage = typePage.goToMainPage();
-        typesListPage = mainPage.openReportTypesListPage();
-
-        typePage = typesListPage.searchAndOpenDocument(documentObject.getDocumentDataFirst().getDocName());
-
-        /***** Удаляем документ *****/
-        typePage.removeDocument();
-        mainPage = typePage.goToMainPageWithConfirm();
-        typesListPage = mainPage.openReportTypesListPage();
-        assertFalse(typesListPage.searchDocument(documentObject.getDocumentDataFirst().getDocName()), "Тип документа не удалился");
-    }
-
-    @Story("Открытие и закрытие документа")
-    @Test(description = "Открытие и закрытие документа через список документов")
-    public void checkOpenCloseDocumentThroughList() {
-        /***** Генерим тестовые данные *****/
-        documentObject = new CreateDocumentObject();
-        versionsList = new VersionsObject();
-
-        /***** Тест *****/
-        DocumentTypesListPage typesListPage = new MainPage().openReportTypesListPage();
-        CreateDocumentTypePage typePage = typesListPage.goToCreateNewDocumentPage();
-        /***** Создаем документ *****/
-        typePage.setDataToDocumentType(documentObject.getDocumentDataFirst(), versionsList.getVersionList());
-        typePage.saveCurrentDocAndReturnId();
-        MainPage mainPage = typePage.goToMainPage();
-        typesListPage = mainPage.openReportTypesListPage();
-
-        typesListPage.searchDocument(documentObject.getDocumentDataFirst().getDocName());
-        assertTrue(typesListPage.openDocument(), "Документ не открылся");
-        assertTrue(typesListPage.closeDocument(), "Документ не закрылся");
-    }
-
-    @Story("Открытие и закрытие документа")
-    @Test(description = "Открытие и закрытие документа через список редактирование документа")
-    public void checkOpenCloseDocumentThroughDocumentPage() {
-        /***** Генерим тестовые данные *****/
-        documentObject = new CreateDocumentObject();
-        versionsList = new VersionsObject();
-
-        /***** Тест *****/
-        DocumentTypesListPage typesListPage = new MainPage().openReportTypesListPage();
-        CreateDocumentTypePage typePage = typesListPage.goToCreateNewDocumentPage();
-        /***** Создаем документ *****/
-        typePage.setDataToDocumentType(documentObject.getDocumentDataFirst(), versionsList.getVersionList());
-        typePage.saveCurrentDocAndReturnId();
-        MainPage mainPage = typePage.goToMainPage();
-        typesListPage = mainPage.openReportTypesListPage();
-
-        typePage = typesListPage.searchAndOpenDocument(documentObject.getDocumentDataFirst().getDocName());
-        assertTrue(typePage.openDocument(), "Документ не открылся");
-        assertTrue(typePage.closeDocument(), "Документ не открылся");
-    }
-
-    @Story("Открытие и закрытие документа")
-    @Test(description = "Открытие и закрытие документа через список редактирование документа + открытие версий")
-    public void checkOpenDocumentVersion() {
-        /***** Генерим тестовые данные *****/
-        documentObject = new CreateDocumentObject();
-        versionsList = new VersionsObject();
-
-        /***** Тест *****/
-        DocumentTypesListPage typesListPage = new MainPage().openReportTypesListPage();
-        CreateDocumentTypePage typePage = typesListPage.goToCreateNewDocumentPage();
-        /***** Создаем документ *****/
-        typePage.setDataToDocumentType(documentObject.getDocumentDataFirst(), versionsList.getVersionList());
-        typePage.saveCurrentDocAndReturnId();
-        MainPage mainPage = typePage.goToMainPage();
-        typesListPage = mainPage.openReportTypesListPage();
-
-        typePage = typesListPage.searchAndOpenDocument(documentObject.getDocumentDataFirst().getDocName());
-        assertTrue(typePage.openAllVersion(), "Версия не открылась");
-        assertTrue(typePage.closeAllVersion(), "Версия не закрылась");
-    }
-
-    @Story("Создание типа документа с вкладками")
-    @Test(description = "Создание типа документа с вкладками")
-    public void checkCreateDocTypeWithTabs() {
-        /***** Генерим тестовые данные *****/
-        documentObject = new CreateDocumentObject();
-        versionsList = new VersionsObject();
-        tabsObject = new TabsObject();
-
-
-        /***** Тест *****/
-        CreateDocumentTypePage typePage = new MainPage().openCreateNewTypePage();
-        /***** Создаем документ *****/
-        typePage.setDataToDocumentType(documentObject.getDocumentDataFirst(), versionsList.getVersionList(), tabsObject.tabsArray());
-        String docId = typePage.saveCurrentDocAndReturnId();
-        MainPage mainPage = typePage.goToMainPage();
-        DocumentTypesListPage typesListPage = mainPage.openReportTypesListPage();
-
-        typePage = typesListPage.searchAndOpenDocument(documentObject.getDocumentDataFirst().getDocName());
-        typePage.checkDocument(documentObject.getDocumentDataFirst(), docId, versionsList.getVersionList(), tabsObject.tabsArray());
-    }
-
-    @Story("Удаление вкладок с документа")
-    @Test(description = "Удаление вкладок с документа")
-    public void checkDeleteTabsFromDocument() {
-        /***** Генерим тестовые данные *****/
-        documentObject = new CreateDocumentObject();
-        versionsList = new VersionsObject();
-        tabsObject = new TabsObject();
-
-
-        /***** Тест *****/
-        CreateDocumentTypePage typePage = new MainPage().openCreateNewTypePage();
-        /***** Создаем документ *****/
-        typePage.setDataToDocumentType(documentObject.getDocumentDataFirst(), versionsList.getVersionList(), tabsObject.tabsArray());
-        typePage.saveCurrentDocAndReturnId();
-        MainPage mainPage = typePage.goToMainPage();
-        DocumentTypesListPage typesListPage = mainPage.openReportTypesListPage();
-
-        typePage = typesListPage.searchAndOpenDocument(documentObject.getDocumentDataFirst().getDocName());
-        typePage.deleteTabsFromDocument();
-        String docId = typePage.saveCurrentDocAndReturnId();
-        typePage.goToMainPage();
-        typesListPage = mainPage.openReportTypesListPage();
-        typesListPage.searchAndOpenDocument(docId);
-        typePage.checkDocument(documentObject.getDocumentDataFirst(), docId, versionsList.getVersionList());
-    }
-
-    @Story("Создание типа документа с вкладками (негативный сценарий. некорректные данные для вкладок)")
-    @Test(description = "Создание типа документа с вкладками")
-    public void checkCreateDocTypeWithTabsNegative() {
-        /***** Генерим тестовые данные *****/
-        documentObject = new CreateDocumentObject();
-        versionsList = new VersionsObject();
-        tabsObject = new TabsObject();
-
-        /***** Тест *****/
-        CreateDocumentTypePage typePage = new MainPage().openCreateNewTypePage();
-        /***** Создаем документ *****/
-        typePage.setDataToDocumentType(documentObject.getDocumentDataFirst(), versionsList.getVersionList(), tabsObject.tabsArrayNegative());
-        assertEquals("Ошибка", typePage.saveCurrentDocAndReturnId(), "Документ сохранился с некорректными данными");
-    }
-
-
     /***** Формы документов *****/
     @Story("Сортировка на странице \"Формы документов\"")
     @Test(description = "сортировка по возростанию", dataProvider = "formDocumentSort")
@@ -796,58 +420,4 @@ public class TestRunner extends BaseTest {
         createForm.checkForm(dataS1605110Edit);
     }
 
-    @Story("Создание выпадающего списка")
-    @Test(description = "Создание выпадающего списка")
-    public void checkAddDropDownElement() {
-        DropDownListData listData = new DropDownElementsListObject().getListDataObject();
-
-        DropDownListPage dropDownListPage = new MainPage().openDropDownList();
-        CreateDropDownListPage createDropDownListPage = dropDownListPage.openCreateNewDropDownList();
-        createDropDownListPage.createNewDropDownList(listData);
-        String idList = createDropDownListPage.saveCurrentDocAndReturnId();
-        createDropDownListPage.goToMainPage();
-
-        dropDownListPage = new MainPage().openDropDownList();
-        createDropDownListPage = dropDownListPage.searchAndOpenDocument(idList);
-        createDropDownListPage.checkDropDownList(listData, idList);
-    }
-
-    @Story("Создание выпадающего списка (негативный сценарий)")
-    @Test(description = "Создание выпадающего списка (негативный сценарий)")
-    public void checkAddDropDownElementNegative() {
-        DropDownListData listData = new DropDownElementsListObject().getListDataObjectNegative();
-
-        DropDownListPage dropDownListPage = new MainPage().openDropDownList();
-        CreateDropDownListPage createDropDownListPage = dropDownListPage.openCreateNewDropDownList();
-        createDropDownListPage.createNewDropDownList(listData);
-        assertEquals(createDropDownListPage.saveCurrentDocAndReturnId(), "Ошибка", "Произошло сохранение с повторяющимся ключом!");
-    }
-
-    @Story("Редактирования выпадающего списка")
-    @Test(description = "редактирования выпадающего списка")
-    public void checkEditDropDownElement() {
-        DropDownListData listData = new DropDownElementsListObject().getListDataObject();
-        DropDownListData listDataOneElement = new DropDownElementsListObject().getListDataObjectWithOneElement();
-
-
-        DropDownListPage dropDownListPage = new MainPage().openDropDownList();
-        CreateDropDownListPage createDropDownListPage = dropDownListPage.openCreateNewDropDownList();
-        createDropDownListPage.createNewDropDownList(listData);
-        String idList = createDropDownListPage.saveCurrentDocAndReturnId();
-        createDropDownListPage.goToMainPage();
-
-        dropDownListPage = new MainPage().openDropDownList();
-        createDropDownListPage = dropDownListPage.searchAndOpenDocument(idList);
-        createDropDownListPage.createNewDropDownList(listDataOneElement);
-        createDropDownListPage.saveCurrentDocAndReturnId();
-        createDropDownListPage.goToMainPage();
-
-        dropDownListPage = new MainPage().openDropDownList();
-        createDropDownListPage = dropDownListPage.searchAndOpenDocument(idList);
-
-        /***** Проверка элементов после редактирование выпадающего списка *****/
-        IntStream.range(0, listData.getElementListData().size()).forEach(i -> listDataOneElement.getElementListData().add(listData.getElementListData().get(i)));
-
-        createDropDownListPage.checkDropDownList(listDataOneElement, idList);
-    }
 }
