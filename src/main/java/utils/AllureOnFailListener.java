@@ -16,12 +16,12 @@ public final class AllureOnFailListener implements ITestListener {
 
     @Override
     public void onTestStart(final ITestResult result) {
-        log.info("Start checkAndWaitPeriod:" + result.getName());
+        log.info("Start checkAndWaitPeriod: " + result.getName());
     }
 
     @Override
     public void onTestSuccess(final ITestResult result) {
-        log.info("Test" + result.getName() + " successfully ended");
+        log.info("Test " + result.getName() + " successfully ended");
     }
 
     @Override
@@ -31,7 +31,7 @@ public final class AllureOnFailListener implements ITestListener {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        log.info("Test" + result.getName() + "ended failed");
+        log.info("Test " + result.getName() + " ended failed");
     }
 
     @Override
