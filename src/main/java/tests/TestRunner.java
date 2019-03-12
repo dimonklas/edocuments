@@ -452,7 +452,7 @@ public class TestRunner extends BaseTest {
 
         typePage = typesListPage.searchAndOpenDocument(documentObject.getDocumentDataFirst().getDocName());
         typePage.getEditButton().shouldBe(Condition.visible).click();
-        /***** Редатируем документ (добавляем версию) *****/
+        /***** Редактируем документ (добавляем версию) *****/
         typePage.setDataToDocumentType(documentObject.getDocumentDataSecond(), versionData);
         String docEditId = typePage.saveCurrentDocAndReturnId();
         mainPage = typePage.goToMainPage();
@@ -519,7 +519,7 @@ public class TestRunner extends BaseTest {
 
         typePage = typesListPage.searchAndOpenDocument(documentObject.getDocumentDataFirst().getDocName());
         typePage.getEditButton().shouldBe(Condition.visible).click();
-        /***** Редатируем документ (добавляем версию) *****/
+        /***** Редактируем документ (добавляем версию) *****/
         typePage.setDataToDocumentType(documentObject.getDocumentDataSecond());
         typePage.cancelChanges();
         typePage.checkDocument(documentObject.getDocumentDataFirst(), docId, versionsList.getVersionList());
@@ -546,7 +546,7 @@ public class TestRunner extends BaseTest {
 
         typePage = typesListPage.searchAndOpenDocument(documentObject.getDocumentDataFirst().getDocName());
         typePage.getEditButton().shouldBe(Condition.visible).click();
-        /***** Редатируем документ (добавляем версию) *****/
+        /***** Редактируем документ (добавляем версию) *****/
         typePage.setDataToDocumentType(documentObject.getDocumentDataSecond(), versionsList.getVersionList());
         typePage.cancelChanges();
         typePage.checkDocument(documentObject.getDocumentDataFirst(), docId);
