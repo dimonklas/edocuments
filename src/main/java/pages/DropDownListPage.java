@@ -47,7 +47,7 @@ public class DropDownListPage implements WorkingWithBrowserTabs {
     public CreateDropDownListPage searchAndOpenDocument(String value) {
         refresh();
         searchField.shouldBe(visible).sendKeys(value);
-        $(By.xpath("//tbody//tr")).click();
+        $(By.xpath("//tbody//tr/td")).click();
         viewDropDownList.click();
         closeBrowserTab("Выпадающие списки");
         return new CreateDropDownListPage();
