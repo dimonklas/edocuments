@@ -6,10 +6,7 @@ import com.codeborne.selenide.WebDriverRunner;
 import com.codeborne.selenide.testng.TextReport;
 import lombok.extern.log4j.Log4j;
 import org.aeonbits.owner.ConfigFactory;
-import org.testng.annotations.AfterSuite;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.BeforeSuite;
-import org.testng.annotations.Listeners;
+import org.testng.annotations.*;
 import pages.DocumentTypesListPage;
 import pages.DropDownListPage;
 import pages.LoginPage;
@@ -46,7 +43,7 @@ public class BaseTest {
         }
     }
 
-    @BeforeMethod
+    @BeforeTest
     public void authorization(){
         open(Configuration.baseUrl);
         switchToDefaultContent();
