@@ -44,7 +44,7 @@ public class BaseTest {
     }
 
     @BeforeMethod
-    public void authorization(){
+    public void authorization() {
         open(Configuration.baseUrl);
         switchToDefaultContent();
         clearBrowserCookiesAndCache();
@@ -79,13 +79,6 @@ public class BaseTest {
                 if (waitCount > wait) break;
             }
         }
-    }
-
-    @BeforeTest
-    public void beforeTest() {
-        LoginPage loginPage = new LoginPage();
-        if (loginPage.needAuth()) loginPage.login(confVariable.userLogin());
-        setCookie();
     }
 
     @AfterSuite(enabled = false)
