@@ -4,6 +4,7 @@ import com.codeborne.selenide.Screenshots;
 import com.google.common.io.Files;
 import io.qameta.allure.Attachment;
 import lombok.extern.log4j.Log4j;
+import org.apache.log4j.Logger;
 import org.testng.ITestContext;
 import org.testng.ITestListener;
 import org.testng.ITestResult;
@@ -14,6 +15,8 @@ import java.io.IOException;
 @Log4j
 public final class AllureOnFailListener implements ITestListener {
 
+    private final static Logger LOGGER = Logger.getLogger(AllureOnFailListener.class);
+
     @Override
     public void onTestStart(final ITestResult result) {
         log.info("Start checkAndWaitPeriod: " + result.getName());
@@ -21,7 +24,7 @@ public final class AllureOnFailListener implements ITestListener {
 
     @Override
     public void onTestSuccess(final ITestResult result) {
-        log.info("Test " + result.getName() + " successfully ended");
+        LOGGER.info("Test " + result.getName() + " successfully ended");
     }
 
     @Override
@@ -31,7 +34,7 @@ public final class AllureOnFailListener implements ITestListener {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        log.info("Test " + result.getName() + " ended failed");
+        LOGGER.error("Test " + result.getName() + " ended failed");
     }
 
     @Override
