@@ -53,7 +53,6 @@ public class DropDownRunner extends BaseTest {
         DropDownListData listData = new DropDownElementsListObject().getListDataObject();
         DropDownListData listDataOneElement = new DropDownElementsListObject().getListDataObjectWithOneElement();
 
-
         DropDownListPage dropDownListPage = new MainPage().openDropDownList();
         CreateDropDownListPage createDropDownListPage = dropDownListPage.openCreateNewDropDownList();
         createDropDownListPage.createNewDropDownList(listData);
