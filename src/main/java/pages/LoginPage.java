@@ -32,9 +32,9 @@ public class LoginPage {
         waitPreloader();
         submitButton.shouldBe(visible).click();
         waitPreloader();
-        if (warningSubmitButton.isEnabled()) warningSubmitButton.shouldBe(visible).click();
+        if (warningSubmitButton.isDisplayed()) warningSubmitButton.shouldBe(visible).click();
         waitPreloader();
-        if (authenticationNextButton.isEnabled()) authenticationNextButton.shouldBe(visible).click();
+        if (authenticationNextButton.isDisplayed()) authenticationNextButton.shouldBe(visible).click();
         waitPreloader();
     }
 
