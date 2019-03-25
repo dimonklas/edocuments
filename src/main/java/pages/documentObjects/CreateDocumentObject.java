@@ -45,7 +45,7 @@ public class CreateDocumentObject {
 
     CreateDocumentData documentIncorrectDataSecond = CreateDocumentData.builder()
             .docName(CV.docName() + new DateUtil()
-             .getCurrentDateTime("hhmmssSSS"))
+                    .getCurrentDateTime("hhmmssSSS"))
             .service("")
             .gateway("Шлюз пенсионного фонда")
             .groupJournal(false)
@@ -57,7 +57,7 @@ public class CreateDocumentObject {
 
     CreateDocumentData documentIncorrectDataThird = CreateDocumentData.builder()
             .docName(CV.docName() + new DateUtil()
-             .getCurrentDateTime("hhmmssSSS"))
+                    .getCurrentDateTime("hhmmssSSS"))
             .service("Служба статистики")
             .gateway("").groupJournal(false)
             .finReport(true)
@@ -68,7 +68,7 @@ public class CreateDocumentObject {
 
     CreateDocumentData documentIncorrectDataFour = CreateDocumentData.builder()
             .docName(CV.docName() + new DateUtil()
-             .getCurrentDateTime("hhmmssSSS"))
+                    .getCurrentDateTime("hhmmssSSS"))
             .service("Пенсионный фонд")
             .gateway("Шлюз пенсионного фонда")
             .groupJournal(false)

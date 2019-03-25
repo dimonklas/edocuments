@@ -14,7 +14,7 @@ public class ChromeDriverProvider implements WebDriverProvider {
     @Override
     public WebDriver createDriver(DesiredCapabilities desiredCapabilities) {
         ChromeOptions options = new ChromeOptions();
-        options.addExtensions(new File( new File("dependencies/Crypto-Plugin_v1.1.8_0.crx").getAbsolutePath()));
+        options.addExtensions(new File(new File("dependencies/Crypto-Plugin_v1.1.8_0.crx").getAbsolutePath()));
 
         options.setAcceptInsecureCerts(true);
         options.setUnhandledPromptBehaviour(UnexpectedAlertBehaviour.IGNORE);

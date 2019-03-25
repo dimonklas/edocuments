@@ -152,9 +152,9 @@ public class CreateReportDeclarationJ0301206 {
     }
 
 
-    public TaxDeclarationType chooseReportCheckBox =  () -> reportCheckBox.click();
-    public TaxDeclarationType chooseReportNewCheckBox =  () -> reportNewCheckBox.click();
-    public TaxDeclarationType chooseClarificationCheckBox =  () -> clarificationCheckBox.click();
+    public TaxDeclarationType chooseReportCheckBox = () -> reportCheckBox.click();
+    public TaxDeclarationType chooseReportNewCheckBox = () -> reportNewCheckBox.click();
+    public TaxDeclarationType chooseClarificationCheckBox = () -> clarificationCheckBox.click();
 
     public ReportPeriodType choosePeriodFirstQuater = () -> reportPeriodFirstQuarter.click();
     public ReportPeriodType choosePeriodHalfYear = () -> reportPeriodHalfYear.click();
@@ -241,7 +241,7 @@ public class CreateReportDeclarationJ0301206 {
     }
 
     @Step("Ввести в поле значение \"{value}\"")
-    public void setValueToField(SelenideElement element, String value){
+    public void setValueToField(SelenideElement element, String value) {
         clearField(element);
         element.shouldBe(visible).setValue(value);
         element.pressEnter();
@@ -249,60 +249,84 @@ public class CreateReportDeclarationJ0301206 {
 
     @Step("Заполнение поля {name} в загальних відомостях")
     public void setValueToGeneralInfo(SelenideElement element, String name, DeclarationDataGeneralInformationJ0301206 data) {
-        switch (name){
-            case "Рік":setValueToField(element, data.getYear());
+        switch (name) {
+            case "Рік":
+                setValueToField(element, data.getYear());
                 break;
-            case "порядковий N":setValueToField(element, data.getSequenceNumber());
+            case "порядковий N":
+                setValueToField(element, data.getSequenceNumber());
                 break;
-            case "Платник податку":setValueToField(element, data.getComName());
+            case "Платник податку":
+                setValueToField(element, data.getComName());
                 break;
-            case "Податковий номер платника":setValueToField(element, data.getInnNumberOrPassport());
+            case "Податковий номер платника":
+                setValueToField(element, data.getInnNumberOrPassport());
                 break;
-            case "КВЕД":setValueToField(element, data.getKved());
+            case "КВЕД":
+                setValueToField(element, data.getKved());
                 break;
-            case "поштовий індекс":setValueToField(element, data.getZip());
+            case "поштовий індекс":
+                setValueToField(element, data.getZip());
                 break;
-            case "міжміський код":setValueToField(element, data.getCityCode());
+            case "міжміський код":
+                setValueToField(element, data.getCityCode());
                 break;
-            case "телефон":setValueToField(element, data.getTelNumber());
+            case "телефон":
+                setValueToField(element, data.getTelNumber());
                 break;
-            case "факс":setValueToField(element, data.getFaxNumber());
+            case "факс":
+                setValueToField(element, data.getFaxNumber());
                 break;
-            case "податкова адреса":setValueToField(element, data.getLocationAddress());
+            case "податкова адреса":
+                setValueToField(element, data.getLocationAddress());
                 break;
-            case "електронна адреса":setValueToField(element, data.getEmail());
+            case "електронна адреса":
+                setValueToField(element, data.getEmail());
                 break;
-            case "контролюючий орган":element.selectOption(data.getControlAuthority());
+            case "контролюючий орган":
+                element.selectOption(data.getControlAuthority());
                 break;
         }
     }
 
     @Step("Заполнение поля {name} в розрахуноках податкових зобов'язань")
     public void setValueToCalculationTax(SelenideElement element, String name, DeclarationDataCalculationTaxJ0301206 data) {
-        switch (name){
-            case "Назва платежа":setValueToField(element, data.getSumName());
+        switch (name) {
+            case "Назва платежа":
+                setValueToField(element, data.getSumName());
                 break;
-            case "Площа земельної ділянки":setValueToField(element, data.getSquare());
+            case "Площа земельної ділянки":
+                setValueToField(element, data.getSquare());
                 break;
-            case "Мінімальна заробітна плата":setValueToField(element, data.getMinSalary());
+            case "Мінімальна заробітна плата":
+                setValueToField(element, data.getMinSalary());
                 break;
-            case "Кількість днів провадження":setValueToField(element, data.getCountDays());
+            case "Кількість днів провадження":
+                setValueToField(element, data.getCountDays());
                 break;
-            case "Ставка збору":setValueToField(element, data.getPercent());
+            case "Ставка збору":
+                setValueToField(element, data.getPercent());
                 break;
-            case "Нарахована сума збору":setValueToField(element, data.getTaxSum());
+            case "Нарахована сума збору":
+                setValueToField(element, data.getTaxSum());
                 break;
-            case "сума збору за даними раніше поданої декларації":setValueToField(element, data.getTaxSumSpecified());
+            case "сума збору за даними раніше поданої декларації":
+                setValueToField(element, data.getTaxSumSpecified());
                 break;
-            case "Уточнена сума":setValueToField(element, data.getSpecifiedSum());
+            case "Уточнена сума":
+                setValueToField(element, data.getSpecifiedSum());
                 break;
-            case "Сума штрафу":setValueToField(element, data.getFineSum());
+            case "Сума штрафу":
+                setValueToField(element, data.getFineSum());
                 break;
-            case "Сума пені":setValueToField(element, data.getPenaltySum());
+            case "Сума пені":
+                setValueToField(element, data.getPenaltySum());
                 break;
-            case "Зміст доповнення":setValueToField(element, data.getAddText());
+            case "Зміст доповнення":
+                setValueToField(element, data.getAddText());
                 break;
-            case "Доповнення до декларації":setValueToField(element, data.getAddDeclaration());
+            case "Доповнення до декларації":
+                setValueToField(element, data.getAddDeclaration());
                 break;
         }
     }
@@ -310,16 +334,21 @@ public class CreateReportDeclarationJ0301206 {
 
     @Step("Заполнение поля {name} в персональну інформацію")
     public void setValueToPersonalInfo(SelenideElement element, String name, DeclarationDataPersonInfoJ0301206 data) {
-        switch (name){
-            case "Дата заповнення":setValueToField(element, data.getDateDeclaration());
+        switch (name) {
+            case "Дата заповнення":
+                setValueToField(element, data.getDateDeclaration());
                 break;
-            case "Керівник":setValueToField(element, data.getFIO());
+            case "Керівник":
+                setValueToField(element, data.getFIO());
                 break;
-            case "Реєстраційний номер":setValueToField(element, data.getInn());
+            case "Реєстраційний номер":
+                setValueToField(element, data.getInn());
                 break;
-            case "Головний бухгалтер":setValueToField(element, data.getAccountant());
+            case "Головний бухгалтер":
+                setValueToField(element, data.getAccountant());
                 break;
-            case "Реєстраційний номер бухгалтера":setValueToField(element, data.getAccountantInn());
+            case "Реєстраційний номер бухгалтера":
+                setValueToField(element, data.getAccountantInn());
                 break;
         }
     }
@@ -327,48 +356,63 @@ public class CreateReportDeclarationJ0301206 {
     /***** Проверка данных в форме *****/
     @Step("Проверка поля {name} в загальних відомостях")
     public void checkValueInGeneralInfo(SelenideElement element, String name, String fieldSetValue) {
-        switch (name){
-            case "Рік":assertEquals(element.getValue(), fieldSetValue.replaceAll("\\D+", ""));
+        switch (name) {
+            case "Рік":
+                assertEquals(element.getValue(), fieldSetValue.replaceAll("\\D+", ""));
                 break;
-            case "порядковий N":assertEquals(element.getValue(), fieldSetValue.replaceAll("\\D+", ""));
+            case "порядковий N":
+                assertEquals(element.getValue(), fieldSetValue.replaceAll("\\D+", ""));
                 break;
-            case "поштовий індекс":assertEquals(element.getValue(), fieldSetValue.replaceAll("\\D+", ""));
+            case "поштовий індекс":
+                assertEquals(element.getValue(), fieldSetValue.replaceAll("\\D+", ""));
                 break;
-            case "міжміський код":assertEquals(element.getValue(), fieldSetValue.replaceAll("\\D+", ""));
+            case "міжміський код":
+                assertEquals(element.getValue(), fieldSetValue.replaceAll("\\D+", ""));
                 break;
         }
     }
 
     @Step("Проверка поля {name} в розрахуноках податкових зобов'язань")
     public void checkValueInCalculationTax(SelenideElement element, String name) {
-        switch (name){
-            case "Площа земельної ділянки":assertEquals(element.getValue(), "0.000");
+        switch (name) {
+            case "Площа земельної ділянки":
+                assertEquals(element.getValue(), "0.000");
                 break;
-            case "Мінімальна заробітна плата":assertEquals(element.getValue(), "0.00");
+            case "Мінімальна заробітна плата":
+                assertEquals(element.getValue(), "0.00");
                 break;
-            case "Кількість днів провадження":assertEquals(element.getValue(), "0");
+            case "Кількість днів провадження":
+                assertEquals(element.getValue(), "0");
                 break;
-            case "Ставка збору":assertEquals(element.getValue(), "0.0000");
+            case "Ставка збору":
+                assertEquals(element.getValue(), "0.0000");
                 break;
-            case "Нарахована сума збору":assertEquals(element.getValue(), "0.00");
+            case "Нарахована сума збору":
+                assertEquals(element.getValue(), "0.00");
                 break;
-            case "сума збору за даними раніше поданої декларації":assertEquals(element.getValue(), "0.00");
+            case "сума збору за даними раніше поданої декларації":
+                assertEquals(element.getValue(), "0.00");
                 break;
-            case "Уточнена сума":assertEquals(element.getValue(), "0.00");
+            case "Уточнена сума":
+                assertEquals(element.getValue(), "0.00");
                 break;
-            case "Сума штрафу":assertEquals(element.getValue(), "0.00");
+            case "Сума штрафу":
+                assertEquals(element.getValue(), "0.00");
                 break;
-            case "Сума пені":assertEquals(element.getValue(), "0.00");
+            case "Сума пені":
+                assertEquals(element.getValue(), "0.00");
                 break;
-            case "Доповнення до декларації":assertEquals(element.getValue(), "0");
+            case "Доповнення до декларації":
+                assertEquals(element.getValue(), "0");
                 break;
         }
     }
 
     @Step("Заполнение поля {name} в персональну інформацію")
     public void checkValueInPersonalInfo(SelenideElement element, String name) {
-        switch (name){
-            case "Дата заповнення":assertEquals(element.getValue(), "");
+        switch (name) {
+            case "Дата заповнення":
+                assertEquals(element.getValue(), "");
                 break;
         }
     }
@@ -377,28 +421,39 @@ public class CreateReportDeclarationJ0301206 {
 
     @Step("Заполнение поля {name} в загальних відомостях")
     public void checkValueToGeneralInfo(SelenideElement element, String name, DeclarationDataGeneralInformationJ0301206 data) {
-        switch (name){
-            case "Рік":assertEquals(element.getValue(), data.getYear());
+        switch (name) {
+            case "Рік":
+                assertEquals(element.getValue(), data.getYear());
                 break;
-            case "порядковий N":assertEquals(element.getValue(), data.getSequenceNumber());
+            case "порядковий N":
+                assertEquals(element.getValue(), data.getSequenceNumber());
                 break;
-            case "Платник податку":assertEquals(element.getValue(), data.getComName());
+            case "Платник податку":
+                assertEquals(element.getValue(), data.getComName());
                 break;
-            case "Податковий номер платника":assertEquals(element.getValue(), data.getInnNumberOrPassport());
+            case "Податковий номер платника":
+                assertEquals(element.getValue(), data.getInnNumberOrPassport());
                 break;
-            case "КВЕД":assertEquals(element.getValue(), data.getKved());
+            case "КВЕД":
+                assertEquals(element.getValue(), data.getKved());
                 break;
-            case "поштовий індекс":assertEquals(element.getValue(), data.getZip());
+            case "поштовий індекс":
+                assertEquals(element.getValue(), data.getZip());
                 break;
-            case "міжміський код":assertEquals(element.getValue(), data.getCityCode());
+            case "міжміський код":
+                assertEquals(element.getValue(), data.getCityCode());
                 break;
-            case "телефон":assertEquals(element.getValue(), data.getTelNumber());
+            case "телефон":
+                assertEquals(element.getValue(), data.getTelNumber());
                 break;
-            case "факс":assertEquals(element.getValue(), data.getFaxNumber());
+            case "факс":
+                assertEquals(element.getValue(), data.getFaxNumber());
                 break;
-            case "податкова адреса":assertEquals(element.getValue(), data.getLocationAddress());
+            case "податкова адреса":
+                assertEquals(element.getValue(), data.getLocationAddress());
                 break;
-            case "електронна адреса":assertEquals(element.getValue(), data.getEmail());
+            case "електронна адреса":
+                assertEquals(element.getValue(), data.getEmail());
                 break;
 //            case "контролюючий орган":assertEquals(element.getValue(), data.getControlAuthority());
 //                break;
@@ -407,30 +462,42 @@ public class CreateReportDeclarationJ0301206 {
 
     @Step("Заполнение поля {name} в розрахуноках податкових зобов'язань")
     public void checkValueToCalculationTax(SelenideElement element, String name, DeclarationDataCalculationTaxJ0301206 data) {
-        switch (name){
-            case "Назва платежа":assertEquals(element.getValue(), data.getSumName());
+        switch (name) {
+            case "Назва платежа":
+                assertEquals(element.getValue(), data.getSumName());
                 break;
-            case "Площа земельної ділянки":assertEquals(element.getValue(), data.getSquare());
+            case "Площа земельної ділянки":
+                assertEquals(element.getValue(), data.getSquare());
                 break;
-            case "Мінімальна заробітна плата":assertEquals(element.getValue(), data.getMinSalary());
+            case "Мінімальна заробітна плата":
+                assertEquals(element.getValue(), data.getMinSalary());
                 break;
-            case "Кількість днів провадження":assertEquals(element.getValue(), data.getCountDays());
+            case "Кількість днів провадження":
+                assertEquals(element.getValue(), data.getCountDays());
                 break;
-            case "Ставка збору":assertEquals(element.getValue(), data.getPercent());
+            case "Ставка збору":
+                assertEquals(element.getValue(), data.getPercent());
                 break;
-            case "Нарахована сума збору":assertEquals(element.getValue(), data.getTaxSum());
+            case "Нарахована сума збору":
+                assertEquals(element.getValue(), data.getTaxSum());
                 break;
-            case "сума збору за даними раніше поданої декларації":assertEquals(element.getValue(), data.getTaxSumSpecified());
+            case "сума збору за даними раніше поданої декларації":
+                assertEquals(element.getValue(), data.getTaxSumSpecified());
                 break;
-            case "Уточнена сума":assertEquals(element.getValue(), data.getSpecifiedSum());
+            case "Уточнена сума":
+                assertEquals(element.getValue(), data.getSpecifiedSum());
                 break;
-            case "Сума штрафу":assertEquals(element.getValue(), data.getFineSum());
+            case "Сума штрафу":
+                assertEquals(element.getValue(), data.getFineSum());
                 break;
-            case "Сума пені":assertEquals(element.getValue(), data.getPenaltySum());
+            case "Сума пені":
+                assertEquals(element.getValue(), data.getPenaltySum());
                 break;
-            case "Зміст доповнення":assertEquals(element.getValue(), data.getAddText());
+            case "Зміст доповнення":
+                assertEquals(element.getValue(), data.getAddText());
                 break;
-            case "Доповнення до декларації":assertEquals(element.getValue(), data.getAddDeclaration());
+            case "Доповнення до декларації":
+                assertEquals(element.getValue(), data.getAddDeclaration());
                 break;
         }
     }
@@ -438,16 +505,21 @@ public class CreateReportDeclarationJ0301206 {
 
     @Step("Заполнение поля {name} в персональну інформацію")
     public void checkValueToPersonalInfo(SelenideElement element, String name, DeclarationDataPersonInfoJ0301206 data) {
-        switch (name){
-            case "Дата заповнення":assertEquals(element.getValue(), data.getDateDeclaration());
+        switch (name) {
+            case "Дата заповнення":
+                assertEquals(element.getValue(), data.getDateDeclaration());
                 break;
-            case "Керівник":assertEquals(element.getValue(), data.getFIO());
+            case "Керівник":
+                assertEquals(element.getValue(), data.getFIO());
                 break;
-            case "Реєстраційний номер":assertEquals(element.getValue(), data.getInn());
+            case "Реєстраційний номер":
+                assertEquals(element.getValue(), data.getInn());
                 break;
-            case "Головний бухгалтер":assertEquals(element.getValue(), data.getAccountant());
+            case "Головний бухгалтер":
+                assertEquals(element.getValue(), data.getAccountant());
                 break;
-            case "Реєстраційний номер бухгалтера":assertEquals(element.getValue(), data.getAccountantInn());
+            case "Реєстраційний номер бухгалтера":
+                assertEquals(element.getValue(), data.getAccountantInn());
                 break;
         }
     }

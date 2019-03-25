@@ -186,13 +186,13 @@ public class CreateDocumentTypePage {
     }
 
     @Step("Добавление вкладок в документ")
-    public void addTabsToDocument(ArrayList<TabsData> tabsData){
+    public void addTabsToDocument(ArrayList<TabsData> tabsData) {
 
         for (int i = 1; i <= tabsData.size(); i++) {
 
             addTabButton.shouldBe(visible).click();
 
-            if(i == 1){
+            if (i == 1) {
                 $x("//*[@id='tabs_table']//tr[last()]//td[5]//input[@name='form_code']").shouldBe(visible).setValue(tabsData.get(i - 1).getFormCode());
             }
 

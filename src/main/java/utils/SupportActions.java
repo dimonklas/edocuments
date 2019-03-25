@@ -14,7 +14,7 @@ import static com.codeborne.selenide.Selenide.switchTo;
 public class SupportActions {
 
     public static String generateRandomFloatNumber(int numbersAfterPoint) {
-        return String.format("%." + numbersAfterPoint + "f", (Math.random()*100+10)).replace(",", ".");
+        return String.format("%." + numbersAfterPoint + "f", (Math.random() * 100 + 10)).replace(",", ".");
     }
 
     public static void clearField(SelenideElement element) {
@@ -33,12 +33,12 @@ public class SupportActions {
         try {
             switchTo().alert();
             return true;
-        }catch (NoAlertPresentException e){
+        } catch (NoAlertPresentException e) {
             return false;
         }
     }
 
-    public static void waitPreloader(){
-        $(By.xpath("//*[contains(@class,'spinner')]")).waitUntil(not(visible),15000);
+    public static void waitPreloader() {
+        $(By.xpath("//*[contains(@class,'spinner')]")).waitUntil(not(visible), 15000);
     }
 }

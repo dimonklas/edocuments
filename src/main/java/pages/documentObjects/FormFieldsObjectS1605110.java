@@ -28,7 +28,7 @@ public class FormFieldsObjectS1605110 {
         return formFields;
     }
 
-        public ArrayList<FormFields> editFields() {
+    public ArrayList<FormFields> editFields() {
         ArrayList<FormFields> formFields = new ArrayList<>();
 
         formFields.add(FormFields.builder()

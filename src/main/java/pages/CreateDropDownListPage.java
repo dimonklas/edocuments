@@ -71,8 +71,8 @@ public class CreateDropDownListPage {
         int xpathValue = 1;
         for (int i = 0; i < listData.getElementListData().size(); i++) {
 
-            assertEquals(listData.getElementListData().get(i).getKey(), $x("(//*[@name='element_key'])[" + xpathValue + "]").getValue(), "Неверный ключ у "+xpathValue+"-го элемента");
-            assertEquals(listData.getElementListData().get(i).getValue(), $x("(//*[@name='element_value'])[" + xpathValue + "]").getValue(), "Неверное значение у "+xpathValue+"-го элемента");
+            assertEquals(listData.getElementListData().get(i).getKey(), $x("(//*[@name='element_key'])[" + xpathValue + "]").getValue(), "Неверный ключ у " + xpathValue + "-го элемента");
+            assertEquals(listData.getElementListData().get(i).getValue(), $x("(//*[@name='element_value'])[" + xpathValue + "]").getValue(), "Неверное значение у " + xpathValue + "-го элемента");
 
             xpathValue++;
         }

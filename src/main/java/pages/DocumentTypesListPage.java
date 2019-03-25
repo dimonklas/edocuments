@@ -163,7 +163,7 @@ public class DocumentTypesListPage {
     @Step("Удаление всех документов по значению \"{valueForDelete}\"")
     public void deleteAllDocument(String valueForDelete) {
         searchField.shouldBe(visible).setValue(valueForDelete);
-        int count =  $$(By.xpath("//tbody//tr[@role='row']/td[contains(.,'" + valueForDelete + "')]")).size();
+        int count = $$(By.xpath("//tbody//tr[@role='row']/td[contains(.,'" + valueForDelete + "')]")).size();
         for (int i = 0; i < count; i++) {
             $(By.xpath("//tbody//tr[@role='row']/td[contains(.,'" + valueForDelete + "')]")).click();
             deleteButton.shouldBe(visible).click();
@@ -193,7 +193,7 @@ public class DocumentTypesListPage {
         ArrayList<String> arrayList = new ArrayList<>();
 
         for (int i = 1; i < 3; i++) {
-        StringBuilder stringBuilder = new StringBuilder();
+            StringBuilder stringBuilder = new StringBuilder();
             for (int j = 2; j < 6; j++) {
                 stringBuilder.append($(By.xpath("(//tbody//tr[" + i + "]/td)[" + j + "]")).getText());
             }
@@ -203,7 +203,7 @@ public class DocumentTypesListPage {
     }
 
     @Step("Открытие документа")
-    public CreateDocumentTypePage openDocument(String value){
+    public CreateDocumentTypePage openDocument(String value) {
         $(By.xpath("//tr/td[contains(., '" + value + "')]")).shouldBe(visible).click();
         viewDocButton.click();
         closeBrowserTab("Типы документов");
@@ -254,11 +254,11 @@ public class DocumentTypesListPage {
 //                        .log().all()
                         .cookie("PHPSESSID", phpSessId)
                         .cookie("CSRF-TOKEN", csrfToken)
-                        .header("X-CSRF-Token",csrfToken)
+                        .header("X-CSRF-Token", csrfToken)
                         .contentType("application/x-www-form-urlencoded; charset=UTF-8")
-                        .formParam("object","type")
-                        .formParam("type_id",pair)
-                        .formParam("action","delete")
+                        .formParam("object", "type")
+                        .formParam("type_id", pair)
+                        .formParam("action", "delete")
                         .post("http://buhonline.test.it.loc/admin/ajax.php");
 
                 assertTrue(response.getBody().prettyPrint().contains("result\":\"success\""), "Операция по удалению документа неуспешна");

@@ -57,7 +57,7 @@ public class DropDownListPage {
     @Step("Удаление всех документов по значению \"{valueForDelete}\"")
     public void deleteAllDocument(String valueForDelete) {
         searchField.shouldBe(visible).setValue(valueForDelete);
-        int count =  $$(By.xpath("//tbody//tr[@role='row']/td[contains(.,'" + valueForDelete + "')]")).size();
+        int count = $$(By.xpath("//tbody//tr[@role='row']/td[contains(.,'" + valueForDelete + "')]")).size();
         for (int i = 0; i < count; i++) {
             $(By.xpath("//tbody//tr[@role='row']/td[contains(.,'" + valueForDelete + "')]")).click();
             deleteButton.shouldBe(visible).click();
@@ -112,11 +112,11 @@ public class DropDownListPage {
 //                        .log().all()
                         .cookie("PHPSESSID", phpSessId)
                         .cookie("CSRF-TOKEN", csrfToken)
-                        .header("X-CSRF-Token",csrfToken)
+                        .header("X-CSRF-Token", csrfToken)
                         .contentType("application/x-www-form-urlencoded; charset=UTF-8")
-                        .formParam("object","drop_down_list")
-                        .formParam("list_id",pair)
-                        .formParam("action","delete")
+                        .formParam("object", "drop_down_list")
+                        .formParam("list_id", pair)
+                        .formParam("action", "delete")
                         .post("http://buhonline.test.it.loc/admin/ajax.php");
 
                 assertTrue(response.getBody().prettyPrint().contains("result\":\"success\""), "Операция по удалению документа неуспешна");

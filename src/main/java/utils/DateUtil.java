@@ -6,7 +6,7 @@ import java.time.format.DateTimeFormatter;
 
 public class DateUtil {
 
-    public String getCurrentDateTime (String pattern) {
+    public String getCurrentDateTime(String pattern) {
         ZoneId zoneId = ZoneId.of("Europe/Kiev");
         return LocalDateTime.now(zoneId).format(DateTimeFormatter.ofPattern(pattern));
     }

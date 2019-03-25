@@ -9,6 +9,7 @@ import pages.document.FormDataAbstract;
 import utils.IConfigurationVariables;
 
 import java.io.File;
+
 import org.apache.commons.io.FilenameUtils;
 
 import static com.codeborne.selenide.Condition.*;
@@ -38,12 +39,12 @@ public class CreateForm {
 
 
     @Step("Загрузка файла формы")
-    public boolean uploadFile(String file){
+    public boolean uploadFile(String file) {
         uploadFileButton.shouldBe(visible);
         String fileName = FilenameUtils.removeExtension(new File("src/main/resources/supportFiles/" + file).getName());
         uploadFileInput.uploadFile(new File("src/main/resources/supportFiles/" + file).getAbsoluteFile());
         sleep(2000);
-        if (modalWindowError.isDisplayed()){
+        if (modalWindowError.isDisplayed()) {
             $x("//a[contains(.,\"Перейти в форму '" + fileName + "'\")]").shouldBe(Condition.visible).click();
             return false;
         } else return true;
@@ -57,7 +58,7 @@ public class CreateForm {
 
 
     @Step("Заполнение формы")
-    public void setValuesToForm(){
+    public void setValuesToForm() {
         editFormButton.shouldBe(visible).click();
     }
 
