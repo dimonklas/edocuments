@@ -23,9 +23,10 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 import static utils.Cookie.csrfToken;
 import static utils.Cookie.phpSessId;
+import static utils.WorkingWithBrowserTabs.closeBrowserTab;
 
 @Log4j
-public class DocumentTypesListPage implements WorkingWithBrowserTabs {
+public class DocumentTypesListPage {
 
     private final IConfigurationVariables CV = ConfigFactory.create(IConfigurationVariables.class, System.getProperties());
 

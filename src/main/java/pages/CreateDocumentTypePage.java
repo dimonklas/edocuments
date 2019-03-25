@@ -18,11 +18,12 @@ import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
 import static org.testng.Assert.*;
 import static utils.SupportActions.isAlertPresent;
+import static utils.WorkingWithBrowserTabs.closeBrowserTab;
 
 
 @Log4j
 @Getter
-public class CreateDocumentTypePage implements WorkingWithBrowserTabs {
+public class CreateDocumentTypePage {
     private SelenideElement fieldName = $(By.id("type_name"));
     private SelenideElement saveButton = $(By.id("btn_save"));
     private SelenideElement cancelButton = $(By.id("btn_cancel"));

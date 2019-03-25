@@ -1,14 +1,19 @@
 package utils;
 
+import com.codeborne.selenide.WebDriverRunner;
 import io.qameta.allure.Step;
+import lombok.extern.log4j.Log4j;
 
 import static com.codeborne.selenide.Selenide.switchTo;
 
-public interface WorkingWithBrowserTabs {
+@Log4j
+public class WorkingWithBrowserTabs {
 
     @Step("Закрыть вкладку {nameTittle}: и переключиться на основную")
-    default void closeBrowserTab(String nameTittle) {
-        switchTo().window(nameTittle).close();
-        switchTo().window(0);
+    public static void closeBrowserTab(String nameTittle) {
+        if (WebDriverRunner.getWebDriver().getWindowHandles().size() > 1) {
+            switchTo().window(nameTittle).close();
+            switchTo().window(0);
+        } else log.info("Вкладка не открылась");
     }
 }

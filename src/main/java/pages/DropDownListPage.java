@@ -21,10 +21,11 @@ import static io.restassured.RestAssured.given;
 import static org.testng.Assert.assertTrue;
 import static utils.Cookie.csrfToken;
 import static utils.Cookie.phpSessId;
+import static utils.WorkingWithBrowserTabs.closeBrowserTab;
 
 @Getter
 @Log4j
-public class DropDownListPage implements WorkingWithBrowserTabs {
+public class DropDownListPage {
 
     private final IConfigurationVariables CV = ConfigFactory.create(IConfigurationVariables.class, System.getProperties());
 

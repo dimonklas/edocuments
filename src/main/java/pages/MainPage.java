@@ -6,8 +6,9 @@ import org.openqa.selenium.By;
 import utils.WorkingWithBrowserTabs;
 
 import static com.codeborne.selenide.Selenide.$;
+import static utils.WorkingWithBrowserTabs.closeBrowserTab;
 
-public class MainPage implements WorkingWithBrowserTabs {
+public class MainPage {
 
     private SelenideElement switchToReportTypeList = $(By.xpath("//h5[normalize-space()='Типы отчетных документов']/..//a[contains(.,'список')]"));
     private SelenideElement createNewType = $(By.xpath("//h5[normalize-space()='Типы отчетных документов']/..//a[contains(.,'тип')]"));
