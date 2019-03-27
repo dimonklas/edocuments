@@ -418,6 +418,13 @@ public class ReportFormRunner extends BaseTest {
         createForm = mainPage.openCreateForm();
         assertFalse(createForm.uploadFile("S1605110.xsd"), "Созданная форма не найдена");
         createForm.checkForm(dataS1605110Edit);
-    }
 
+        createForm.goToMainPage();
+        dataTypesPage = mainPage.openGeneralDataTypes();
+        dataTypesPage.editDataTypes(dataS1605110.getFields());
+        dataTypesPage.goToMainPage();
+        createForm = mainPage.openCreateForm();
+        assertFalse(createForm.uploadFile("S1605110.xsd"), "Созданная форма не найдена");
+        createForm.checkForm(dataS1605110);
+    }
 }
