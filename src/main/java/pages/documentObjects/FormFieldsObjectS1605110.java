@@ -3,11 +3,12 @@ package pages.documentObjects;
 import pages.document.FormFields;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class FormFieldsObjectS1605110 {
 
-    public ArrayList<FormFields> originalFields() {
-        ArrayList<FormFields> formFields = new ArrayList<>();
+    public List<FormFields> originalFields() {
+        List<FormFields> formFields = new ArrayList<>();
 
         formFields.add(FormFields.builder()
                 .codeField("A10_1").dataType("decimal").fieldType("Число (?)").tabNumber("").fieldsGroup("").paramAutoSet("").rule("0").hint("")
@@ -28,8 +29,8 @@ public class FormFieldsObjectS1605110 {
         return formFields;
     }
 
-    public ArrayList<FormFields> editFields() {
-        ArrayList<FormFields> formFields = new ArrayList<>();
+    public List<FormFields> editFields() {
+        List<FormFields> formFields = new ArrayList<>();
 
         formFields.add(FormFields.builder()
                 .codeField("A10_1").dataType("decimal").fieldType("Цифры").tabNumber("").fieldsGroup("").paramAutoSet("").rule("0").hint("")
