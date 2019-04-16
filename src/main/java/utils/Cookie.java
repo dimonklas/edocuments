@@ -2,12 +2,14 @@ package utils;
 
 import com.codeborne.selenide.WebDriverRunner;
 import lombok.Getter;
+import lombok.extern.log4j.Log4j;
 
 
 import static com.codeborne.selenide.Selenide.refresh;
 import static com.codeborne.selenide.Selenide.sleep;
 
 @Getter
+@Log4j
 public class Cookie {
 
     public static String phpSessId;
@@ -23,7 +25,7 @@ public class Cookie {
                 phpSessId = WebDriverRunner.getWebDriver().manage().getCookieNamed("PHPSESSID").getValue();
                 csrfToken = WebDriverRunner.getWebDriver().manage().getCookieNamed("CSRF-TOKEN").getValue();
             } catch (NullPointerException e) {
-                System.out.println("####################NullPointerException#################");
+                log.info("####################NullPointerException#################");
                 refresh();
                 count++;
                 setCookie();
