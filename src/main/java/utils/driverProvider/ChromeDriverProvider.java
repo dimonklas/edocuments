@@ -18,7 +18,7 @@ public class ChromeDriverProvider implements WebDriverProvider {
 
         options.setAcceptInsecureCerts(true);
         options.setUnhandledPromptBehaviour(UnexpectedAlertBehaviour.IGNORE);
-        ChromeDriverManager.chromedriver().setup();
+        ChromeDriverManager.chromedriver().version("74.0.3729.6").setup();
         ChromeDriver driver = new ChromeDriver(options);
         return driver;
     }
