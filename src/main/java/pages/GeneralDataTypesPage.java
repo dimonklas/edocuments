@@ -9,12 +9,11 @@ import lombok.extern.log4j.Log4j;
 import org.openqa.selenium.By;
 import pages.document.FormFields;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$x;
-import static com.codeborne.selenide.Selenide.sleep;
 
 @Log4j
 @Getter
@@ -40,7 +39,7 @@ public class GeneralDataTypesPage {
     }
 
     @Step("Редактирование типов данных")
-    public void editDataTypes(ArrayList<FormFields> fields) {
+    public void editDataTypes(List<FormFields> fields) {
         for (int i = 0; i < fields.size(); i++) {
             searchAndOpenDataType(fields.get(i).getDataType());
             $x("//*[@id='data_types_table']//td[text()='" + fields.get(i).getDataType() + "']/../..//*[@class='btn_edit_field_type']").shouldBe(Condition.visible).click();
