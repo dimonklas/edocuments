@@ -9,6 +9,7 @@ import utils.IConfigurationVariables;
 
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
+import static com.codeborne.selenide.Selenide.$x;
 import static utils.SupportActions.waitPreloader;
 
 @Log4j
@@ -32,6 +33,8 @@ public class LoginPage {
         waitPreloader();
         submitButton.shouldBe(visible).click();
         waitPreloader();
+        $x("//*[text()='Несуществующий логин или неверный пароль']").waitUntil(hidden, 1000);
+        $x("//*[text()='Неправильный пользователь или пароль']").waitUntil(hidden, 1000);
         if (warningSubmitButton.isDisplayed()) warningSubmitButton.shouldBe(visible).click();
         waitPreloader();
         if (authenticationNextButton.isDisplayed()) authenticationNextButton.shouldBe(visible).click();

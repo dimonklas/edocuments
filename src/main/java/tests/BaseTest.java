@@ -6,6 +6,8 @@ import com.codeborne.selenide.WebDriverRunner;
 import com.codeborne.selenide.testng.TextReport;
 import lombok.extern.log4j.Log4j;
 import org.aeonbits.owner.ConfigFactory;
+import org.apache.commons.io.IOUtils;
+import org.apache.log4j.Logger;
 import org.testng.annotations.*;
 import pages.DocumentTypesListPage;
 import pages.DropDownListPage;
@@ -15,7 +17,14 @@ import utils.AllureOnFailListener;
 import utils.IConfigurationVariables;
 
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Properties;
+
+import static com.codeborne.selenide.Configuration.baseUrl;
 import static com.codeborne.selenide.Selenide.*;
+import static java.lang.System.getProperty;
+import static java.util.Optional.ofNullable;
 import static utils.Cookie.*;
 import static utils.SupportActions.waitPreloader;
 
@@ -23,6 +32,7 @@ import static utils.SupportActions.waitPreloader;
 @Listeners({AllureOnFailListener.class, TextReport.class})
 public class BaseTest {
     private final IConfigurationVariables confVariable = ConfigFactory.create(IConfigurationVariables.class, System.getProperties());
+    private static final Logger LOGGER = Logger.getLogger(BaseTest.class);
 
     @BeforeSuite
     public void setUp() {
@@ -96,6 +106,29 @@ public class BaseTest {
         typesListPage.goToMainPage();
         DropDownListPage dropDownListPage = new MainPage().openDropDownList();
         dropDownListPage.deleteAllDocument(confVariable.docName());
+    }
 
+    @AfterSuite(alwaysRun = true)
+    public void createEnvironmentProps() {
+        FileOutputStream fos = null;
+        try {
+            Properties props = new Properties();
+            fos = new FileOutputStream("target/allure-results/environment.properties");
+
+            ofNullable(baseUrl).ifPresent(s -> props.setProperty("project.URL", confVariable.mainPageUrl()));
+            ofNullable(getProperty("browser")).ifPresent(s -> props.setProperty("browser", s));
+            ofNullable(getProperty("driver.version")).ifPresent(s -> props.setProperty("driver.version", s));
+            ofNullable(getProperty("os.name")).ifPresent(s -> props.setProperty("os.name", s));
+            ofNullable(getProperty("os.version")).ifPresent(s -> props.setProperty("os.version", s));
+            ofNullable(getProperty("os.arch")).ifPresent(s -> props.setProperty("os.arch", s));
+
+            props.store(fos, "See https://github.com/allure-framework/allure-app/wiki/Environment");
+
+            fos.close();
+        } catch (IOException e) {
+            LOGGER.error("IO problem when writing allure properties file", e);
+        } finally {
+            IOUtils.closeQuietly(fos);
+        }
     }
 }
