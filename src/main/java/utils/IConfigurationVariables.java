@@ -24,6 +24,12 @@ public interface IConfigurationVariables extends Config {
 
     String CurrentBrowser();
 
+    String urlPromin();
+
+    String techLogin();
+
+    String techPassword();
+
     /****** Тестовые данные для J0301206****/
     /****** Тестовые данные для "Загальних відомостей"****/
     String year();
