@@ -31,13 +31,13 @@ public class LoginPage {
         loginField.shouldBe(visible).setValue(login);
         passwordField.shouldBe(visible).setValue(CV.userPassword());
         waitPreloader();
-        submitButton.shouldBe(visible).click();
+        submitButton.shouldBe(visible, enabled).click();
         waitPreloader();
         $x("//*[text()='Несуществующий логин или неверный пароль']").waitUntil(hidden, 1000);
         $x("//*[text()='Неправильный пользователь или пароль']").waitUntil(hidden, 1000);
-        if (warningSubmitButton.isDisplayed()) warningSubmitButton.shouldBe(visible).click();
+        if (warningSubmitButton.isDisplayed()) warningSubmitButton.shouldBe(visible, enabled).click();
         waitPreloader();
-        if (authenticationNextButton.isDisplayed()) authenticationNextButton.shouldBe(visible).click();
+        if (authenticationNextButton.isDisplayed()) authenticationNextButton.shouldBe(visible, enabled).click();
         waitPreloader();
     }
 
