@@ -15,6 +15,7 @@ import pages.LoginPage;
 import pages.MainPage;
 import utils.AllureOnFailListener;
 import utils.IConfigurationVariables;
+import utils.sid.ProminSession;
 
 
 import java.io.FileOutputStream;
@@ -33,6 +34,7 @@ import static utils.SupportActions.waitPreloader;
 public class BaseTest {
     private final IConfigurationVariables confVariable = ConfigFactory.create(IConfigurationVariables.class, System.getProperties());
     private static final Logger LOGGER = Logger.getLogger(BaseTest.class);
+    protected String prominSession;
 
     @BeforeSuite
     public void setUp() {
@@ -40,6 +42,7 @@ public class BaseTest {
         Configuration.startMaximized = true;
         Configuration.baseUrl = confVariable.mainPageUrl();
         Configuration.browser = "utils.driverProvider.ChromeDriverProvider";
+        prominSession = new ProminSession().getAdminSession();
 
         switch (Integer.parseInt(confVariable.CurrentBrowser())) {
             case 0:
