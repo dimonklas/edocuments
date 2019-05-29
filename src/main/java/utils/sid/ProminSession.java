@@ -17,7 +17,7 @@ public class ProminSession {
     private Session session = new Session();
     private User user = User.builder()
             .login(CV.techLogin())
-            .password("")
+            .password(CV.techPassword())
             .auth("EXCL")
             .build();
 
