@@ -18,8 +18,8 @@ public class Cookie {
     private static int count = 0;
 
 
-    public static void setCookie() {
-        if (count < 10) {
+    public static void getBrowserCookies() {
+        if (count < 5) {
             try {
                 sleep(1000);
                 phpSessId = WebDriverRunner.getWebDriver().manage().getCookieNamed("PHPSESSID").getValue();
@@ -28,7 +28,7 @@ public class Cookie {
                 log.info("####################NullPointerException#################");
                 refresh();
                 count++;
-                setCookie();
+                getBrowserCookies();
             }
         }
     }
