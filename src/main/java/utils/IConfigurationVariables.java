@@ -30,6 +30,12 @@ public interface IConfigurationVariables extends Config {
 
     String techPassword();
 
+    String urlApiTest();
+
+    String urlApiStage();
+
+    String prominSession();
+
     /****** Тестовые данные для J0301206****/
     /****** Тестовые данные для "Загальних відомостей"****/
     String year();

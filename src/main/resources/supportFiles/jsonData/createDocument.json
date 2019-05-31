@@ -1,0 +1,21 @@
+{
+  "user_id": "1026212512",
+  "documents": [
+    {
+      "id": 1,
+      "company_id": "1026212512",
+      "period_type": "Q",
+      "quarter" : "2",
+      "year": 2019,
+      "forms": [
+        {
+          "code": "S1001011",
+          "fields": {
+            "T1RXXXXG77" : "5599",
+            "T1RXXXXG50" : "55778844"
+          }
+        }
+      ]
+    }
+  ]
+}
