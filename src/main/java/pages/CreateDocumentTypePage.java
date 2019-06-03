@@ -9,15 +9,13 @@ import org.openqa.selenium.By;
 import pages.document.CreateDocumentData;
 import pages.document.TabsData;
 import pages.document.VersionData;
-import pages.documentObjects.TabsObject;
-import utils.WorkingWithBrowserTabs;
 
 import java.util.ArrayList;
 
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
 import static org.testng.Assert.*;
-import static utils.SupportActions.isAlertPresent;
+import static utils.Utils.isAlertPresent;
 import static utils.WorkingWithBrowserTabs.closeBrowserTab;
 
 

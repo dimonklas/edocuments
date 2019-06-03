@@ -10,7 +10,7 @@ import utils.IConfigurationVariables;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$x;
-import static utils.SupportActions.waitPreloader;
+import static utils.Utils.waitPreloader;
 
 @Log4j
 public class LoginPage {

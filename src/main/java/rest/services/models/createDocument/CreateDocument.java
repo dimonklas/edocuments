@@ -26,7 +26,7 @@ public class CreateDocument {
         ObjectMapper mapper = new ObjectMapper();
         {
             try {
-                CreateDocument doc = mapper.readValue(new File("src/main/resources/supportFiles/jsonData/createDocument.json"), CreateDocument.class);
+                CreateDocument doc = mapper.readValue(new File("src/main/resources/supportFiles/jsonData/createDocumentRemove.json"), CreateDocument.class);
                 return doc;
             } catch (IOException e) {
                 log.info(e + " а файла то нету, Карл");

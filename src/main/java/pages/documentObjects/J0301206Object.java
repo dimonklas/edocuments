@@ -9,7 +9,7 @@ import pages.document.j0301206.DeclarationDataGeneralInformationJ0301206;
 import pages.document.j0301206.DeclarationDataPersonInfoJ0301206;
 import utils.IConfigurationVariables;
 
-import static utils.SupportActions.generateRandomFloatNumber;
+import static utils.Utils.generateRandomFloatNumber;
 
 @Getter
 public class J0301206Object {

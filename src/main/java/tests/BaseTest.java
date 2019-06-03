@@ -26,7 +26,7 @@ import static com.codeborne.selenide.Selenide.*;
 import static java.lang.System.getProperty;
 import static java.util.Optional.ofNullable;
 import static utils.Cookie.*;
-import static utils.SupportActions.waitPreloader;
+import static utils.Utils.waitPreloader;
 
 @Log4j
 @Listeners({AllureOnFailListener.class, TextReport.class})

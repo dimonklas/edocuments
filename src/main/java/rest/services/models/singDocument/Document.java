@@ -13,7 +13,7 @@ import javax.annotation.Generated;
 
 @Log4j
 @Generated("com.robohorse.robopojogenerator")
-public class SingDocument{
+public class Document {
 
 	@JsonProperty("user_id")
 	private String userId;
@@ -22,11 +22,11 @@ public class SingDocument{
 	private List<DocumentsItem> documents;
 
 	@JsonIgnore
-	public SingDocument getDocumentDataFromFile() {
+	public Document getDocumentDataFromFile() {
 		ObjectMapper mapper = new ObjectMapper();
 		{
 			try {
-				SingDocument doc = mapper.readValue(new File("src/main/resources/supportFiles/jsonData/singDocument.json"), SingDocument.class);
+				Document doc = mapper.readValue(new File("src/main/resources/supportFiles/jsonData/singDocument.json"), Document.class);
 				return doc;
 			} catch (IOException e) {
 				log.info(e + " а файла то нету, Карл");

@@ -16,7 +16,7 @@ import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotEquals;
-import static utils.SupportActions.clearField;
+import static utils.Utils.clearField;
 
 @Log4j
 @Getter
