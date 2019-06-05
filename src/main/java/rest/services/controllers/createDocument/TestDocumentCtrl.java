@@ -44,7 +44,7 @@ public class TestDocumentCtrl {
                 .when()
                 .formParam("data", doc)
 //                .log().all()
-                .post().then().extract().response();
+                .post();
     }
 
     @Step("Создание документа")
@@ -54,7 +54,7 @@ public class TestDocumentCtrl {
                 .basePath("/api/documents/create")
                 .when()
                 .formParam("data", doc)
-                .post().then().extract().response();
+                .post();
     }
 
     @Step("Передача списка документов для подписания")
@@ -63,8 +63,7 @@ public class TestDocumentCtrl {
                 .basePath("/api/documents/sign")
                 .when()
                 .formParam("data", doc)
-                .post()
-                .then().extract().response();
+                .post();
     }
 
     @Step("Страница подписания документов")
@@ -74,8 +73,7 @@ public class TestDocumentCtrl {
                 .queryParam("temporary_token", tmpToken)
                 .when()
                 .formParam("data", doc)
-                .post()
-                .then().extract().response();
+                .post();
     }
 
     @Step("Получение печатных форм документов")
@@ -83,8 +81,7 @@ public class TestDocumentCtrl {
         return given(spec)
                 .basePath("/api/printed_forms/get")
                 .when().formParam("data", doc)
-                .post()
-                .then().extract().response();
+                .post();
     }
 
     @Step("Получение состояний документов")
@@ -92,8 +89,7 @@ public class TestDocumentCtrl {
         return given(spec)
                 .basePath("/api/documents/get_state")
                 .when().formParam("data", doc)
-                .post()
-                .then().extract().response();
+                .post();
     }
 
 
@@ -103,7 +99,6 @@ public class TestDocumentCtrl {
                 .basePath("/api/receipts/decrypt")
                 .when()
                 .formParam("data", doc)
-                .post()
-                .then().extract().response();
+                .post();
     }
 }
