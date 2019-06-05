@@ -72,11 +72,10 @@ public class RestApiTest extends BaseTest {
     }
 
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//    @Test(description = "Передача списка документов для расшифровки квитанций")
-//    public void decryptDocument() {
-//        Document sing = new Document().getDocumentDataFromFile();
-//        Response res = documentCtrl.decryptDocument(sing);
-//        assertEquals(res.jsonPath().getString("result"), "success");
-//    }
+    @Test(description = "Передача списка документов для расшифровки квитанций", enabled = false)
+    public void decryptDocument() {
+        Document sing = new Document().getDocumentDataFromFile();
+        Response res = documentCtrl.decryptDocument(sing);
+        assertEquals(res.jsonPath().getString("result"), "success");
+    }
 }

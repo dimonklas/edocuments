@@ -96,14 +96,14 @@ public class TestDocumentCtrl {
                 .then().extract().response();
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//    @Step("Передача списка документов для расшифровки квитанций")
-//    public Response decryptDocument(Document doc) {
-//        return given(spec)
-//                .basePath("/api/receipts/decrypt")
-//                .when()
-//                .formParam("data", doc)
-//                .post()
-//                .then().extract().response();
-//    }
+
+    @Step("Передача списка документов для расшифровки квитанций")
+    public Response decryptDocument(Document doc) {
+        return given(spec)
+                .basePath("/api/receipts/decrypt")
+                .when()
+                .formParam("data", doc)
+                .post()
+                .then().extract().response();
+    }
 }
