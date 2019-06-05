@@ -19,11 +19,11 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.lessThan;
 
 @Log4j
-public class TestDocumentCtrl {
+public class DocumentCtrl {
 
     private RequestSpecification spec;
 
-    public TestDocumentCtrl() {
+    public DocumentCtrl() {
         RestAssured.responseSpecification = new ResponseSpecBuilder()
                 .expectResponseTime(lessThan(15 * 1000L))
                 .expectStatusCode(200)
@@ -32,6 +32,7 @@ public class TestDocumentCtrl {
         this.spec = new RequestSpecBuilder()
                 .setBaseUri(ConfigFactory.create(IConfigurationVariables.class, System.getProperties()).urlApiTest())
                 .addQueryParam("token", new ProminSession().getAdminSession())
+                .setRelaxedHTTPSValidation()
                 .setAccept(ContentType.JSON)
                 .build();
     }

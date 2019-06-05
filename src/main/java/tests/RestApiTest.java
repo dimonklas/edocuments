@@ -2,7 +2,7 @@ package tests;
 
 import io.restassured.response.Response;
 import org.testng.annotations.Test;
-import rest.services.controllers.createDocument.TestDocumentCtrl;
+import rest.services.controllers.createDocument.DocumentCtrl;
 import rest.services.models.createDocument.CreateDocument;
 import rest.services.models.singDocument.Document;
 
@@ -11,7 +11,7 @@ import static org.testng.Assert.assertEquals;
 
 public class RestApiTest extends BaseTest {
 
-    private TestDocumentCtrl documentCtrl = new TestDocumentCtrl();
+    private DocumentCtrl documentCtrl = new DocumentCtrl();
 
     @Test(description = "создание нового документа через api")
     public void createNewDocument() {
