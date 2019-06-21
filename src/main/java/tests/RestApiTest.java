@@ -7,6 +7,7 @@ import rest.services.models.createDocument.CreateDocument;
 import rest.services.models.singDocument.Document;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 
 public class RestApiTest extends BaseTest {
@@ -32,7 +33,8 @@ public class RestApiTest extends BaseTest {
     public void singDocument() {
         Document doc = new Document().getDocumentDataFromFile();
         Response res = documentCtrl.signDocuments(doc);
-        assertEquals(res.jsonPath().getString("result"), "success");
+        String result = res.body().asString();
+        assertTrue(result.contains("\"result\":\"success\""));
     }
 
     @Test(description = "передача списка документов для подписания")

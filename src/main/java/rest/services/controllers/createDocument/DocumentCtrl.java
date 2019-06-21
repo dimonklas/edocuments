@@ -4,6 +4,7 @@ import io.qameta.allure.Step;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.builder.ResponseSpecBuilder;
+import io.restassured.filter.log.LogDetail;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
@@ -27,6 +28,7 @@ public class DocumentCtrl {
         RestAssured.responseSpecification = new ResponseSpecBuilder()
                 .expectResponseTime(lessThan(15 * 1000L))
                 .expectStatusCode(200)
+                .log(LogDetail.ALL)
                 .build();
 
         this.spec = new RequestSpecBuilder()
@@ -34,6 +36,7 @@ public class DocumentCtrl {
                 .addQueryParam("token", new ProminSession().getAdminSession())
                 .setRelaxedHTTPSValidation()
                 .setAccept(ContentType.JSON)
+                .log(LogDetail.ALL)
                 .build();
     }
 
